@@ -10,11 +10,6 @@ ENV HOME=/${WORKDIR} \
     HOST=0.0.0.0 \
     API_URL=${API_URL}
 
-# ENV check（このRUN命令は確認のためなので無くても良い）
-RUN echo ${HOME}
-RUN echo ${CONTAINER_PORT}
-RUN echo ${API_URL}
-
 WORKDIR ${HOME}
 
 EXPOSE ${CONTAINER_PORT}
