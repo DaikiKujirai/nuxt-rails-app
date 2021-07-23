@@ -1,3 +1,5 @@
+require "validator/email_validator"
+
 class User < ApplicationRecord
   before_validation :downcase_email
 
