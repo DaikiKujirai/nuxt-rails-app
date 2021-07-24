@@ -80,5 +80,8 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+  },
+  publicRuntimeConfig: {
+    appName: process.env.APP_NAME
   }
 }
