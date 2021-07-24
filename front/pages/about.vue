@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-app-bar
       dense
       collapse-on-scroll
@@ -8,7 +8,7 @@
       <v-spacer></v-spacer>
       <v-btn
         to="/"
-        :color="colors[0]"
+        :color="colors[1]"
       >
         Bookers
       </v-btn>
