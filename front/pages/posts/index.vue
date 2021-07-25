@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <wel-app-bar
-      :menus="menus"
-    />
+    <wel-app-bar />
     <v-img
       dark
       src="https://picsum.photos/id/20/1920/1080?blur=5"
@@ -29,27 +27,27 @@
         id="users"
       />
     </v-card>
+    <v-card>
+      <bef-login-footer />
+    </v-card>
   </v-app>
 </template>
 
 <script>
+import BefLoginFooter from '../../components/beforeLogin/befLoginFooter.vue'
 import welAppBar from '../../components/welcome/welAppBar.vue'
 
 export default {
   components: {
-    welAppBar
+    welAppBar,
+    BefLoginFooter
   },
   props: {
   },
   data: () => {
     return {
       posts: [],
-      imgHeight: 500,
-      menus: [
-        { title: 'users' },
-        { title: 'posts' },
-        { title: 'myPage' }
-      ]
+      imgHeight: 500
     }
   },
   mounted () {

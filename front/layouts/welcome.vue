@@ -1,6 +1,8 @@
 <template>
   <v-app>
-    <wel-app-bar />
+    <wel-app-bar
+      :menus="menus"
+    />
     <v-img
       dark
       src="https://picsum.photos/id/20/1920/1080?blur=5"
@@ -33,22 +35,12 @@
 </template>
 
 <script>
-// import welAbout from '~/components/welcome/welAbout'
-import welAppBar from '~/components/welcome/welAppBar'
-// import welCompany from '~/components/welcome/welCompany'
-// import welContact from '~/components/welcome/welContact'
-// import welPrice from '~/components/welcome/welPrice'
-// import welProducts from '~/components/welcome/welProducts'
+import WelAppBar from '../components/welcome/welAppBar.vue'
 import BefLoginFooter from '~/components/beforeLogin/befLoginFooter.vue'
 
 export default {
   components: {
-    // welAbout,
-    welAppBar,
-    // welCompany,
-    // welContact,
-    // welPrice,
-    // welProducts,
+    WelAppBar,
     BefLoginFooter
   },
   data () {

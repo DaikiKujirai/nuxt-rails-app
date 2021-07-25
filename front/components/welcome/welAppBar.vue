@@ -5,7 +5,7 @@
     hide-on-scroll
     clipped-left
   >
-    <v-app-bar-nav-icon />
+    <app-logo />
     <v-toolbar-title>
       {{ appName }}
     </v-toolbar-title>
@@ -17,11 +17,13 @@
         text
         rounded
         class="mr-2"
-        @click="goTo(menu.title)"
+        to="/users"
       >
         {{ $t(`menus.${menu.title}`) }}
       </v-btn>
     </v-toolbar-items>
+    <signup-link />
+    <login-link />
     <v-btn
       rounded
       color="info"
@@ -58,16 +60,22 @@
         </v-btn>
       </v-card>
     </v-dialog>
+    <v-app-bar-nav-icon />
   </v-app-bar>
 </template>
 
 <script>
+import AppLogo from '../appLogo.vue'
+import signupLink from '~/components/beforeLogin/signupLink'
+import loginLink from '~/components/beforeLogin/loginLink'
+
 export default {
+  components: {
+    AppLogo,
+    signupLink,
+    loginLink
+  },
   props: {
-    menus: {
-      type: Array,
-      default: () => []
-    },
     imgHeight: {
       type: Number,
       default: 0
@@ -76,7 +84,12 @@ export default {
   data ({ $config: { appName } }) {
     return {
       appName,
-      dialog: false
+      dialog: false,
+      menus: [
+        { title: 'users' },
+        { title: 'posts' },
+        { title: 'myPage' }
+      ]
     }
   },
   mounted () {
