@@ -17,6 +17,7 @@
         text
         rounded
         class="mr-2"
+        @click="goTo(menu.title)"
       >
         {{ $t(`menus.${menu.title}`) }}
       </v-btn>
@@ -66,12 +67,25 @@ export default {
     menus: {
       type: Array,
       default: () => []
+    },
+    imgHeight: {
+      type: Number,
+      default: 0
     }
   },
   data ({ $config: { appName } }) {
     return {
       appName,
       dialog: false
+    }
+  },
+  mounted () {
+  },
+  beforeDestroy () {
+  },
+  methods: {
+    goTo (id) {
+      this.$vuetify.goTo(`#${id}`)
     }
   }
 }

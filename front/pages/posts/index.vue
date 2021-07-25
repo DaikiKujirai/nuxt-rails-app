@@ -25,7 +25,9 @@
       </v-card-text>
     </v-card>
     <v-card>
-      <v-calendar-daily />
+      <v-calendar-daily
+        id="users"
+      />
     </v-card>
   </v-app>
 </template>
@@ -38,10 +40,6 @@ export default {
     welAppBar
   },
   props: {
-    // menus: {
-    //   type: Array,
-    //   default: () => []
-    // }
   },
   data: () => {
     return {
