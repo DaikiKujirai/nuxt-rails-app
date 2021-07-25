@@ -1,6 +1,12 @@
 {
+  "menus": {
+    "users" : "会員一覧",
+    "posts" : "投稿一覧",
+    "myPage": "マイページ"
+  },
   "title": {
     "signup": "会員登録",
-    "login": "ログイン"
+    "login" : "ログイン",
+    "logout": "ログアウト"
   }
 }

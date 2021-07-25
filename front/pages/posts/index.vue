@@ -1,6 +1,8 @@
 <template>
   <v-app>
-    <wel-app-bar />
+    <wel-app-bar
+      :menus="menus"
+    />
     <v-img
       dark
       src="https://picsum.photos/id/20/1920/1080?blur=5"
@@ -35,10 +37,21 @@ export default {
   components: {
     welAppBar
   },
+  props: {
+    // menus: {
+    //   type: Array,
+    //   default: () => []
+    // }
+  },
   data: () => {
     return {
       posts: [],
-      imgHeight: 500
+      imgHeight: 500,
+      menus: [
+        { title: 'users' },
+        { title: 'posts' },
+        { title: 'myPage' }
+      ]
     }
   },
   mounted () {
