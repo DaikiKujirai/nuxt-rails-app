@@ -27,20 +27,15 @@
         id="users"
       />
     </v-card>
-    <v-card>
-      <bef-login-footer />
-    </v-card>
   </v-app>
 </template>
 
 <script>
-import BefLoginFooter from '../../components/beforeLogin/befLoginFooter.vue'
 import welAppBar from '../../components/welcome/welAppBar.vue'
 
 export default {
   components: {
-    welAppBar,
-    BefLoginFooter
+    welAppBar
   },
   props: {
   },

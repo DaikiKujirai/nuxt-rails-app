@@ -4,8 +4,8 @@
       dense
       collapse-on-scroll
     >
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
-      <v-spacer></v-spacer>
+      <v-app-bar-nav-icon />
+      <v-spacer />
       <v-btn
         to="/"
         :color="colors[1]"

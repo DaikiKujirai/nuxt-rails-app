@@ -1,10 +1,11 @@
 <template>
-  <h1>Users</h1>
+  <div>
+    signup.vue
+  </div>
 </template>
 
 <script>
 export default {
-  components: {
-  }
+  layout: 'beforeLogin'
 }
 </script>

@@ -6,9 +6,9 @@
     clipped-left
   >
     <app-logo />
-    <v-toolbar-title>
-      {{ appName }}
-    </v-toolbar-title>
+    <app-title
+      class="hidden-mobile-and-down"
+    />
     <v-spacer />
     <v-toolbar-items>
       <v-btn
@@ -17,7 +17,7 @@
         text
         rounded
         class="mr-2"
-        to="/users"
+        :to="`/${menu.title}`"
       >
         {{ $t(`menus.${menu.title}`) }}
       </v-btn>
@@ -65,13 +65,15 @@
 </template>
 
 <script>
-import AppLogo from '../appLogo.vue'
+import appLogo from '../appLogo.vue'
+import appTitle from '~/components/ui/apptitle'
 import signupLink from '~/components/beforeLogin/signupLink'
 import loginLink from '~/components/beforeLogin/loginLink'
 
 export default {
   components: {
-    AppLogo,
+    appLogo,
+    appTitle,
     signupLink,
     loginLink
   },
@@ -81,15 +83,15 @@ export default {
       default: 0
     }
   },
-  data ({ $config: { appName } }) {
+  data ({ $store }) {
     return {
-      appName,
       dialog: false,
       menus: [
         { title: 'users' },
         { title: 'posts' },
         { title: 'myPage' }
       ]
+      // appBarHeight: $store.state.styles.beforeLogin.appBarHeight
     }
   },
   mounted () {
