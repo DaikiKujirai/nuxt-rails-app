@@ -8,5 +8,11 @@
 
 <script>
 export default {
+  props: {
+    password: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>

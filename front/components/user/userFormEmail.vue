@@ -8,5 +8,11 @@
 
 <script>
 export default {
+  props: {
+    email: {
+      type: String,
+      default: ''
+    }
+  }
 }
 </script>

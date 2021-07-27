@@ -1,9 +1,18 @@
 <template>
   <bef-login-form-card #form-card-content> <!--eslint-disable-line-->
-    <v-form>
+    <v-form
+      v-model="isValid"
+    >
       <user-form-name />
       <user-form-email />
       <user-form-password />
+      <v-btn
+        :disabled="!isValid"
+        block
+        color="myblue"
+      >
+        登録する
+      </v-btn>
     </v-form>
   </bef-login-form-card>
 </template>
@@ -21,6 +30,11 @@ export default {
     UserFormEmail,
     UserFormPassword
   },
-  layout: 'beforeLogin'
+  layout: 'beforeLogin',
+  data () {
+    return {
+      inValid: false
+    }
+  }
 }
 </script>
