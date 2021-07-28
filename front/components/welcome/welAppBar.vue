@@ -43,13 +43,12 @@
             新規登録
           </v-card-title>
           <v-spacer />
-          <v-icon
-            size="30"
-            class="mr-5"
+          <v-btn
+            icon
             @click="dialog = false"
           >
             ✖︎
-          </v-icon>
+          </v-btn>
         </div>
         <v-textarea />
         <v-btn

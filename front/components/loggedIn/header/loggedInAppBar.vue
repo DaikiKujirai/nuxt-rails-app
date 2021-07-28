@@ -1,9 +1,6 @@
 <template>
   <v-app-bar
     app
-    dense
-    elevation="1"
-    clipped-left
     color="white"
   >
     <nuxt-link
@@ -12,8 +9,22 @@
     >
       <app-logo />
     </nuxt-link>
-    <app-title />
+    <app-title
+      class="hidden-mobile-and-down"
+    />
     <v-spacer />
+    <v-toolbar-items>
+      <v-btn
+        v-for="(menu, i) in menus"
+        :key="`menu-btn-${i}`"
+        text
+        rounded
+        class="mr-2"
+        :to="`/${menu.title}`"
+      >
+        {{ $t(`menus.${menu.title}`) }}
+      </v-btn>
+    </v-toolbar-items>
     <v-menu
       app
       offset-x
@@ -76,12 +87,17 @@ export default {
     appLogo,
     appTitle
   },
-  data () {
+  data ({ $store }) {
     return {
       accountMenus: [
         { name: 'account-settings', icon: 'mdi-account-cog' },
         { name: 'account-password', icon: 'mdi-lock-outline' },
         { name: 'logout', icon: 'mdi-logout-variant', divider: true }
+      ],
+      menus: [
+        { title: 'users' },
+        { title: 'posts' },
+        { title: 'myPage' }
       ]
     }
   }

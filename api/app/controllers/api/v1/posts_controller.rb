@@ -4,9 +4,25 @@ class Api::V1::PostsController < ApplicationController
     render json: posts
   end
 
+  def show
+    post = Post.find_by(id: params[:id])
+    unless Post.nil?
+      render json: post
+    else
+      render json: { error_message: 'Not Found' }
+    end
+  end
+
   def create
     post = Post.new(post_params)
+    if post.save
+      render json: { success_message: '保存しました' }
+    else
+      render json: post.errors.messages
+    end
   end
+
+
 
   private
 
