@@ -1,7 +1,8 @@
 <template>
   <v-app-bar
     app
-    color="white"
+    dark
+    hide-on-scroll
   >
     <nuxt-link
       to="/"
@@ -13,6 +14,7 @@
       class="hidden-mobile-and-down"
     />
     <v-spacer />
+    <modal-new-post />
     <v-toolbar-items>
       <v-btn
         v-for="(menu, i) in menus"
@@ -80,12 +82,14 @@
 
 <script>
 import appLogo from '../../appLogo.vue'
+import ModalNewPost from '../../posts/modalNewPost.vue'
 import appTitle from '../../ui/appTitle.vue'
 
 export default {
   components: {
     appLogo,
-    appTitle
+    appTitle,
+    ModalNewPost
   },
   data ({ $store }) {
     return {
@@ -96,8 +100,7 @@ export default {
       ],
       menus: [
         { title: 'users' },
-        { title: 'posts' },
-        { title: 'myPage' }
+        { title: 'posts' }
       ]
     }
   }

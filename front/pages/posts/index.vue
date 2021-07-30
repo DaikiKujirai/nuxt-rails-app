@@ -1,48 +1,49 @@
 <template>
-  <v-app>
-    <wel-app-bar />
-    <v-img
-      dark
-      src="https://picsum.photos/id/20/1920/1080?blur=5"
-      gradient="to top right, rgba(19,84,122,.6), rgba(128,208,199,.9)"
-      :height="imgHeight"
-    />
-    <v-card
-      v-for="post in posts"
-      :key="post.id"
-      class="mt-40"
-    >
-      <v-card-title>
-        {{ post.title }}
-      </v-card-title>
-      <v-card-text>
-        {{ post.content }}
-      </v-card-text>
-      <v-card-text>
-        {{ post.created_at }}
-      </v-card-text>
-    </v-card>
-    <v-card>
-      <v-calendar-daily
-        id="users"
-      />
-    </v-card>
-  </v-app>
+  <v-container
+    fluid
+    class="d-flex"
+  >
+    <v-row>
+      <v-col
+        v-for="post in posts"
+        :key="post.id"
+        cols="4"
+      >
+        <v-card
+          hover
+          :to="`/posts/${post.id}`"
+          class="d-flex"
+        >
+          <v-img
+            :src="src"
+            max-height="200"
+            max-width="200"
+            contain
+          />
+          <div>
+            <v-card-title>
+              {{ post.title }}
+            </v-card-title>
+            <v-card-text>
+              {{ post.content }}
+            </v-card-text>
+            <v-card-text>
+              {{ post.created_at }}
+            </v-card-text>
+          </div>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
-import welAppBar from '../../components/welcome/welAppBar.vue'
-
 export default {
-  components: {
-    welAppBar
-  },
-  props: {
-  },
+  layout: 'loggedIn',
   data: () => {
     return {
       posts: [],
-      imgHeight: 500
+      src: 'https://picsum.photos/200/200'
     }
   },
   mounted () {
@@ -54,8 +55,6 @@ export default {
       this.$axios.get(url)
         .then((res) => {
           this.posts = res.data
-          console.log(this.posts)
-          return this.posts
         })
         .catch((err) => {
           console.error(err) // eslint-disable-line

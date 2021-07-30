@@ -1,16 +1,27 @@
-# table_names = %w(
-#   users
-# )
+table_names = %w(
+  users
+)
 
-# table_names.each do |table_name|
-#   path = Rails.root.join("db/seeds/#{Rails.env}/#{table_name}.rb")
+table_names.each do |table_name|
+  path = Rails.root.join("db/seeds/#{Rails.env}/#{table_name}.rb")
 
-#   # ファイルが存在しない場合はdevelopmentディレクトリを読み込む
-#   path = path.sub(Rails.env, "development") unless File.exist?(path)
+  # ファイルが存在しない場合はdevelopmentディレクトリを読み込む
+  path = path.sub(Rails.env, "development") unless File.exist?(path)
 
-#   puts "#{table_name}..."
-#   require path
+  puts "#{table_name}..."
+  require path
+end
+
+# 10.times do |i|
+#   User.create!(
+#     id:        0,
+#     name:      "name#{i}",
+#     email:     "#{i}email@example.com",
+#     password:  "password",
+#     is_active: true
+#   )
 # end
+
 5.times do |i|
   Post.create!(
     title:   "title#{i}",

@@ -24,7 +24,6 @@
     </v-toolbar-items>
     <signup-link />
     <login-link />
-    <modal-new-post />
     <v-app-bar-nav-icon />
   </v-app-bar>
 </template>
@@ -34,15 +33,13 @@ import appLogo from '../appLogo.vue'
 import appTitle from '~/components/ui/apptitle'
 import signupLink from '~/components/beforeLogin/signupLink'
 import loginLink from '~/components/beforeLogin/loginLink'
-import modalNewPost from '~/components/posts/modalNewPost.vue'
 
 export default {
   components: {
     appLogo,
     appTitle,
     signupLink,
-    loginLink,
-    modalNewPost
+    loginLink
   },
   props: {
     imgHeight: {
@@ -55,8 +52,7 @@ export default {
       dialog: false,
       menus: [
         { title: 'users' },
-        { title: 'posts' },
-        { title: 'myPage' }
+        { title: 'posts' }
       ]
       // appBarHeight: $store.state.styles.beforeLogin.appBarHeight
     }

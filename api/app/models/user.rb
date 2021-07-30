@@ -3,7 +3,7 @@ require "validator/email_validator"
 class User < ApplicationRecord
   before_validation :downcase_email
 
-  has_secure_password
+  # has_secure_password
 
   validates :name,  presence: true,
                     length: { maximum: 30, allow_blank: true }
@@ -23,7 +23,7 @@ class User < ApplicationRecord
   class << self
     # emailからアクティブなユーザーを返す
     def find_activated(email)
-      find_by(email: email, activated: true)
+      find_by(email: email, is_active: true)
     end
   end
   # class method end #########################

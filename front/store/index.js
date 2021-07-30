@@ -1,5 +1,5 @@
 export const state = () => ({
-  loggedIn: true,
+  loggedIn: false,
   current: {
     post: null
   },

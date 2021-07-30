@@ -3,10 +3,10 @@
     <v-btn
       rounded
       color="info"
-      class="open-modal-btn"
+      class="open-modal-btn mr-2"
       @click="dialog = true"
     >
-      +
+      新規投稿
     </v-btn>
     <v-dialog
       v-model="dialog"
@@ -15,7 +15,7 @@
       <v-card>
         <div class="d-flex">
           <v-card-title>
-            新規登録
+            新規投稿
           </v-card-title>
           <v-spacer />
           <v-btn
@@ -45,7 +45,6 @@
             >
               投稿する
             </v-btn>
-            {{ params }}
           </v-form>
         </v-container>
       </v-card>
@@ -87,7 +86,7 @@ export default {
           console.log('投稿しました', res)
           this.showMessage({ message: '投稿しました', type: 'primary', status: true })
           this.loading = false
-          this.$router.push('/')
+          this.$router.push('/posts')
           this.params = { post: { title: '', content: '' } }
           this.dialog = false
         })

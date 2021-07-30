@@ -18,10 +18,10 @@
             contain
           />
           <v-card-title>
-            {{ post.title }}
+            {{ user.name }}
           </v-card-title>
           <v-card-text>
-            {{ post.content }}
+            {{ user.introduction }}
           </v-card-text>
           <v-card-actions>
             <v-btn
@@ -54,7 +54,7 @@ export default {
   layout: 'loggedIn',
   data: () => {
     return {
-      post: {},
+      user: {},
       src: 'https://picsum.photos/500/500'
     }
   },
@@ -63,12 +63,12 @@ export default {
   },
   methods: {
     fetchContents () {
-      const url = `/api/v1/posts/${this.$route.params.id}`
+      const url = `/api/v1/users/${this.$route.params.id}`
       this.$axios.get(url)
         .then((res) => {
           // eslint-disable-next-line
           console.log('投稿詳細')
-          this.post = res.data
+          this.user = res.data
         })
         .catch((err) => {
           console.error(err) // eslint-disable-line

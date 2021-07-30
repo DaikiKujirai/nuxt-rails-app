@@ -1,13 +1,13 @@
 class Api::V1::PostsController < ApplicationController
   def index
     posts = Post.all
-    render json: posts
+    render json: posts.as_json
   end
 
   def show
     post = Post.find_by(id: params[:id])
     unless Post.nil?
-      render json: post
+      render json: post.as_json
     else
       render json: { error_message: 'Not Found' }
     end
@@ -21,8 +21,6 @@ class Api::V1::PostsController < ApplicationController
       render json: post.errors.messages
     end
   end
-
-
 
   private
 
