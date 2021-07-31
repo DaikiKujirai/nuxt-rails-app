@@ -2,7 +2,7 @@
   <v-text-field
     v-model="setTitle"
     label="タイトル"
-    placeholder="本のタイトル"
+    :placeholder="form.placeholder"
     :rules="rules"
     outlined
   />

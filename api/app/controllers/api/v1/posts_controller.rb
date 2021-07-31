@@ -5,7 +5,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    post = Post.find_by(id: params[:id])
+    post = Post.find(params[:id])
     unless Post.nil?
       render json: post.as_json
     else
@@ -23,7 +23,12 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def update
-
+    post = Post.find(params[:id])
+    if post.update(post_params)
+      render json: post.as_json
+    else
+      render json: post.errors.messages
+    end
   end
 
   def destroy

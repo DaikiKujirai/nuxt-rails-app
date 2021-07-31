@@ -3,7 +3,7 @@
     <v-btn
       :color="color"
       text
-      @click="dialog = true"
+      @click="dialog = true, setParams()"
     >
       編集
       <v-icon>
@@ -33,10 +33,10 @@
             v-model="isValid"
           >
             <edit-post-form-title
-              :title.sync="params.post.title"
+              :title.sync="post.title"
             />
             <edit-post-form-content
-              :content.sync="params.post.content"
+              :content.sync="post.content"
             />
             <v-btn
               :disabled="!isValid || loading"
@@ -69,7 +69,7 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
-      params: { post: { title: '', content: '' } },
+      post: { title: '', content: '' },
       color: 'deep-purple lighten-2'
     }
   },
@@ -82,15 +82,23 @@ export default {
     ...mapActions({
       showMessage: 'flash/showMessage'
     }),
+    async setParams () {
+      const url = `/api/v1/posts/${this.$route.params.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.post.title = res.data.title
+          this.post.content = res.data.content
+        })
+        .catch((err) => {
+          console.error(err) // eslint-disable-line
+        })
+    },
     async updatePost () {
       this.loading = true
-      await this.$axios.$post('/api/v1/posts', this.params)
+      await this.$axios.$put(`/api/v1/posts/${this.$route.params.id}`, this.post)
         .then((res) => {
-          console.log('投稿しました', res)
-          this.showMessage({ message: '投稿しました', type: 'primary', status: true })
+          console.log('更新しました', res)
           this.loading = false
-          this.$router.push('/posts')
-          this.params = { post: { title: '', content: '' } }
           this.dialog = false
         })
         .catch((err) => {

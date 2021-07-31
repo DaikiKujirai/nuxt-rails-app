@@ -1,8 +1,8 @@
 <template>
   <v-text-field
-    v-model="content"
+    v-model="setTitle"
     label="タイトル"
-    placeholder="本のタイトル"
+    :placeholder="form.placeholder"
     :rules="rules"
     outlined
   />
@@ -13,7 +13,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: ''
+      default: 'デフォルト'
     }
   },
   data () {
@@ -30,12 +30,15 @@ export default {
       return { placeholder }
     },
     setTitle: {
-      get () { return this.title },
-      set (newVal) { return this.$emit('update:title', newVal) }
+      get () {
+        return this.title
+      },
+      set (newVal) {
+        return this.$emit('update:title', newVal)
+      }
     }
   },
   methods: {
-    
   }
 }
 </script>

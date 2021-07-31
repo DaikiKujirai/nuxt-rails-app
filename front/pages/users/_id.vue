@@ -28,19 +28,13 @@
               color="deep-purple lighten-2"
               text
             >
-              いいね
-              <v-icon>
-                mdi-heart-outline
-              </v-icon>
+              フォロー中
             </v-btn>
             <v-btn
               color="deep-purple lighten-2"
               text
             >
-              コメント
-              <v-icon>
-                mdi-chat-processing-outline
-              </v-icon>
+              フォロワー
             </v-btn>
           </v-card-actions>
         </v-card>
