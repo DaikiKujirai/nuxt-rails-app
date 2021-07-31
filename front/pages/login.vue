@@ -60,7 +60,7 @@ export default {
       this.loading = true
       setTimeout(() => {
         this.$store.dispatch('login')
-        this.$router.replace('/')
+        this.$router.replace('/posts')
         this.loading = false
       }, 1500)
     }

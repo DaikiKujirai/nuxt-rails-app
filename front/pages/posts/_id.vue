@@ -25,7 +25,7 @@
           </v-card-text>
           <v-card-actions>
             <v-btn
-              color="deep-purple lighten-2"
+              :color="color"
               text
             >
               いいね
@@ -34,12 +34,23 @@
               </v-icon>
             </v-btn>
             <v-btn
-              color="deep-purple lighten-2"
+              :color="color"
               text
             >
               コメント
               <v-icon>
                 mdi-chat-processing-outline
+              </v-icon>
+            </v-btn>
+            <v-spacer />
+            <modal-update-post />
+            <v-btn
+              :color="color"
+              text
+            >
+              削除
+              <v-icon>
+                mdi-delete-empty
               </v-icon>
             </v-btn>
           </v-card-actions>
@@ -50,12 +61,18 @@
 </template>
 
 <script>
+import modalUpdatePost from '../../components/posts/editPost.vue'
+
 export default {
+  components: {
+    modalUpdatePost
+  },
   layout: 'loggedIn',
   data: () => {
     return {
       post: {},
-      src: 'https://picsum.photos/500/500'
+      src: 'https://picsum.photos/500/500',
+      color: 'deep-purple lighten-2'
     }
   },
   mounted () {

@@ -14,7 +14,7 @@
       class="hidden-mobile-and-down"
     />
     <v-spacer />
-    <modal-new-post />
+    <new-post />
     <v-toolbar-items>
       <v-btn
         v-for="(menu, i) in menus"
@@ -82,14 +82,14 @@
 
 <script>
 import appLogo from '../../appLogo.vue'
-import ModalNewPost from '../../posts/modalNewPost.vue'
+import newPost from '../../posts/newPost.vue'
 import appTitle from '../../ui/appTitle.vue'
 
 export default {
   components: {
     appLogo,
     appTitle,
-    ModalNewPost
+    newPost
   },
   data ({ $store }) {
     return {

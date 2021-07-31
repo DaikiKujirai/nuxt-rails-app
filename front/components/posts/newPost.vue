@@ -30,10 +30,10 @@
             ref="form"
             v-model="isValid"
           >
-            <post-form-title
+            <new-post-form-title
               :title.sync="params.post.title"
             />
-            <post-form-content
+            <new-post-form-content
               :content.sync="params.post.content"
             />
             <v-btn
@@ -54,13 +54,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import PostFormContent from './postFormContent.vue'
-import postFormTitle from './postFormTitle.vue'
+import NewPostFormContent from './newPostFormContent.vue'
+import NewPostFormTitle from './newPostFormTitle.vue'
 
 export default {
   components: {
-    postFormTitle,
-    PostFormContent
+    NewPostFormTitle,
+    NewPostFormContent
   },
   data () {
     return {
