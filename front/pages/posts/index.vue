@@ -55,6 +55,11 @@ export default {
       this.$axios.get(url)
         .then((res) => {
           this.posts = res.data
+          return this.posts.sort((a, b) => {
+            if (a.id > b.id) { return -1 }
+            if (a.id < b.id) { return 1 }
+            return 0
+          })
         })
         .catch((err) => {
           console.error(err) // eslint-disable-line

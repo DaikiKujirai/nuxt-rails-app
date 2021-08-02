@@ -3,7 +3,7 @@
     <v-btn
       :color="color"
       text
-      @click="dialog = true, setParams()"
+      @click="dialog = true, setPost()"
     >
       編集
       <v-icon>
@@ -78,11 +78,18 @@ export default {
       currentUser: 'auth/data'
     })
   },
+  mounted () {
+    this.$nextTick(() => {
+      this.$nuxt.$loading.start()
+      setTimeout(() => this.$nuxt.$loading.finish(), 500)
+      console.log('mounted')
+    })
+  },
   methods: {
     ...mapActions({
       showMessage: 'flash/showMessage'
     }),
-    async setParams () {
+    async setPost () {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
@@ -93,17 +100,19 @@ export default {
           console.error(err) // eslint-disable-line
         })
     },
-    async updatePost () {
+    updatePost () {
       this.loading = true
-      await this.$axios.$put(`/api/v1/posts/${this.$route.params.id}`, this.post)
+      this.$axios.$put(`/api/v1/posts/${this.$route.params.id}`, this.post)
         .then((res) => {
           console.log('更新しました', res)
           this.loading = false
+          // this.postTitle(res.data)
+          // this.postContent()
           this.dialog = false
         })
         .catch((err) => {
           console.log(err.response)
-          this.showMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
+          // this.showMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
           this.loading = false
         })
     }

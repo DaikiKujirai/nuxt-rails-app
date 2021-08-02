@@ -18,10 +18,10 @@
             contain
           />
           <v-card-title>
-            {{ post.title }}
+            {{ postTitle }}
           </v-card-title>
           <v-card-text>
-            {{ post.content }}
+            {{ postContent }}
           </v-card-text>
           <v-card-actions>
             <v-btn
@@ -43,7 +43,7 @@
               </v-icon>
             </v-btn>
             <v-spacer />
-            <modal-update-post />
+            <edit-post />
             <v-btn
               :color="color"
               text
@@ -61,18 +61,29 @@
 </template>
 
 <script>
-import modalUpdatePost from '../../components/posts/editPost.vue'
+import editPost from '../../components/posts/editPost.vue'
 
 export default {
   components: {
-    modalUpdatePost
+    editPost
   },
   layout: 'loggedIn',
   data: () => {
     return {
       post: {},
       src: 'https://picsum.photos/500/500',
-      color: 'deep-purple lighten-2'
+      color: 'deep-purple lighten-2',
+      parentData: '親コンポーネント'
+    }
+  },
+  computed: {
+    postTitle () {
+      console.log('タイトル')
+      return this.post.title
+    },
+    postContent () {
+      console.log('コンテント')
+      return this.post.content
     }
   },
   mounted () {
