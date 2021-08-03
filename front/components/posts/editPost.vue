@@ -47,6 +47,7 @@
             >
               更新する
             </v-btn>
+            {{ parent }}
           </v-form>
         </v-container>
       </v-card>
@@ -70,19 +71,22 @@ export default {
       isValid: false,
       loading: false,
       post: { title: '', content: '' },
-      color: 'deep-purple lighten-2'
+      color: 'deep-purple lighten-2',
+      testProps: 'テストプロップス'
     }
   },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data'
-    })
+    }),
+    parent () {
+      return this.parentData
+    }
   },
   mounted () {
     this.$nextTick(() => {
       this.$nuxt.$loading.start()
       setTimeout(() => this.$nuxt.$loading.finish(), 500)
-      console.log('mounted')
     })
   },
   methods: {
@@ -102,12 +106,10 @@ export default {
     },
     updatePost () {
       this.loading = true
-      this.$axios.$put(`/api/v1/posts/${this.$route.params.id}`, this.post)
+      this.$axios.$patch(`/api/v1/posts/${this.$route.params.id}`, this.post)
         .then((res) => {
           console.log('更新しました', res)
           this.loading = false
-          // this.postTitle(res.data)
-          // this.postContent()
           this.dialog = false
         })
         .catch((err) => {

@@ -25,7 +25,7 @@ class Api::V1::PostsController < ApplicationController
   def update
     post = Post.find(params[:id])
     if post.update(post_params)
-      render json: post.as_json
+      render json: {success_message: '更新しました'}
     else
       render json: post.errors.messages
     end

@@ -28,7 +28,10 @@
               {{ post.content }}
             </v-card-text>
             <v-card-text>
-              {{ post.created_at }}
+              <v-icon size="16">
+                mdi-update
+              </v-icon>
+              {{ $my.format(post.created_at) }}
             </v-card-text>
           </div>
         </v-card>

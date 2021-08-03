@@ -22,6 +22,7 @@ export const mutations = {
 
 export const actions = {
   login ({ commit }) {
+    console.log(commit)
     commit('setLoggedIn', true)
   },
   logout ({ commit }) {

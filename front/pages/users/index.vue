@@ -3,31 +3,64 @@
     fluid
     class="d-flex"
   >
-    <v-row>
+    <v-row
+      justify="center"
+      align="center"
+    >
       <v-col
-        v-for="user in users"
-        :key="user.id"
-        cols="4"
+        cols="12"
+        :sm="container.sm"
+        :md="container.md"
       >
-        <v-card
-          hover
-          :to="`/users/${user.id}`"
-          class="d-flex"
-        >
-          <v-img
-            :src="src"
-            max-height="200"
-            max-width="200"
-            contain
-          />
-          <div>
-            <v-card-title>
-              {{ user.name }}
-            </v-card-title>
-            <v-card-text>
-              {{ user.introduction }}
-            </v-card-text>
-          </div>
+        <v-card-title>
+          全ての会員
+        </v-card-title>
+        <v-divider class="mb-4" />
+        <v-card>
+          <v-simple-table
+            :items="users"
+            item-key="name"
+          >
+            <template v-slot:default> <!--eslint-disable-line-->
+              <thead>
+                <tr>
+                  <th>
+                    アイコン
+                  </th>
+                  <th>
+                    名前
+                  </th>
+                  <th>
+                    紹介文
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr
+                  v-for="user in users"
+                  :key="user.name"
+                >
+                  <td>
+                    <v-avatar size="150">
+                      <v-img
+                        :src="src"
+                        max-height="200"
+                        max-width="200"
+                        contain
+                        :to="`/users/${user.id}`"
+                      />
+                    </v-avatar>
+                  </td>
+                  <td>
+                    {{ user.name }}
+                  </td>
+                  <td>
+                    {{ user.introduction }}
+                  </td>
+                </tr>
+              </tbody>
+            </template>
+          </v-simple-table>
         </v-card>
       </v-col>
     </v-row>
@@ -40,7 +73,11 @@ export default {
   data: () => {
     return {
       users: [],
-      src: 'https://picsum.photos/200/200'
+      src: 'https://picsum.photos/200/200',
+      container: {
+        sm: 10,
+        md: 8
+      }
     }
   },
   mounted () {
