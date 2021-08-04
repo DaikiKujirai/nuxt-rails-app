@@ -47,12 +47,13 @@
                         max-height="200"
                         max-width="200"
                         contain
-                        :to="`/users/${user.id}`"
                       />
                     </v-avatar>
                   </td>
                   <td>
-                    {{ user.name }}
+                    <nuxt-link :to="`/users/${user.id}`">
+                      {{ user.name }}
+                    </nuxt-link>
                   </td>
                   <td>
                     {{ user.introduction }}

@@ -3,6 +3,7 @@
     <v-btn
       :color="color"
       text
+      rounded
       @click="dialog = true, setPost()"
     >
       編集
@@ -47,7 +48,6 @@
             >
               更新する
             </v-btn>
-            {{ parent }}
           </v-form>
         </v-container>
       </v-card>
@@ -70,9 +70,8 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
-      post: { title: '', content: '' },
       color: 'deep-purple lighten-2',
-      testProps: 'テストプロップス'
+      post: { title: '', content: '' }
     }
   },
   computed: {

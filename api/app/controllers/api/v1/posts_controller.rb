@@ -25,14 +25,19 @@ class Api::V1::PostsController < ApplicationController
   def update
     post = Post.find(params[:id])
     if post.update(post_params)
-      render json: {success_message: '更新しました'}
+      render json: { success_message: '更新しました' }
     else
       render json: post.errors.messages
     end
   end
 
   def destroy
-
+    post = Post.find(params[:id])
+    if post.destroy
+      render json: post
+    else
+      render json: post.errors
+    end
   end
 
   private

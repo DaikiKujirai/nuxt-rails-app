@@ -44,15 +44,7 @@
             </v-btn>
             <v-spacer />
             <edit-post />
-            <v-btn
-              :color="color"
-              text
-            >
-              削除
-              <v-icon>
-                mdi-delete-empty
-              </v-icon>
-            </v-btn>
+            <delete-post />
           </v-card-actions>
         </v-card>
       </v-col>
@@ -61,19 +53,20 @@
 </template>
 
 <script>
+import deletePost from '../../components/posts/deletePost.vue'
 import editPost from '../../components/posts/editPost.vue'
 
 export default {
   components: {
-    editPost
+    editPost,
+    deletePost
   },
   layout: 'loggedIn',
-  data: () => {
+  data () {
     return {
       post: {},
       src: 'https://picsum.photos/500/500',
-      color: 'deep-purple lighten-2',
-      parentData: '親コンポーネント'
+      color: 'deep-purple lighten-2'
     }
   },
   computed: {
