@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import firebase from 'firebase'
 import befLoginFormCard from '../components/beforeLogin/befLoginFormCard.vue'
 import UserFormEmail from '../components/user/userFormEmail.vue'
 import UserFormName from '../components/user/userFormName.vue'
@@ -50,6 +51,19 @@ export default {
   },
   methods: {
     signup () {
+      firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+        .then((res) => {
+          const params = { token: res.user.za, registration: { email: res.user.email } }
+          const url = '/api/v1/users/registrations'
+          this.$axios.post(url, params)
+            .then((res) => {
+              console.log(res)
+              this.$router.push('/')
+            })
+            .catch((err) => {
+              console.log(err)
+            })
+        })
       this.loading = true
       setTimeout(() => {
         this.formReset()

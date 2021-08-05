@@ -37,15 +37,16 @@
 </template>
 
 <script>
-import BefLoginFormCard from '../components/beforeLogin/befLoginFormCard.vue'
+import befLoginFormCard from '../components/beforeLogin/befLoginFormCard.vue'
 import userFormEmail from '../components/user/userFormEmail.vue'
-import UserFormPassword from '../components/user/userFormPassword.vue'
+import userFormPassword from '../components/user/userFormPassword.vue'
+import firebase from '~/plugins/firebase'
 
 export default {
   components: {
     userFormEmail,
-    UserFormPassword,
-    BefLoginFormCard
+    userFormPassword,
+    befLoginFormCard
   },
   layout: 'beforeLogin',
   data () {
@@ -57,12 +58,18 @@ export default {
   },
   methods: {
     login () {
-      this.loading = true
-      setTimeout(() => {
-        this.$store.dispatch('login')
-        this.$router.replace('/posts')
-        this.loading = false
-      }, 1500)
+      firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+        .then((user) => {
+          this.loading = true
+          setTimeout(() => {
+            // this.$store.dispatch('login')
+            // this.$router.replace('/posts')
+            this.loading = false
+          }, 1500)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
     }
   }
 }

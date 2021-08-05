@@ -12,9 +12,12 @@
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.13.6",
+    "@nuxtjs/dotenv": "^1.4.1",
     "core-js": "^3.15.1",
+    "firebase": "^8.8.1",
     "nuxt": "^2.15.7",
-    "nuxt-i18n": "^6.27.3"
+    "nuxt-i18n": "^6.27.3",
+    "vuex-persistedstate": "^4.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",
