@@ -5,14 +5,17 @@
       v-model="isValid"
     >
       <user-form-name
-        :name.sync="params.user.name"
+        :name.sync="user.name"
       />
       <user-form-email
-        :email.sync="params.user.email"
+        :email.sync="user.email"
       />
       <user-form-password
-        :password.sync="params.user.password"
+        :password.sync="user.password"
       />
+      <!-- <user-form-password-confirmation
+        :password_confirmation.sync="user.password_confirmation"
+      /> -->
       <v-btn
         :disabled="!isValid || loading"
         :loading="loading"
@@ -23,16 +26,19 @@
       >
         登録する
       </v-btn>
+      {{ user }}
     </v-form>
   </bef-login-form-card>
 </template>
 
 <script>
-import firebase from 'firebase'
+import { mapActions } from 'vuex'
+import firebase from 'firebase/app'
 import befLoginFormCard from '../components/beforeLogin/befLoginFormCard.vue'
 import UserFormEmail from '../components/user/userFormEmail.vue'
 import UserFormName from '../components/user/userFormName.vue'
 import UserFormPassword from '../components/user/userFormPassword.vue'
+// import UserFormPasswordConfirmation from '../components/user/userFormPasswordConfirmation.vue'
 
 export default {
   components: {
@@ -40,29 +46,51 @@ export default {
     UserFormName,
     UserFormEmail,
     UserFormPassword
+    // UserFormPasswordConfirmation
   },
   layout: 'beforeLogin',
   data () {
     return {
       isValid: false,
       loading: false,
-      params: { user: { name: '', email: '', password: '' } }
+      user: {
+        name: '',
+        email: '',
+        password: ''
+        // password_confirmation: ''
+      }
     }
   },
   methods: {
+    ...mapActions({
+      login: 'auth/login',
+      loadData: 'auth/loadData',
+      showMessage: 'flash/showMessage'
+    }),
     signup () {
-      firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+      this.loading = true
+      firebase.auth().createUserWithEmailAndPassword(this.user.email, this.user.password)
         .then((res) => {
-          const params = { token: res.user.za, registration: { email: res.user.email } }
-          const url = '/api/v1/users/registrations'
-          this.$axios.post(url, params)
-            .then((res) => {
-              console.log(res)
-              this.$router.push('/')
+          console.log('サインアップ成功', res)
+          const user = {
+            name: this.user.name,
+            email: res.user.email,
+            uid: res.user.uid
+          }
+          this.$axios.$post('/api/v1/users', { user })
+            .then(() => {
+              console.log('アカウント作成', res)
+              this.login(res.user)
+              // this.showMessage({ message: '登録に成功しました', type: 'success', status: true })
+              this.loading = false
+              this.$router.push('/posts')
             })
             .catch((err) => {
-              console.log(err)
+              console.log('アカウント作成失敗', err)
             })
+        })
+        .catch((err) => {
+          console.log('サインアップエラー', err)
         })
       this.loading = true
       setTimeout(() => {
@@ -72,7 +100,12 @@ export default {
     },
     formReset () {
       this.$refs.form.reset()
-      this.params = { user: { name: '', email: '', password: '' } }
+      this.user = {
+        name: '',
+        email: '',
+        password: '',
+        password_confirmation: ''
+      }
     }
   }
 }

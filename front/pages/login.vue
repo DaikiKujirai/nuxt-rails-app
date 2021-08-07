@@ -58,12 +58,12 @@ export default {
   },
   methods: {
     login () {
-      firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+      firebase.auth().signInWithEmailAndPassword(this.params.auth.email, this.params.auth.password)
         .then((user) => {
           this.loading = true
           setTimeout(() => {
             this.$store.dispatch('login')
-            // this.$router.replace('/posts')
+            this.$router.replace('/posts')
             this.loading = false
           }, 1500)
         })
