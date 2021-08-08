@@ -81,7 +81,7 @@ export default {
             .then(() => {
               console.log('アカウント作成', res)
               this.login(res.user)
-              // this.showMessage({ message: '登録に成功しました', type: 'success', status: true })
+              this.showMessage({ message: '登録に成功しました', type: 'success', status: true })
               this.loading = false
               this.$router.push('/posts')
             })
