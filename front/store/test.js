@@ -1,17 +1,24 @@
 export const state = () => ({
-  test: 0,
-  gts: 0
+  number: 0
 })
 
 export const getters = {
-  testGetters (gts) {
-    gts = 2
-    return gts
+  testGetters (state) {
+    return state.number
   }
 }
 
 export const mutations = {
+  testMutation (state, payload) {
+    state.number += payload
+  }
 }
 
 export const actions = {
+  async testAction ({ dispatch }, payload) {
+    await dispatch('message', payload)
+  },
+  async message ({ commit }, payload) {
+    await commit('testMutation', payload)
+  }
 }

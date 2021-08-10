@@ -79,10 +79,12 @@ export default {
     clickOK () {
       this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then((res) => {
+          // eslint-disable-next-line no-console
           console.log('投稿を削除しました', res)
           this.$router.push('/posts')
         })
         .catch((err) => {
+          // eslint-disable-next-line no-console
           console.log('投稿の削除に失敗', err)
         })
     }

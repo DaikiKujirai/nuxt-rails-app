@@ -57,13 +57,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import EditPostFormContent from './editPostFormContent.vue'
-import EditPostFormTitle from './editPostFormTitle.vue'
+import editPostFormContent from './editPostFormContent.vue'
+import editPostFormTitle from './editPostFormTitle.vue'
 
 export default {
   components: {
-    EditPostFormTitle,
-    EditPostFormContent
+    editPostFormTitle,
+    editPostFormContent
   },
   data () {
     return {
@@ -77,10 +77,7 @@ export default {
   computed: {
     ...mapGetters({
       currentUser: 'auth/data'
-    }),
-    parent () {
-      return this.parentData
-    }
+    })
   },
   mounted () {
     this.$nextTick(() => {
@@ -107,13 +104,15 @@ export default {
       this.loading = true
       this.$axios.$patch(`/api/v1/posts/${this.$route.params.id}`, this.post)
         .then((res) => {
+          // eslint-disable-next-line no-console
           console.log('更新しました', res)
           this.loading = false
           this.dialog = false
         })
         .catch((err) => {
+          // eslint-disable-next-line no-console
           console.log(err.response)
-          // this.showMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
+          this.showMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
           this.loading = false
         })
     }

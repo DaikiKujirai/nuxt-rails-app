@@ -1,8 +1,6 @@
 <template>
   <v-app>
-    <wel-app-bar
-      :menus="menus"
-    />
+    <wel-app-bar />
     <v-img
       dark
       src="https://picsum.photos/id/20/1920/1080?blur=5"
@@ -35,13 +33,13 @@
 </template>
 
 <script>
-import WelAppBar from '../components/welcome/welAppBar.vue'
-import BefLoginFooter from '~/components/beforeLogin/befLoginFooter.vue'
+import welAppBar from '../components/welcome/welAppBar.vue'
+import befLoginFooter from '~/components/beforeLogin/befLoginFooter.vue'
 
 export default {
   components: {
-    WelAppBar,
-    BefLoginFooter
+    welAppBar,
+    befLoginFooter
   },
   data () {
     return {

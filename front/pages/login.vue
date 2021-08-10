@@ -5,11 +5,11 @@
       v-model="isValid"
     >
       <user-form-email
-        :email.sync="params.auth.email"
+        :email.sync="params.user.email"
         no-validation
       />
       <user-form-password
-        :password.sync="params.auth.password"
+        :password.sync="params.user.password"
         no-validation
       />
       <v-card-actions>
@@ -37,6 +37,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import befLoginFormCard from '../components/beforeLogin/befLoginFormCard.vue'
 import userFormEmail from '../components/user/userFormEmail.vue'
 import userFormPassword from '../components/user/userFormPassword.vue'
@@ -53,22 +54,28 @@ export default {
     return {
       isValid: false,
       loading: false,
-      params: { auth: { email: '', password: '' } }
+      params: { user: { email: '', password: '' } }
     }
   },
   methods: {
+    ...mapActions({
+      login: 'auth/login'
+    }),
     login () {
-      firebase.auth().signInWithEmailAndPassword(this.params.auth.email, this.params.auth.password)
-        .then((user) => {
-          this.loading = true
+      this.loading = true
+      firebase.auth().signInWithEmailAndPassword(this.params.user.email, this.params.user.password)
+        .then((res) => {
           setTimeout(() => {
-            this.$store.dispatch('login')
+            // this.login(res.user)
             this.$router.replace('/posts')
             this.loading = false
           }, 1500)
+          // eslint-disable-next-line no-console
+          console.log('ログイン成功')
         })
         .catch((err) => {
-          console.error(err)
+          // eslint-disable-next-line no-console
+          console.error('ログイン失敗', err)
         })
     }
   }

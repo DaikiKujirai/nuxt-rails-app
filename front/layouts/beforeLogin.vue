@@ -9,13 +9,13 @@
 </template>
 
 <script>
-import BefLoginAppBar from '../components/beforeLogin/befLoginAppBar.vue'
-import BefLoginFooter from '../components/beforeLogin/befLoginFooter.vue'
+import befLoginAppBar from '../components/beforeLogin/befLoginAppBar.vue'
+import befLoginFooter from '../components/beforeLogin/befLoginFooter.vue'
 
 export default {
   components: {
-    BefLoginAppBar,
-    BefLoginFooter
+    befLoginAppBar,
+    befLoginFooter
   }
 }
 </script>

@@ -3,43 +3,45 @@
     <v-card class="text-center">
       test
       <v-card-title class="justify-center">
-        state ："  {{ test }}  "
+        state ："  {{ number }}  "
       </v-card-title>
       <v-card-title class="justify-center">
-        getters ："  {{ gts }}  "
+        getters ："  {{ number }}  "
       </v-card-title>
       <v-btn
         rounded
         color="primary"
+        @click="toActions"
       >
         ボタン
       </v-btn>
+      <v-card-title>
+        mutation ："  {{}}  "
+      </v-card-title>
     </v-card>
   </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data () {
     return {
-      // test: 0
     }
   },
   computed: {
-    ...mapState(
-      'test',
-      'gts'
-    ),
-    ...mapGetters([
-      'gts'
-    ])
+    ...mapGetters({
+      number: 'test/testGetters'
+    })
   },
   methods: {
-    // ...mapState({
-    //   test
-    // })
+    ...mapActions({
+      testAction: 'test/testAction'
+    }),
+    toActions () {
+      this.testAction(5)
+    }
   }
 }
 </script>

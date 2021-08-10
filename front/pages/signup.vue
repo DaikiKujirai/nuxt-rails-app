@@ -13,9 +13,6 @@
       <user-form-password
         :password.sync="user.password"
       />
-      <!-- <user-form-password-confirmation
-        :password_confirmation.sync="user.password_confirmation"
-      /> -->
       <v-btn
         :disabled="!isValid || loading"
         :loading="loading"
@@ -26,7 +23,6 @@
       >
         登録する
       </v-btn>
-      {{ user }}
     </v-form>
   </bef-login-form-card>
 </template>
@@ -35,18 +31,16 @@
 import { mapActions } from 'vuex'
 import firebase from 'firebase/app'
 import befLoginFormCard from '../components/beforeLogin/befLoginFormCard.vue'
-import UserFormEmail from '../components/user/userFormEmail.vue'
-import UserFormName from '../components/user/userFormName.vue'
-import UserFormPassword from '../components/user/userFormPassword.vue'
-// import UserFormPasswordConfirmation from '../components/user/userFormPasswordConfirmation.vue'
+import userFormEmail from '../components/user/userFormEmail.vue'
+import userFormName from '../components/user/userFormName.vue'
+import userFormPassword from '../components/user/userFormPassword.vue'
 
 export default {
   components: {
     befLoginFormCard,
-    UserFormName,
-    UserFormEmail,
-    UserFormPassword
-    // UserFormPasswordConfirmation
+    userFormName,
+    userFormEmail,
+    userFormPassword
   },
   layout: 'beforeLogin',
   data () {
@@ -57,7 +51,6 @@ export default {
         name: '',
         email: '',
         password: ''
-        // password_confirmation: ''
       }
     }
   },
@@ -71,6 +64,7 @@ export default {
       this.loading = true
       firebase.auth().createUserWithEmailAndPassword(this.user.email, this.user.password)
         .then((res) => {
+          // eslint-disable-next-line no-console
           console.log('サインアップ成功', res)
           const user = {
             name: this.user.name,
@@ -79,6 +73,7 @@ export default {
           }
           this.$axios.$post('/api/v1/users', { user })
             .then(() => {
+              // eslint-disable-next-line no-console
               console.log('アカウント作成', res)
               this.login(res.user)
               this.showMessage({ message: '登録に成功しました', type: 'success', status: true })
@@ -86,10 +81,12 @@ export default {
               this.$router.push('/posts')
             })
             .catch((err) => {
+              // eslint-disable-next-line no-console
               console.log('アカウント作成失敗', err)
             })
         })
         .catch((err) => {
+          // eslint-disable-next-line no-console
           console.log('サインアップエラー', err)
         })
       this.loading = true
@@ -99,12 +96,13 @@ export default {
       }, 1500)
     },
     formReset () {
+      // eslint-disable-next-line no-debugger
+      debugger
       this.$refs.form.reset()
       this.user = {
         name: '',
         email: '',
-        password: '',
-        password_confirmation: ''
+        password: ''
       }
     }
   }
