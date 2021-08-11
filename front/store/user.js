@@ -30,10 +30,10 @@ export const actions = {
 }
 
 export const getters = {
-  user: state => {
+  user: (state) => {
     return state.user
   },
-  info: state => {
+  info: (state) => {
     return state.info
   }
 }

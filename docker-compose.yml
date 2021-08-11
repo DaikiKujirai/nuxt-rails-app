@@ -22,7 +22,7 @@ services:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
       API_DOMAIN: "localhost:$FRONT_PORT"
     volumes:
-      - ./api:/$WORKDIR
+      - ./api:/app:cached
     depends_on:
       - db
     ports:
@@ -37,7 +37,7 @@ services:
         API_URL: "http://localhost:$API_PORT"
     command: yarn run dev
     volumes:
-      - ./front:/$WORKDIR
+      - ./front:/app:cached
     ports:
       - "$FRONT_PORT:$CONTAINER_PORT"
     depends_on:

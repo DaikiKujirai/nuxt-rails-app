@@ -4,7 +4,7 @@ export default {
 
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'app',
+    title: 'nuxt',
     htmlAttrs: {
       lang: 'en'
     },
@@ -28,7 +28,7 @@ export default {
   plugins: [
     'plugins/axios',
     'plugins/myInject',
-    '~/plugins/firebase.js',
+    'plugins/firebase',
     { src: '~plugins/persistedstate.js', ssr: false }
   ],
 
@@ -47,7 +47,33 @@ export default {
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
     'nuxt-i18n',
-    '@nuxtjs/dotenv'
+    '@nuxtjs/dotenv',
+    [
+
+      '@nuxtjs/firebase',
+      {
+        config: {
+          apiKey: process.env.FIREBASE_API_KEY,
+          authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+          projectId: process.env.FIREBASE_PROJECT_ID,
+          storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+          messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+          appId: process.env.FIREBASE_APP_ID,
+          measurementId: process.env.FIREBASE_MEASUREMENT_ID
+        },
+        services: {
+          auth: true
+          // firestore: true,
+          // functions: true,
+          // storage: true,
+          // database: true,
+          // messaging: true,
+          // performance: true,
+          // analytics: true,
+          // remoteConfig: true
+        }
+      }
+    ]
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
