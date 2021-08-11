@@ -54,13 +54,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import NewPostFormContent from './newPostFormContent.vue'
-import NewPostFormTitle from './newPostFormTitle.vue'
+import newPostFormContent from './newPostFormContent.vue'
+import newPostFormTitle from './newPostFormTitle.vue'
 
 export default {
   components: {
-    NewPostFormTitle,
-    NewPostFormContent
+    newPostFormTitle,
+    newPostFormContent
   },
   data () {
     return {
@@ -83,15 +83,16 @@ export default {
       this.loading = true
       await this.$axios.$post('/api/v1/posts', this.params)
         .then((res) => {
+          // eslint-disable-next-line no-console
           console.log('投稿しました', res)
           this.showMessage({ message: '投稿しました', type: 'primary', status: true })
           this.loading = false
           this.$router.push('/posts')
-          this.params = { post: { title: '', content: '' } }
           this.dialog = false
         })
         .catch((err) => {
-          console.log(err.response)
+          // eslint-disable-next-line no-console
+          console.log('投稿エラー', err.response)
           this.showMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
           this.loading = false
         })

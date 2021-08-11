@@ -18,6 +18,7 @@ class Api::V1::UsersController < ApplicationController
     @user.is_active = true
     if @user.save
       render json: @user, status: :created
+      puts 'create'
     else
       render json: @user.errors, status: :unprocessable_entity
     end

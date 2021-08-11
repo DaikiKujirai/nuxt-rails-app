@@ -30,7 +30,7 @@
 
 <script>
 import appLogo from '../appLogo.vue'
-import appTitle from '~/components/ui/apptitle'
+import appTitle from '~/components/ui/appTitle'
 import signupLink from '~/components/beforeLogin/signupLink'
 import loginLink from '~/components/beforeLogin/loginLink'
 

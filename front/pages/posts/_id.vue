@@ -71,10 +71,12 @@ export default {
   },
   computed: {
     postTitle () {
+      // eslint-disable-next-line no-console
       console.log('タイトル')
       return this.post.title
     },
     postContent () {
+      // eslint-disable-next-line no-console
       console.log('コンテント')
       return this.post.content
     }

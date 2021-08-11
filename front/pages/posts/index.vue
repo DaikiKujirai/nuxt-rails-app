@@ -65,7 +65,8 @@ export default {
           })
         })
         .catch((err) => {
-          console.error(err) // eslint-disable-line
+          // eslint-disable-next-line no-console
+          console.error(err)
         })
     }
   }

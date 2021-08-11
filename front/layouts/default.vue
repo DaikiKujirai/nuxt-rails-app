@@ -7,12 +7,12 @@
 </template>
 
 <script>
-import BefLoginFooter from '../components/beforeLogin/befLoginFooter.vue'
+import befLoginFooter from '../components/beforeLogin/befLoginFooter.vue'
 import welAppBar from '../components/welcome/welAppBar.vue'
 export default {
   components: {
-    welAppBar,
-    BefLoginFooter
+    befLoginFooter,
+    welAppBar
   }
 }
 </script>
