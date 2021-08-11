@@ -3,20 +3,12 @@ require "validator/email_validator"
 class User < ApplicationRecord
   before_validation :downcase_email
 
-  # has_secure_password
-
   validates :name,  presence: true,
                     length: { maximum: 30, allow_blank: true }
   validates :email, presence: true,
                     email: { allow_blank: true }
   VALID_PASSWORD_REGEX = /\A[\w\-]+\z/
-  # validates :uid,  presence: true,
-  #                       length: { minimum: 8 },
-  #                       format: {
-  #                         with: VALID_PASSWORD_REGEX,
-  #                         message: :invalid_password
-  #                       },
-  #                       allow_nil: true
+  validates :uid,  presence: true
 
   ## methods
   # class method  ###########################

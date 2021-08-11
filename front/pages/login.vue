@@ -1,15 +1,16 @@
 <template>
   <bef-login-form-card #form-card-content> <!--eslint-disable-line-->
+    <error />
     <v-form
       ref="form"
       v-model="isValid"
     >
       <user-form-email
-        :email.sync="params.user.email"
+        :email.sync="user.email"
         no-validation
       />
       <user-form-password
-        :password.sync="params.user.password"
+        :password.sync="user.password"
         no-validation
       />
       <v-card-actions>
@@ -37,45 +38,44 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
 import befLoginFormCard from '../components/beforeLogin/befLoginFormCard.vue'
 import userFormEmail from '../components/user/userFormEmail.vue'
 import userFormPassword from '../components/user/userFormPassword.vue'
+import error from '../components/error'
 import firebase from '~/plugins/firebase'
 
 export default {
   components: {
     userFormEmail,
     userFormPassword,
-    befLoginFormCard
+    befLoginFormCard,
+    error
   },
   layout: 'beforeLogin',
   data () {
     return {
       isValid: false,
       loading: false,
-      params: { user: { email: '', password: '' } }
+      user: { email: '', password: '' }
     }
   },
   methods: {
-    ...mapActions({
-      login: 'auth/login'
-    }),
     login () {
       this.loading = true
-      firebase.auth().signInWithEmailAndPassword(this.params.user.email, this.params.user.password)
+      firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password)
         .then((res) => {
           setTimeout(() => {
-            // this.login(res.user)
             this.$router.replace('/posts')
             this.loading = false
           }, 1500)
           // eslint-disable-next-line no-console
-          console.log('ログイン成功')
+          console.log('ログイン成功', res)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error('ログイン失敗', err)
+          this.error = 'メールアドレスまたはパスワードが正しくありません'
+          this.loading = false
         })
     }
   }

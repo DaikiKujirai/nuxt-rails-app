@@ -91,20 +91,18 @@ export default {
         })
       this.loading = true
       setTimeout(() => {
-        this.formReset()
+        // this.formReset()
         this.loading = false
       }, 1500)
-    },
-    formReset () {
-      // eslint-disable-next-line no-debugger
-      debugger
-      this.$refs.form.reset()
-      this.user = {
-        name: '',
-        email: '',
-        password: ''
-      }
     }
+    // formReset () {
+    //   this.$refs.form.reset()
+    //   this.user = {
+    //     name: '',
+    //     email: '',
+    //     password: ''
+    //   }
+    // }
   }
 }
 </script>

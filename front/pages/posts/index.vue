@@ -1,16 +1,35 @@
 <template>
   <v-container
     fluid
-    class="d-flex"
   >
     <v-row>
-      <v-col
-        v-for="post in posts"
-        :key="post.id"
-        cols="4"
-      >
+      <v-col cols="3">
+        <v-card>
+          <li>あ</li>
+          <li>い</li>
+          <li>う</li>
+          <li>え</li>
+          <li>お</li>
+          <li>あ</li>
+          <li>い</li>
+          <li>う</li>
+          <li>え</li>
+          <li>お</li>
+          <li>・</li>
+          <li>・</li>
+          <li>・</li>
+          <li>・</li>
+          <li>・</li>
+          <li>・</li>
+          <li>・</li>
+          <li>・</li>
+          <li>・</li>
+        </v-card>
+      </v-col>
+      <v-col cols="6">
         <v-card
-          hover
+          v-for="post in posts"
+          :key="post.id"
           :to="`/posts/${post.id}`"
           class="d-flex"
         >
@@ -34,6 +53,11 @@
               {{ $my.format(post.created_at) }}
             </v-card-text>
           </div>
+        </v-card>
+      </v-col>
+      <v-col cols="3">
+        <v-card>
+          サイドバー
         </v-card>
       </v-col>
     </v-row>
@@ -72,3 +96,6 @@ export default {
   }
 }
 </script>
+
+<style scope>
+</style>
