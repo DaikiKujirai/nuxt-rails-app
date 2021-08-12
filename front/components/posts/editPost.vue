@@ -33,9 +33,6 @@
             ref="form"
             v-model="isValid"
           >
-            <edit-post-form-title
-              :title.sync="post.title"
-            />
             <edit-post-form-content
               :content.sync="post.content"
             />
@@ -58,11 +55,9 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import editPostFormContent from './editPostFormContent.vue'
-import editPostFormTitle from './editPostFormTitle.vue'
 
 export default {
   components: {
-    editPostFormTitle,
     editPostFormContent
   },
   data () {
@@ -71,7 +66,7 @@ export default {
       isValid: false,
       loading: false,
       color: 'deep-purple lighten-2',
-      post: { title: '', content: '' }
+      post: { content: '' }
     }
   },
   computed: {
@@ -93,7 +88,6 @@ export default {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.post.title = res.data.title
           this.post.content = res.data.content
         })
         .catch((err) => {

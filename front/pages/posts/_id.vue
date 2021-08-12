@@ -3,8 +3,9 @@
     class="mt-3"
   >
     <v-row>
+      <sidebar />
       <v-col
-        cols="8"
+        cols="6"
         offset="2"
       >
         <v-card
@@ -53,13 +54,15 @@
 </template>
 
 <script>
+import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
 import deletePost from '../../components/posts/deletePost.vue'
 import editPost from '../../components/posts/editPost.vue'
 
 export default {
   components: {
     editPost,
-    deletePost
+    deletePost,
+    sidebar
   },
   layout: 'loggedIn',
   data () {

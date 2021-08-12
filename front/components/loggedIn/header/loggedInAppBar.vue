@@ -13,6 +13,9 @@
     <app-title
       class="hidden-mobile-and-down"
     />
+    <breadcrumbs
+      v-if="notTopPage"
+    />
     <v-spacer />
     <new-post />
     <v-toolbar-items>
@@ -27,56 +30,7 @@
         {{ $t(`menus.${menu.title}`) }}
       </v-btn>
     </v-toolbar-items>
-    <v-menu
-      app
-      offset-x
-      offset-y
-      max-width="200"
-    >
-      <template v-slot:activator="{ on }"> <!--eslint-disable-line-->
-        <v-btn
-          icon
-          v-on="on"
-        >
-          <v-icon>
-            mdi-account-circle
-          </v-icon>
-        </v-btn>
-      </template>
-      <v-list>
-        <v-subheader>
-          ログイン中のユーザー
-        </v-subheader>
-        <v-list-item>
-          <v-list-item-content>
-            <v-list-item-subtitle>
-              ユーザー名が表示されます
-            </v-list-item-subtitle>
-          </v-list-item-content>
-        </v-list-item>
-        <v-divider />
-        <v-subheader>
-          アカウント
-        </v-subheader>
-        <template v-for="(menu, i) in accountMenus">
-          <v-divider
-            v-if="menu.divider"
-            :key="`menu-divider-${i}`"
-          />
-          <v-list-item
-            :key="`menu-list-${i}`"
-            :to="{ name: menu.name }"
-          >
-            <v-list-item-icon class="mr-2">
-              <v-icon size="22" v-text="menu.icon" />
-            </v-list-item-icon>
-            <v-list-item-title>
-              {{ $my.pageTitle(menu.name) }}
-            </v-list-item-title>
-          </v-list-item>
-        </template>
-      </v-list>
-    </v-menu>
+    <account-link />
   </v-app-bar>
 </template>
 
@@ -84,24 +38,28 @@
 import appLogo from '../../appLogo.vue'
 import newPost from '../../posts/newPost.vue'
 import appTitle from '../../ui/appTitle.vue'
+import breadcrumbs from '../ui/breadcrumbs.vue'
+import accountLink from './accountLink.vue'
 
 export default {
   components: {
     appLogo,
     appTitle,
-    newPost
+    newPost,
+    accountLink,
+    breadcrumbs
   },
-  data ({ $store }) {
+  data () {
     return {
-      accountMenus: [
-        { name: 'account-settings', icon: 'mdi-account-cog' },
-        { name: 'account-password', icon: 'mdi-lock-outline' },
-        { name: 'logout', icon: 'mdi-logout-variant', divider: true }
-      ],
       menus: [
         { title: 'users' },
         { title: 'posts' }
       ]
+    }
+  },
+  computed: {
+    notTopPage () {
+      return this.$route.name !== 'index'
     }
   }
 }

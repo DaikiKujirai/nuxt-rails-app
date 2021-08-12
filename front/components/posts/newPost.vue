@@ -30,11 +30,8 @@
             ref="form"
             v-model="isValid"
           >
-            <new-post-form-title
-              :title.sync="params.post.title"
-            />
             <new-post-form-content
-              :content.sync="params.post.content"
+              :content.sync="post.content"
             />
             <v-btn
               :disabled="!isValid || loading"
@@ -55,11 +52,9 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import newPostFormContent from './newPostFormContent.vue'
-import newPostFormTitle from './newPostFormTitle.vue'
 
 export default {
   components: {
-    newPostFormTitle,
     newPostFormContent
   },
   data () {
@@ -67,7 +62,7 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
-      params: { post: { title: '', content: '' } }
+      post: { content: '' }
     }
   },
   computed: {
@@ -81,7 +76,7 @@ export default {
     }),
     async newPost () {
       this.loading = true
-      await this.$axios.$post('/api/v1/posts', this.params)
+      await this.$axios.$post('/api/v1/posts', this.post)
         .then((res) => {
           // eslint-disable-next-line no-console
           console.log('投稿しました', res)

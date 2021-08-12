@@ -3,29 +3,7 @@
     fluid
   >
     <v-row>
-      <v-col cols="3">
-        <v-card>
-          <li>あ</li>
-          <li>い</li>
-          <li>う</li>
-          <li>え</li>
-          <li>お</li>
-          <li>あ</li>
-          <li>い</li>
-          <li>う</li>
-          <li>え</li>
-          <li>お</li>
-          <li>・</li>
-          <li>・</li>
-          <li>・</li>
-          <li>・</li>
-          <li>・</li>
-          <li>・</li>
-          <li>・</li>
-          <li>・</li>
-          <li>・</li>
-        </v-card>
-      </v-col>
+      <sidebar />
       <v-col cols="6">
         <v-card
           v-for="post in posts"
@@ -65,7 +43,12 @@
 </template>
 
 <script>
+import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
+
 export default {
+  components: {
+    sidebar
+  },
   layout: 'loggedIn',
   data: () => {
     return {
@@ -77,9 +60,9 @@ export default {
     this.fetchContents()
   },
   methods: {
-    fetchContents () {
+    async fetchContents () {
       const url = '/api/v1/posts'
-      this.$axios.get(url)
+      await this.$axios.get(url)
         .then((res) => {
           this.posts = res.data
           return this.posts.sort((a, b) => {
