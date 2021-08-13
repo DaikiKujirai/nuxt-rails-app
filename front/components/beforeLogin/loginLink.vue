@@ -4,9 +4,9 @@
     outlined
     color="light-green"
     class="mx-2 font-weight-bold"
-    to="/login"
+    to="/auth/login"
   >
-    {{ $t('pages.login') }}
+    {{ $t('pages.auth-login') }}
   </v-btn>
 </template>
 

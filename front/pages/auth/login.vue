@@ -28,7 +28,7 @@
           block
           color="success"
           class="white--text"
-          @click="login"
+          @click="loginUser"
         >
           ログインする
         </v-btn>
@@ -38,10 +38,11 @@
 </template>
 
 <script>
-import befLoginFormCard from '../components/beforeLogin/befLoginFormCard.vue'
-import userFormEmail from '../components/user/userFormEmail.vue'
-import userFormPassword from '../components/user/userFormPassword.vue'
-import error from '../components/error'
+import { mapState, mapActions } from 'vuex'
+import befLoginFormCard from '../../components/beforeLogin/befLoginFormCard.vue'
+import userFormEmail from '../../components/user/userFormEmail.vue'
+import userFormPassword from '../../components/user/userFormPassword.vue'
+import error from '../../components/error'
 import firebase from '~/plugins/firebase'
 
 export default {
@@ -59,23 +60,32 @@ export default {
       user: { email: '', password: '' }
     }
   },
+  computed: {
+    ...mapState({
+      state: 'auth/state'
+    })
+  },
   methods: {
-    login () {
+    ...mapActions({
+      login: 'auth/login',
+      showMessage: 'flash/showMessage'
+    }),
+    loginUser () {
       this.loading = true
       firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password)
         .then((res) => {
-          setTimeout(() => {
-            this.$router.replace('/posts')
-            this.loading = false
-          }, 1500)
+          this.login(res.user)
+          this.showMessage({ message: 'ログインしました', type: 'success', status: 'true' })
+          this.$router.replace('/posts')
+          this.loading = false
           // eslint-disable-next-line no-console
-          console.log('ログイン成功', res)
+          console.log(res)
         })
         .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error('ログイン失敗', err)
           this.error = 'メールアドレスまたはパスワードが正しくありません'
           this.loading = false
+          // eslint-disable-next-line no-console
+          console.log(err)
         })
     }
   }

@@ -10,18 +10,6 @@
       class="hidden-mobile-and-down"
     />
     <v-spacer />
-    <v-toolbar-items>
-      <v-btn
-        v-for="(menu, i) in menus"
-        :key="`menu-btn-${i}`"
-        text
-        rounded
-        class="mr-2"
-        :to="`/${menu.title}`"
-      >
-        {{ $t(`menus.${menu.title}`) }}
-      </v-btn>
-    </v-toolbar-items>
     <signup-link />
     <login-link />
     <v-app-bar-nav-icon />
@@ -29,7 +17,7 @@
 </template>
 
 <script>
-import appLogo from '../appLogo.vue'
+import appLogo from '../ui/appLogo.vue'
 import appTitle from '~/components/ui/appTitle'
 import signupLink from '~/components/beforeLogin/signupLink'
 import loginLink from '~/components/beforeLogin/loginLink'
@@ -49,12 +37,7 @@ export default {
   },
   data ({ $store }) {
     return {
-      dialog: false,
-      menus: [
-        { title: 'users' },
-        { title: 'posts' }
-      ]
-      // appBarHeight: $store.state.styles.beforeLogin.appBarHeight
+      dialog: false
     }
   },
   mounted () {

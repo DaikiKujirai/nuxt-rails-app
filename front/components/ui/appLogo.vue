@@ -4,11 +4,11 @@
     size="34"
     class="my-app-logo"
   >
-    <span
+    <v-icon
       class="white--text text-subtitle-2"
     >
-      📗
-    </span>
+      mdi-twitter
+    </v-icon>
   </v-avatar>
 </template>
 
@@ -17,7 +17,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
   .my-app-logo {
     margin-right: 8px;
     cursor: pointer;

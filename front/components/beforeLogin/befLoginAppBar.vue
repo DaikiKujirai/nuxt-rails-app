@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import appLogo from '../appLogo.vue'
+import appLogo from '../ui/appLogo.vue'
 import appTitle from '../ui/appTitle.vue'
 import signupLink from './signupLink.vue'
 import loginLink from './loginLink.vue'

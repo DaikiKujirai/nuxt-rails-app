@@ -30,37 +30,59 @@
       <v-subheader>
         アカウント
       </v-subheader>
-      <template v-for="(menu, i) in accountMenus">
-        <v-divider
-          v-if="menu.divider"
-          :key="`menu-divider-${i}`"
-        />
-        <v-list-item
-          :key="`menu-list-${i}`"
-          :to="{ name: menu.name }"
-        >
-          <v-list-item-icon class="mr-2">
-            <v-icon size="22" v-text="menu.icon" />
-          </v-list-item-icon>
-          <v-list-item-title>
-            {{ $my.pageTitle(menu.name) }}
-          </v-list-item-title>
-        </v-list-item>
-      </template>
+      <v-list-item
+        to="/account/settings"
+      >
+        <v-list-item-icon class="mr-2">
+          <v-icon size="22">
+            mdi-account-cog
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>
+          アカウント設定
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
+        @click="logoutUser"
+      >
+        <v-list-item-icon class="mr-2">
+          <v-icon size="22">
+            mdi-logout-variant
+          </v-icon>
+        </v-list-item-icon>
+        <v-list-item-title>
+          ログアウト
+        </v-list-item-title>
+      </v-list-item>
     </v-list>
   </v-menu>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   data () {
     return {
-      accountMenus: [
-        { name: 'account-settings', icon: 'mdi-account-cog' },
-        { name: 'account-password', icon: 'mdi-lock-outline' },
-        { name: 'logout', icon: 'mdi-logout-variant', divider: true }
-      ]
+    }
+  },
+  methods: {
+    ...mapActions({
+      logout: 'auth/logout',
+      showMessage: 'flash/showMessage'
+    }),
+    logoutUser () {
+      this.logout()
+        .then(() => {
+          this.showMessage({ message: 'ログアウトしました', type: 'success', status: true })
+          this.$router.push('/')
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log(err)
+        })
     }
   }
+
 }
 </script>

@@ -29,6 +29,7 @@ export default {
     'plugins/axios',
     'plugins/myInject',
     'plugins/firebase',
+    '~/plugins/authenticate.js',
     { src: '~plugins/persistedstate.js', ssr: false }
   ],
 

@@ -1,6 +1,9 @@
 require "validator/email_validator"
 
 class User < ApplicationRecord
+
+  has_many :posts
+
   before_validation :downcase_email
 
   validates :name,  presence: true,

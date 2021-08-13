@@ -30,10 +30,10 @@
 <script>
 import { mapActions } from 'vuex'
 import firebase from 'firebase/app'
-import befLoginFormCard from '../components/beforeLogin/befLoginFormCard.vue'
-import userFormEmail from '../components/user/userFormEmail.vue'
-import userFormName from '../components/user/userFormName.vue'
-import userFormPassword from '../components/user/userFormPassword.vue'
+import befLoginFormCard from '../../components/beforeLogin/befLoginFormCard.vue'
+import userFormEmail from '../../components/user/userFormEmail.vue'
+import userFormName from '../../components/user/userFormName.vue'
+import userFormPassword from '../../components/user/userFormPassword.vue'
 
 export default {
   components: {
@@ -43,6 +43,10 @@ export default {
     userFormPassword
   },
   layout: 'beforeLogin',
+  middleware: [
+    'handle-login-route',
+    'disable-direct-access'
+  ],
   data () {
     return {
       isValid: false,

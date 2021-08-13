@@ -1,4 +1,4 @@
-// import firebase from '~/plugins/firebase.js'
+import firebase from '~/plugins/firebase.js'
 
 export const state = () => ({
   user: null,
@@ -33,6 +33,13 @@ export const actions = {
     console.log('ユーザーのUID', user.uid)
     await dispatch('setUser', userInfo)
     await dispatch('loadData', userInfo.uid)
+  },
+
+  async logout ({ commit }) {
+    await firebase.auth().signOut()
+
+    commit('setUser', null)
+    commit('setData', null)
   },
 
   setUser ({ commit }, user) {

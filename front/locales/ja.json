@@ -9,8 +9,8 @@
     "follower": "フォロワー"
   },
   "pages": {
-    "signup": "会員登録",
-    "login" : "ログイン",
+    "auth-signup": "会員登録",
+    "auth-login" : "ログイン",
     "logout": "ログアウト",
     "account": {
       "settings": "アカウント設定",

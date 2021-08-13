@@ -9,22 +9,25 @@
           v-for="post in posts"
           :key="post.id"
           :to="`/posts/${post.id}`"
-          class="d-flex"
         >
-          <v-img
-            :src="src"
-            max-height="200"
-            max-width="200"
-            contain
-          />
+          <div class="d-flex">
+            <v-img
+              :src="src"
+              max-height="200"
+              max-width="200"
+              contain
+            />
+          </div>
+          {{ post }}
           <div>
-            <v-card-title>
-              {{ post.title }}
-            </v-card-title>
-            <v-card-text>
+            <v-card-title
+              class="card-content"
+            >
               {{ post.content }}
-            </v-card-text>
-            <v-card-text>
+            </v-card-title>
+            <v-card-text
+              class="text-right"
+            >
               <v-icon size="16">
                 mdi-update
               </v-icon>
@@ -43,14 +46,14 @@
 </template>
 
 <script>
+// import { mapGetters } from 'vuex'
 import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
 
 export default {
   components: {
     sidebar
   },
-  layout: 'loggedIn',
-  data: () => {
+  data () {
     return {
       posts: [],
       src: 'https://picsum.photos/200/200'
@@ -81,4 +84,8 @@ export default {
 </script>
 
 <style scope>
+  .card-content {
+    height: 180px;
+    min-width: 490px
+  }
 </style>

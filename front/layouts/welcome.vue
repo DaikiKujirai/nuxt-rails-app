@@ -23,8 +23,13 @@
             class="subheading"
             :style="{ letterSpacing: '5px' }"
           >
-            試作品
+            {{ status }}
           </h4>
+          <v-btn
+            @click="console"
+          >
+            ボタン
+          </v-btn>
         </v-col>
       </v-row>
     </v-img>
@@ -33,6 +38,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import welAppBar from '../components/welcome/welAppBar.vue'
 import befLoginFooter from '~/components/beforeLogin/befLoginFooter.vue'
 
@@ -44,6 +50,21 @@ export default {
   data () {
     return {
       imgHeight: 500
+    }
+  },
+  computed: {
+    ...mapGetters({
+      loggedIn: 'auth/isAuthenticated'
+    }),
+    status () {
+      return {
+        status: this.loggedIn
+      }
+    }
+  },
+  methods: {
+    console () {
+      // console.log(this.$store.getters.isAuthenticated)
     }
   }
 }

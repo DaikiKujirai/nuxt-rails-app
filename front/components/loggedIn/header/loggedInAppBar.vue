@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import appLogo from '../../appLogo.vue'
+import appLogo from '../../ui/appLogo.vue'
 import newPost from '../../posts/newPost.vue'
 import appTitle from '../../ui/appTitle.vue'
 import breadcrumbs from '../ui/breadcrumbs.vue'
