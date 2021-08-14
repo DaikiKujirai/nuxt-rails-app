@@ -62,12 +62,12 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
-      post: { content: '' }
+      post: { user_uid: '', content: '' }
     }
   },
   computed: {
     ...mapGetters({
-      currentUser: 'auth/data'
+      user: 'auth/user'
     })
   },
   methods: {
@@ -76,6 +76,8 @@ export default {
     }),
     async newPost () {
       this.loading = true
+      this.post.user_uid = this.user.uid
+      console.log(this.post.user_uid, this.user.uid)
       await this.$axios.$post('/api/v1/posts', this.post)
         .then((res) => {
           // eslint-disable-next-line no-console

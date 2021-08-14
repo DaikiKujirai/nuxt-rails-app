@@ -15,6 +15,7 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     post = Post.new(post_params)
+    post.user_id = User.find_by(uid: params[:user_uid]).id
     if post.save
       render json: { success_message: '保存しました' }
     else

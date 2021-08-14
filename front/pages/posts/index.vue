@@ -4,7 +4,10 @@
   >
     <v-row>
       <sidebar />
-      <v-col cols="6">
+      <v-col
+        cols="6"
+        offset="3"
+      >
         <v-card
           v-for="post in posts"
           :key="post.id"
@@ -59,6 +62,9 @@ export default {
       src: 'https://picsum.photos/200/200'
     }
   },
+  computed () {
+    this.fetchContents()
+  },
   mounted () {
     this.fetchContents()
   },
@@ -84,8 +90,8 @@ export default {
 </script>
 
 <style scope>
-  .card-content {
+  /* .card-content {
     height: 180px;
-    min-width: 490px
-  }
+    min-width: 490px;
+  } */
 </style>

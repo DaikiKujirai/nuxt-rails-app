@@ -1,29 +1,30 @@
 <template>
-  <v-col
-    cols="2"
-    offset-md="1"
-    class="col"
-  >
-    <div
-      v-for="(menu, i) in menus"
-      :key="`menu-btn-${i}`"
+  <v-app>
+    <v-col
+      cols="3"
+      class="list"
     >
-      <v-btn
-        text
+      <v-list
+        v-for="(menu, i) in menus"
+        :key="`menu-btn-${i}`"
+        nav
         rounded
-        x-large
-        class="mb-4"
-        :to="`/${menu.title}`"
       >
-        <v-icon
-          size="28"
-          class="mr-5"
-          v-text="menu.icon"
-        />
-        {{ $t(`menus.${menu.title}`) }}
-      </v-btn>
-    </div>
-  </v-col>
+        <v-list-item
+          two-line
+          :to="`/${menu.title}`"
+          class="justify-center"
+        >
+          <v-icon
+            size="28"
+            class="mr-5"
+            v-text="menu.icon"
+          />
+          {{ $t(`menus.${menu.title}`) }}
+        </v-list-item>
+      </v-list>
+    </v-col>
+  </v-app>
 </template>
 
 <script>
@@ -44,4 +45,7 @@ export default {
 </script>
 
 <style scoped>
+  .list {
+    position: fixed;
+  }
 </style>

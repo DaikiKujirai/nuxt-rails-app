@@ -78,8 +78,6 @@ export default {
           this.showMessage({ message: 'ログインしました', type: 'success', status: 'true' })
           this.$router.replace('/posts')
           this.loading = false
-          // eslint-disable-next-line no-console
-          console.log(res)
         })
         .catch((err) => {
           this.error = 'メールアドレスまたはパスワードが正しくありません'

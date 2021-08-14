@@ -1,7 +1,7 @@
 <template>
-  <v-container fluid>
-    ルート
-  </v-container>
+  <div>
+    1
+  </div>
 </template>
 
 <script>
