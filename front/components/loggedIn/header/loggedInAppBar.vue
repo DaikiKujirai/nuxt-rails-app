@@ -38,7 +38,7 @@
 import appLogo from '../../ui/appLogo.vue'
 import newPost from '../../posts/newPost.vue'
 import appTitle from '../../ui/appTitle.vue'
-import breadcrumbs from '../ui/breadcrumbs.vue'
+import Breadcrumbs from '../ui/breadcrumbs.vue'
 import accountLink from './accountLink.vue'
 
 export default {
@@ -47,7 +47,7 @@ export default {
     appTitle,
     newPost,
     accountLink,
-    breadcrumbs
+    Breadcrumbs
   },
   data () {
     return {

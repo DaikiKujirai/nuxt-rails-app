@@ -1,6 +1,5 @@
 <template>
   <bef-login-form-card #form-card-content> <!--eslint-disable-line-->
-    <error />
     <v-form
       ref="form"
       v-model="isValid"
@@ -38,19 +37,17 @@
 </template>
 
 <script>
-import { mapState, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import befLoginFormCard from '../../components/beforeLogin/befLoginFormCard.vue'
 import userFormEmail from '../../components/user/userFormEmail.vue'
 import userFormPassword from '../../components/user/userFormPassword.vue'
-import error from '../../components/error'
 import firebase from '~/plugins/firebase'
 
 export default {
   components: {
     userFormEmail,
     userFormPassword,
-    befLoginFormCard,
-    error
+    befLoginFormCard
   },
   layout: 'beforeLogin',
   data () {
@@ -59,11 +56,6 @@ export default {
       loading: false,
       user: { email: '', password: '' }
     }
-  },
-  computed: {
-    ...mapState({
-      state: 'auth/state'
-    })
   },
   methods: {
     ...mapActions({
@@ -75,15 +67,15 @@ export default {
       firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password)
         .then((res) => {
           this.login(res.user)
-          this.showMessage({ message: 'ログインしました', type: 'success', status: 'true' })
-          this.$router.replace('/posts')
+          this.showMessage({ message: 'ログインしました', type: 'success', status: true })
+          this.$router.push('/posts')
           this.loading = false
         })
         .catch((err) => {
-          this.error = 'メールアドレスまたはパスワードが正しくありません'
           this.loading = false
           // eslint-disable-next-line no-console
           console.log(err)
+          this.showMessage({ message: 'メールアドレスまたはパスワードが正しくありません', type: 'error', status: true })
         })
     }
   }

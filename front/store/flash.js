@@ -5,7 +5,7 @@ export const state = () => ({
 })
 
 export const getters = {
-  messages: state => state.message,
+  message: state => state.message,
   type: state => state.type,
   status: state => state.status
 }
@@ -29,6 +29,6 @@ export const actions = {
     commit('setStatus', status)
     setTimeout(() => {
       commit('setStatus', false)
-    }, 3000)
+    }, 5000)
   }
 }

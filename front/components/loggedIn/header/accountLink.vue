@@ -74,8 +74,8 @@ export default {
     logoutUser () {
       this.logout()
         .then(() => {
-          this.showMessage({ message: 'ログアウトしました', type: 'success', status: true })
           this.$router.push('/')
+          this.showMessage({ message: 'ログアウトしました', type: 'success', status: true })
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

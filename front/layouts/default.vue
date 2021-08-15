@@ -7,6 +7,7 @@
       <logged-in-app-bar />
     </template>
     <v-main>
+      <flash />
       <nuxt />
     </v-main>
     <bef-login-footer />
@@ -16,14 +17,16 @@
 <script>
 import { mapGetters } from 'vuex'
 import befLoginFooter from '../components/beforeLogin/befLoginFooter.vue'
-import LoggedInAppBar from '../components/loggedIn/header/loggedInAppBar.vue'
+import loggedInAppBar from '../components/loggedIn/header/loggedInAppBar.vue'
 import welAppBar from '../components/welcome/welAppBar.vue'
+import flash from '../components/ui/flash.vue'
 
 export default {
   components: {
     befLoginFooter,
     welAppBar,
-    LoggedInAppBar
+    loggedInAppBar,
+    flash
   },
   computed: {
     ...mapGetters({

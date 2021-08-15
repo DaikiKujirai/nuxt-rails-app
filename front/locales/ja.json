@@ -15,6 +15,13 @@
     "account": {
       "settings": "アカウント設定",
       "password": "パスワード変更"
-    }
+    },
+    "users" : "会員一覧",
+    "posts" : "ホーム",
+    "search": "投稿を検索",
+    "notification": "通知",
+    "chat": "チャット",
+    "follow": "フォロー",
+    "follower": "フォロワー"
   }
 }

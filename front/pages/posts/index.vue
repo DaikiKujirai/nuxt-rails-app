@@ -21,7 +21,7 @@
               contain
             />
           </div>
-          {{ post }}
+          {{ post.user_id }}
           <div>
             <v-card-title
               class="card-content"
@@ -49,7 +49,7 @@
 </template>
 
 <script>
-// import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
 import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
 
 export default {
@@ -62,13 +62,13 @@ export default {
       src: 'https://picsum.photos/200/200'
     }
   },
-  computed () {
-    this.fetchContents()
-  },
   mounted () {
     this.fetchContents()
   },
   methods: {
+    ...mapActions({
+      showMessage: 'flash/showMessage'
+    }),
     async fetchContents () {
       const url = '/api/v1/posts'
       await this.$axios.get(url)

@@ -43,10 +43,10 @@ export default {
     userFormPassword
   },
   layout: 'beforeLogin',
-  middleware: [
-    'handle-login-route',
-    'disable-direct-access'
-  ],
+  // middleware: [
+  //   'handle-login-route',
+  //   'disable-direct-access'
+  // ],
   data () {
     return {
       isValid: false,
