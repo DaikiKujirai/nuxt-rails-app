@@ -72,7 +72,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      showMessage: 'flash/showMessage'
+      showMessage: 'flash/showMessage',
+      setPosts: 'post/setPosts'
     }),
     async newPost () {
       this.loading = true
@@ -83,6 +84,7 @@ export default {
           // eslint-disable-next-line no-console
           console.log('投稿しました', res)
           this.showMessage({ message: '投稿しました', type: 'primary', status: true })
+          this.setPosts()
           this.loading = false
           this.$router.push('/posts')
           this.dialog = false

@@ -1,13 +1,13 @@
 class Api::V1::PostsController < ApplicationController
   def index
-    @posts = Post.all
-    render json: @posts.as_json
+    posts = Post.all
+    render json: posts, each_serializer: PostSerializer, include: [:user]
   end
 
   def show
     post = Post.find(params[:id])
     unless Post.nil?
-      render json: post.as_json
+      render json: post, each_serializer: PostSerializer, include: [:user]
     else
       render json: { error_message: 'Not Found' }
     end
