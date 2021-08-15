@@ -8,6 +8,7 @@
         cols="6"
         offset="3"
       >
+        {{ posts }}
         <v-card
           v-for="post in posts"
           :key="post.id"
@@ -16,12 +17,12 @@
           <div class="d-flex">
             <v-img
               :src="src"
-              max-height="200"
-              max-width="200"
+              max-height="50"
+              max-width="50"
               contain
             />
+            {{ post.user.name }}
           </div>
-          {{ post.user_id }}
           <div>
             <v-card-title
               class="card-content"
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
 
 export default {
@@ -58,16 +59,25 @@ export default {
   },
   data () {
     return {
-      posts: [],
+      // posts: [],
       src: 'https://picsum.photos/200/200'
     }
   },
-  mounted () {
-    this.fetchContents()
+  computed: {
+    ...mapGetters({
+      posts: 'post/posts'
+    })
+  },
+  // created () {
+  //   this.
+  // },
+  created () {
+    this.setPosts()
   },
   methods: {
     ...mapActions({
-      showMessage: 'flash/showMessage'
+      showMessage: 'flash/showMessage',
+      setPosts: 'post/setPosts'
     }),
     async fetchContents () {
       const url = '/api/v1/posts'

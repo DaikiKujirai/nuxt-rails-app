@@ -1,8 +1,5 @@
 class PostSerializer < ActiveModel::Serializer
-  # attributes :id, :title, :content
-  # attribute :time do
-  #   unless object.time.nil?
-  #     object.time.strftime("%R")
-  #   end
-  # end
+  attributes :id, :user_id, :content, :created_at
+
+  belongs_to :user
 end
