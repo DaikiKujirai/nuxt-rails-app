@@ -11,11 +11,13 @@ export const getters = {
 export const mutations = {
   setPosts (state, payload) {
     state.data = payload
+    console.log('mutations')
   }
 }
 
 export const actions = {
   setPosts ({ commit, posts }) {
     commit('setPosts', posts)
+    console.log('actions')
   }
 }

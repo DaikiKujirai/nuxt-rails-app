@@ -8,6 +8,7 @@
     >
       新規投稿
     </v-btn>
+    {{ posts }}
     <v-dialog
       v-model="dialog"
       width="500"
@@ -67,7 +68,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: 'auth/user'
+      user: 'auth/user',
+      posts: 'post/posts'
     })
   },
   methods: {
@@ -75,23 +77,26 @@ export default {
       showMessage: 'flash/showMessage',
       setPosts: 'post/setPosts'
     }),
+    fetchContents () {
+      this.$axios.get('/api/v1/posts')
+        .then((res) => {
+          console.log(res)
+          this.setPosts(res.data)
+        })
+    },
     async newPost () {
       this.loading = true
       this.post.user_uid = this.user.uid
-      console.log(this.post.user_uid, this.user.uid)
       await this.$axios.$post('/api/v1/posts', this.post)
         .then((res) => {
-          // eslint-disable-next-line no-console
-          console.log('投稿しました', res)
           this.showMessage({ message: '投稿しました', type: 'primary', status: true })
-          this.setPosts()
+          console.log(res)
+          this.fetchContents()
           this.loading = false
           this.$router.push('/posts')
           this.dialog = false
         })
         .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.log('投稿エラー', err.response)
           this.showMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
           this.loading = false
         })

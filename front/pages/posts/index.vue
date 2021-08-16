@@ -8,7 +8,7 @@
         cols="6"
         offset="3"
       >
-        {{ posts }}
+        <!-- {{ posts }} -->
         <v-card
           v-for="post in posts"
           :key="post.id"
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
 
 export default {
@@ -59,20 +59,20 @@ export default {
   },
   data () {
     return {
-      // posts: [],
+      posts: [],
       src: 'https://picsum.photos/200/200'
     }
   },
   computed: {
-    ...mapGetters({
-      posts: 'post/posts'
-    })
+    // ...mapGetters({
+    //   posts: 'post/posts'
+    // }),
+    // posts () {
+    //   return this.$store.state.posts
+    // }
   },
-  // created () {
-  //   this.
-  // },
-  created () {
-    this.setPosts()
+  mounted () {
+    this.fetchContents()
   },
   methods: {
     ...mapActions({
