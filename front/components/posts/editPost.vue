@@ -4,7 +4,7 @@
       :color="color"
       text
       rounded
-      @click="dialog = true, setPost()"
+      @click="dialog = true, setPostContent()"
     >
       編集
       <v-icon>
@@ -53,7 +53,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import editPostFormContent from './editPostFormContent.vue'
 
 export default {
@@ -66,40 +66,40 @@ export default {
       isValid: false,
       loading: false,
       color: 'deep-purple lighten-2',
-      post: { content: '' }
+      post: {}
     }
   },
   computed: {
-    ...mapGetters({
-      currentUser: 'auth/data'
-    })
+    postContent () {
+      // return this.$store.state.post.content
+      return this.post.content
+    }
   },
   mounted () {
-    this.$nextTick(() => {
-      this.$nuxt.$loading.start()
-      setTimeout(() => this.$nuxt.$loading.finish(), 500)
-    })
+    this.setPostContent()
   },
   methods: {
     ...mapActions({
-      showMessage: 'flash/showMessage'
+      showMessage: 'flash/showMessage',
+      setPost: 'post/setPost'
     }),
-    async setPost () {
+    async setPostContent () {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.post.content = res.data.content
+          this.post = res.data
         })
         .catch((err) => {
-          console.error(err) // eslint-disable-line
+          // eslint-disable-next-line no-console
+          console.error(err)
         })
     },
-    updatePost () {
+    async updatePost () {
       this.loading = true
-      this.$axios.$patch(`/api/v1/posts/${this.$route.params.id}`, this.post)
+      await this.$axios.$patch(`/api/v1/posts/${this.$route.params.id}`, this.post)
         .then((res) => {
-          // eslint-disable-next-line no-console
-          console.log('更新しました', res)
+          this.setPost(res)
+          this.showMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
         })

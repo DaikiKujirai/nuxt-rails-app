@@ -1,29 +1,32 @@
 <template>
   <v-container
+    fluid
     class="mt-3"
   >
     <v-row>
       <sidebar />
       <v-col
         cols="6"
-        offset="2"
+        offset="3"
       >
         <v-card
-          align="center"
           class="pt-4"
         >
-          <v-img
-            :src="src"
-            max-height="500"
-            max-width="500"
-            contain
-          />
+          <div class="d-flex">
+            <v-img
+              :src="src"
+              max-height="90"
+              max-width="90"
+              style="border-radius: 50%;"
+              contain
+            />
+            <v-card-title>
+              {{ userName }}
+            </v-card-title>
+          </div>
           <v-card-title>
-            {{ postTitle }}
+            {{ gettersPost.content }}
           </v-card-title>
-          <v-card-text>
-            {{ postContent }}
-          </v-card-text>
           <v-card-actions>
             <v-btn
               :color="color"
@@ -54,6 +57,7 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
 import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
 import deletePost from '../../components/posts/deletePost.vue'
 import editPost from '../../components/posts/editPost.vue'
@@ -64,37 +68,37 @@ export default {
     deletePost,
     sidebar
   },
-  layout: 'loggedIn',
   data () {
     return {
       post: {},
+      user: {},
       src: 'https://picsum.photos/500/500',
       color: 'deep-purple lighten-2'
     }
   },
   computed: {
-    postTitle () {
-      // eslint-disable-next-line no-console
-      console.log('タイトル')
-      return this.post.title
-    },
-    postContent () {
-      // eslint-disable-next-line no-console
-      console.log('コンテント')
-      return this.post.content
+    ...mapGetters({
+      gettersPost: 'post/post'
+    }),
+    userName () {
+      return this.user.name
     }
   },
   mounted () {
     this.fetchContents()
   },
   methods: {
+    ...mapActions({
+      setPost: 'post/setPost'
+    }),
     fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`
       this.$axios.get(url)
         .then((res) => {
-          // eslint-disable-next-line
-          console.log('投稿詳細')
           this.post = res.data
+          this.user = res.data.user
+          this.setPost(res.data)
+          console.log(res.data)
         })
         .catch((err) => {
           console.error(err) // eslint-disable-line
