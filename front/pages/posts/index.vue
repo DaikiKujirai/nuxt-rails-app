@@ -8,7 +8,6 @@
         cols="6"
         offset="3"
       >
-        <!-- {{ posts }} -->
         <v-card
           v-for="post in posts"
           :key="post.id"
@@ -50,7 +49,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
 
 export default {
@@ -59,17 +58,14 @@ export default {
   },
   data () {
     return {
-      posts: [],
+      // posts: [],
       src: 'https://picsum.photos/200/200'
     }
   },
   computed: {
-    // ...mapGetters({
-    //   posts: 'post/posts'
-    // }),
-    // posts () {
-    //   return this.$store.state.posts
-    // }
+    ...mapGetters({
+      posts: 'post/posts'
+    })
   },
   mounted () {
     this.fetchContents()
@@ -83,12 +79,7 @@ export default {
       const url = '/api/v1/posts'
       await this.$axios.get(url)
         .then((res) => {
-          this.posts = res.data
-          return this.posts.sort((a, b) => {
-            if (a.id > b.id) { return -1 }
-            if (a.id < b.id) { return 1 }
-            return 0
-          })
+          this.setPosts(res.data)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

@@ -1,13 +1,13 @@
 class Api::V1::PostsController < ApplicationController
   def index
-    posts = Post.all
+    posts = Post.includes(:user).all.order(id: :desc)
     render json: posts, each_serializer: PostSerializer, include: [:user]
   end
 
   def show
     post = Post.find(params[:id])
     unless Post.nil?
-      render json: post, each_serializer: PostSerializer, include: [:user]
+      render json: post
     else
       render json: { error_message: 'Not Found' }
     end
@@ -26,7 +26,7 @@ class Api::V1::PostsController < ApplicationController
   def update
     post = Post.find(params[:id])
     if post.update(post_params)
-      render json: { success_message: '更新しました' }
+      render json: post
     else
       render json: post.errors.messages
     end
