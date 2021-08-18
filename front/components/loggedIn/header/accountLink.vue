@@ -69,13 +69,13 @@ export default {
   methods: {
     ...mapActions({
       logout: 'auth/logout',
-      showMessage: 'flash/showMessage'
+      flashMessage: 'flash/flashMessage'
     }),
     logoutUser () {
       this.logout()
         .then(() => {
           this.$router.push('/')
-          this.showMessage({ message: 'ログアウトしました', type: 'success', status: true })
+          this.flashMessage({ message: 'ログアウトしました', type: 'success', status: true })
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

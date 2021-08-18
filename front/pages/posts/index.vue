@@ -7,21 +7,28 @@
       <v-col
         cols="6"
         offset="3"
+        class="mt-3"
       >
         <v-card
           v-for="post in posts"
           :key="post.id"
           :to="`/posts/${post.id}`"
         >
-          <div class="d-flex">
-            <v-img
-              :src="src"
-              max-height="50"
-              max-width="50"
-              contain
-            />
-            {{ post.user.name }}
-          </div>
+          <v-row>
+            <v-col class="d-flex">
+              <v-img
+                :src="src"
+                max-height="50"
+                max-width="50"
+                contain
+                style="border-radius: 50%;"
+                class="ma-2"
+              />
+              <v-card-text>
+                {{ post.user.name }}
+              </v-card-text>
+            </v-col>
+          </v-row>
           <div>
             <v-card-title
               class="card-content"
@@ -72,7 +79,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      showMessage: 'flash/showMessage',
+      flashMessage: 'flash/flashMessage',
       setPosts: 'post/setPosts'
     }),
     async fetchContents () {

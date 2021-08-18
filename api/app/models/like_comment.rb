@@ -1,2 +1,0 @@
-class LikeComment < ApplicationRecord
-end

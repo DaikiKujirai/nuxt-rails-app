@@ -62,7 +62,7 @@ export default {
     ...mapActions({
       login: 'auth/login',
       loadData: 'auth/loadData',
-      showMessage: 'flash/showMessage'
+      flashMessage: 'flash/flashMessage'
     }),
     signup () {
       this.loading = true
@@ -80,7 +80,7 @@ export default {
               // eslint-disable-next-line no-console
               console.log('アカウント作成', res)
               this.login(res.user)
-              this.showMessage({ message: '登録に成功しました', type: 'success', status: true })
+              this.flashMessage({ message: '登録に成功しました', type: 'success', status: true })
               this.loading = false
               this.$router.push('/posts')
             })

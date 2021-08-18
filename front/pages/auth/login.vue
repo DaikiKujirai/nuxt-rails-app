@@ -60,14 +60,14 @@ export default {
   methods: {
     ...mapActions({
       login: 'auth/login',
-      showMessage: 'flash/showMessage'
+      flashMessage: 'flash/flashMessage'
     }),
     loginUser () {
       this.loading = true
       firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password)
         .then((res) => {
           this.login(res.user)
-          this.showMessage({ message: 'ログインしました', type: 'success', status: true })
+          this.flashMessage({ message: 'ログインしました', type: 'success', status: true })
           this.$router.push('/posts')
           this.loading = false
         })
@@ -75,7 +75,7 @@ export default {
           this.loading = false
           // eslint-disable-next-line no-console
           console.log(err)
-          this.showMessage({ message: 'メールアドレスまたはパスワードが正しくありません', type: 'error', status: true })
+          this.flashMessage({ message: 'メールアドレスまたはパスワードが正しくありません', type: 'error', status: true })
         })
     }
   }

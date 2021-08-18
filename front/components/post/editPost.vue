@@ -4,7 +4,7 @@
       :color="color"
       text
       rounded
-      @click="dialog = true, setPostContent()"
+      @click="dialog = true"
     >
       編集
       <v-icon>
@@ -53,13 +53,17 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import editPostFormContent from './editPostFormContent.vue'
 
 export default {
   components: {
     editPostFormContent
   },
+  // props: [
+  //   'userName',
+  //   'post'
+  // ],
   data () {
     return {
       dialog: false,
@@ -70,9 +74,11 @@ export default {
     }
   },
   computed: {
-    postContent () {
-      // return this.$store.state.post.content
-      return this.post.content
+    ...mapGetters({
+      gettersPost: 'post/post'
+    }),
+    params () {
+      return this.post
     }
   },
   mounted () {
@@ -80,12 +86,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      showMessage: 'flash/showMessage',
+      flashMessage: 'flash/flashMessage',
       setPost: 'post/setPost'
     }),
-    async setPostContent () {
+    setPostContent () {
       const url = `/api/v1/posts/${this.$route.params.id}`
-      await this.$axios.get(url)
+      this.$axios.get(url)
         .then((res) => {
           this.post = res.data
         })
@@ -99,14 +105,14 @@ export default {
       await this.$axios.$patch(`/api/v1/posts/${this.$route.params.id}`, this.post)
         .then((res) => {
           this.setPost(res)
-          this.showMessage({ message: '更新しました', type: 'primary', status: true })
+          this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.log(err.response)
-          this.showMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
+          this.flashMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
           this.loading = false
         })
     }
