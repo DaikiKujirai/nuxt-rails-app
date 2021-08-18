@@ -35,6 +35,7 @@ export const actions = {
 
   async logout ({ commit }) {
     await firebase.auth().signOut()
+    console.log(firebase.auth())
 
     commit('setUser', null)
     commit('setData', null)
@@ -47,12 +48,10 @@ export const actions = {
   async loadData ({ commit }, payload) {
     try {
       const data = await this.$axios.$get(`/api/v1/users?uid=${payload}`)
-      // eslint-disable-next-line no-console
-      console.log('ログイン', data)
       commit('setData', data)
-    } catch (e) {
+    } catch (err) {
       // eslint-disable-next-line no-console
-      console.log(e)
+      console.log(err)
     }
   }
 }

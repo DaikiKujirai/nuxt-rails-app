@@ -37,15 +37,7 @@
                 mdi-heart-outline
               </v-icon>
             </v-btn>
-            <v-btn
-              :color="color"
-              text
-            >
-              コメント
-              <v-icon>
-                mdi-chat-processing-outline
-              </v-icon>
-            </v-btn>
+            <new-comment-form />
             <v-spacer />
             <edit-post />
             <delete-post />
@@ -59,14 +51,16 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
-import deletePost from '../../components/posts/deletePost.vue'
-import editPost from '../../components/posts/editPost.vue'
+import newCommentForm from '../../components/comment/newComment.vue'
+import deletePost from '../../components/post/deletePost.vue'
+import editPost from '../../components/post/editPost.vue'
 
 export default {
   components: {
     editPost,
     deletePost,
-    sidebar
+    sidebar,
+    newCommentForm
   },
   data () {
     return {
@@ -89,7 +83,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      setPost: 'post/setPost'
+      setPost: 'post/setPost',
+      setUser: 'post/setUser'
     }),
     fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`
@@ -98,7 +93,7 @@ export default {
           this.post = res.data
           this.user = res.data.user
           this.setPost(res.data)
-          console.log(res.data)
+          this.setUser(res.data.user)
         })
         .catch((err) => {
           console.error(err) // eslint-disable-line

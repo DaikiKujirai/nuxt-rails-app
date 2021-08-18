@@ -36,7 +36,7 @@
 
 <script>
 import appLogo from '../../ui/appLogo.vue'
-import newPost from '../../posts/newPost.vue'
+import newPost from '../../post/newPost.vue'
 import appTitle from '../../ui/appTitle.vue'
 import Breadcrumbs from '../ui/breadcrumbs.vue'
 import accountLink from './accountLink.vue'

@@ -46,6 +46,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   data () {
     return {
@@ -58,12 +60,13 @@ export default {
     this.fetchContents()
   },
   methods: {
+    ...mapActions({
+      flashMessage: 'flash/flashMessage'
+    }),
     fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`
       this.$axios.get(url)
         .then((res) => {
-          // eslint-disable-next-line
-          console.log('投稿詳細')
           this.post = res.data
         })
         .catch((err) => {
@@ -79,8 +82,7 @@ export default {
     clickOK () {
       this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then((res) => {
-          // eslint-disable-next-line no-console
-          console.log('投稿を削除しました', res)
+          this.flashMessage({ message: '削除しました', type: 'primary', status: true })
           this.$router.push('/posts')
         })
         .catch((err) => {

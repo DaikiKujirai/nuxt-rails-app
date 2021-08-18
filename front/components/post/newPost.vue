@@ -72,7 +72,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      showMessage: 'flash/showMessage',
+      flashMessage: 'flash/flashMessage',
       setPosts: 'post/setPosts'
     }),
     fetchContents () {
@@ -86,14 +86,14 @@ export default {
       this.post.user_uid = this.user.uid
       await this.$axios.$post('/api/v1/posts', this.post)
         .then((res) => {
-          this.showMessage({ message: '投稿しました', type: 'primary', status: true })
+          this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
           this.fetchContents()
           this.loading = false
           this.$router.push('/posts')
           this.dialog = false
         })
         .catch((err) => {
-          this.showMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
+          this.flashMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
           this.loading = false
         })
     }

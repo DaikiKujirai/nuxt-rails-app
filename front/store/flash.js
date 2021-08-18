@@ -23,12 +23,12 @@ export const mutations = {
 }
 
 export const actions = {
-  showMessage ({ commit }, { message, type, status }) {
+  flashMessage ({ commit }, { message, type, status }) {
     commit('setMessage', message)
     commit('setType', type)
     commit('setStatus', status)
     setTimeout(() => {
       commit('setStatus', false)
-    }, 5000)
+    }, 3000)
   }
 }
