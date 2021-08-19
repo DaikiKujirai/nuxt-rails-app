@@ -30,7 +30,7 @@ export default {
     },
     setContent: {
       get () { return this.content },
-      set (newVal) { return this.$emit('comment:content', newVal) }
+      set (newVal) { return this.$emit('update:content', newVal) }
     }
   }
 }

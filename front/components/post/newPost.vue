@@ -17,6 +17,7 @@
           <v-card-title>
             新規投稿
           </v-card-title>
+          {{ post }}
           <v-spacer />
           <v-btn
             icon
@@ -67,7 +68,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      user: 'auth/user'
+      currentUser: 'auth/user'
     })
   },
   methods: {
@@ -83,7 +84,7 @@ export default {
     },
     async newPost () {
       this.loading = true
-      this.post.user_uid = this.user.uid
+      this.post.user_uid = this.currentUser.uid
       await this.$axios.$post('/api/v1/posts', this.post)
         .then((res) => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })

@@ -1,67 +1,50 @@
 <template>
-  <v-container
-    fluid
-  >
-    <v-row>
-      <sidebar />
-      <v-col
-        cols="6"
-        offset="3"
-        class="mt-3"
-      >
-        <v-card
-          v-for="post in posts"
-          :key="post.id"
-          :to="`/posts/${post.id}`"
+  <layout-main #layout-main> <!--eslint-disable-line-->
+    <v-card
+      v-for="post in posts"
+      :key="post.id"
+      :to="`/posts/${post.id}`"
+    >
+      <v-row>
+        <v-col class="d-flex">
+          <v-img
+            :src="src"
+            max-height="70"
+            max-width="70"
+            contain
+            style="border-radius: 50%;"
+          />
+          <v-card-text>
+            {{ post.user.name }}
+          </v-card-text>
+        </v-col>
+      </v-row>
+      <div>
+        <v-card-title
+          class="card-content"
         >
-          <v-row>
-            <v-col class="d-flex">
-              <v-img
-                :src="src"
-                max-height="50"
-                max-width="50"
-                contain
-                style="border-radius: 50%;"
-                class="ma-2"
-              />
-              <v-card-text>
-                {{ post.user.name }}
-              </v-card-text>
-            </v-col>
-          </v-row>
-          <div>
-            <v-card-title
-              class="card-content"
-            >
-              {{ post.content }}
-            </v-card-title>
-            <v-card-text
-              class="text-right"
-            >
-              <v-icon size="16">
-                mdi-update
-              </v-icon>
-              {{ $my.format(post.created_at) }}
-            </v-card-text>
-          </div>
-        </v-card>
-      </v-col>
-      <v-col cols="3">
-        <v-card>
-          サイドバー
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+          {{ post.content }}
+        </v-card-title>
+        <v-card-text
+          class="text-right"
+        >
+          <v-icon size="16">
+            mdi-update
+          </v-icon>
+          {{ $my.format(post.created_at) }}
+        </v-card-text>
+      </div>
+    </v-card>
+  </layout-main>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
+import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 
 export default {
   components: {
-    sidebar
+    layoutMain
   },
   data () {
     return {

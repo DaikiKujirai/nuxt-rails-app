@@ -1,12 +1,12 @@
 export const state = () => ({
-  posts: [],
+  comments: [],
   post: {},
   user: {}
 })
 
 export const getters = {
-  posts (state) {
-    return state.posts
+  comments (state) {
+    return state.comments
   },
   post (state) {
     return state.post
@@ -17,25 +17,29 @@ export const getters = {
 }
 
 export const mutations = {
-  setPosts (state, payload) {
-    state.posts = payload
+  setComments (state, payload) {
+    state.comments = payload
   },
   setPost (state, payload) {
     state.post = payload
   },
   setUser (state, payload) {
     state.user = payload
+    // eslint-disable-next-line no-console
+    console.log('mutations')
   }
 }
 
 export const actions = {
-  setPosts ({ commit }, posts) {
-    commit('setPosts', posts)
+  setComments ({ commit }, comments) {
+    commit('setComments', comments)
   },
   setPost ({ commit }, post) {
     commit('setPost', post)
   },
   setUser ({ commit }, user) {
     commit('setUser', user)
+    // eslint-disable-next-line no-console
+    console.log('actions')
   }
 }

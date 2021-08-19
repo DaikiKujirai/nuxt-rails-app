@@ -2,11 +2,12 @@ require "validator/email_validator"
 
 class User < ApplicationRecord
 
-  has_many :posts
+  has_many :posts   , dependent: :destroy
+  has_many :comments, dependent: :destroy
 
   before_validation :downcase_email
 
-  validates :name,  presence: true,
+  validates :name , presence: true,
                     length: { maximum: 30, allow_blank: true }
   validates :email, presence: true,
                     email: { allow_blank: true }
