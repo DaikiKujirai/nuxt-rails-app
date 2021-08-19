@@ -4,7 +4,7 @@
       :color="color"
       text
       rounded
-      @click="dialog = true"
+      @click="dialog = true, setPostId()"
     >
       コメント
       <v-icon>
@@ -51,6 +51,7 @@
             <v-spacer />
             <v-card-text>
               返信先：{{ userName }} さん
+              {{ comment }}
             </v-card-text>
           </div>
         </div>
@@ -60,7 +61,7 @@
             v-model="isValid"
           >
             <new-comment-form
-              :comment.sync="comment.comment"
+              :content.sync="comment.content"
             />
             <v-btn
               :disabled="!isValid || loading"
@@ -93,7 +94,7 @@ export default {
       loading: false,
       src: 'https://picsum.photos/500/500',
       color: 'deep-purple lighten-2',
-      comment: {},
+      comment: { content: '' },
       post: {},
       user: {}
     }
@@ -101,19 +102,33 @@ export default {
   computed: {
     ...mapGetters({
       gettersPost: 'post/post',
-      gettersUser: 'post/user'
+      userPost: 'post/user',
+      currentUser: 'auth/user'
     }),
     userName () {
-      return this.gettersUser.name
+      return this.userPost.name
     }
   },
   methods: {
     ...mapActions({
-      setUser: 'post/setUser'
+      setUser: 'post/setUser',
+      flashMessage: 'flash/flashMessage'
     }),
     async submitComment () {
       this.loading = true
+      this.comment.user_uid = this.currentUser.uid
       await this.$axios.$post('/api/v1/comments', this.comment)
+        .then((res) => {
+          this.loading = false
+          this.dialog = false
+          this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
+        })
+        .catch(() => {
+          this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
+        })
+    },
+    setPostId () {
+      this.comment.post_id = this.gettersPost.id
     }
   }
 }

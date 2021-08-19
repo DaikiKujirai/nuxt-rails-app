@@ -38,7 +38,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import befLoginFormCard from '../../components/beforeLogin/befLoginFormCard.vue'
+import befLoginFormCard from '../../components/layout/befLogin/befLoginFormCard.vue'
 import userFormEmail from '../../components/user/userFormEmail.vue'
 import userFormPassword from '../../components/user/userFormPassword.vue'
 import firebase from '~/plugins/firebase'
