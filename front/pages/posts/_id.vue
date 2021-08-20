@@ -29,12 +29,15 @@
             mdi-heart-outline
           </v-icon>
         </v-btn>
-        <new-comment-form />
         <v-spacer />
-        <edit-post />
-        <delete-post />
+        <new-comment-form
+          :comment="{}"
+        />
+        <v-spacer />
+        <btn-edit-post />
+        <v-spacer />
+        <btn-delete-post />
       </v-card-actions>
-      <v-divider />
       <post-comment />
     </v-card>
   </layout-main>
@@ -43,16 +46,16 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import newCommentForm from '../../components/comment/newComment.vue'
-import deletePost from '../../components/post/deletePost.vue'
-import editPost from '../../components/post/editPost.vue'
+import newCommentForm from '../../components/btn/btnNewComment.vue'
+import btnDeletePost from '../../components/btn/btnDeletePost.vue'
+import btnEditPost from '../../components/btn/btnEditPost.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import postComment from '../../components/comment/postComment.vue'
 
 export default {
   components: {
-    editPost,
-    deletePost,
+    btnDeletePost,
+    btnEditPost,
     newCommentForm,
     layoutMain,
     postComment
@@ -67,36 +70,19 @@ export default {
   },
   computed: {
     ...mapGetters({
-      gettersPost: 'post/post'
+      gettersPost: 'post/post',
+      postUser: 'post/user'
     }),
     userName () {
-      return this.user.name
+      return this.postUser.name
     }
-  },
-  mounted () {
-    this.fetchContents()
   },
   methods: {
     ...mapActions({
       setPost: 'post/setPost',
       setUser: 'post/setUser',
       setComments: 'comment/setComments'
-    }),
-    fetchContents () {
-      const url = `/api/v1/posts/${this.$route.params.id}`
-      this.$axios.get(url)
-        .then((res) => {
-          this.post = res.data
-          this.user = res.data.user
-          this.setPost(res.data)
-          this.setUser(res.data.user)
-          this.setComments(res.data.comments)
-          console.log(res.data.comments)
-        })
-        .catch((err) => {
-          console.error(err) // eslint-disable-line
-        })
-    }
+    })
   }
 }
 </script>

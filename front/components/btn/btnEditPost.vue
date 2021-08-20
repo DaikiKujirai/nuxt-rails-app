@@ -54,7 +54,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import editPostFormContent from './editPostFormContent.vue'
+import editPostFormContent from '../post/editPostFormContent.vue'
 
 export default {
   components: {
@@ -76,10 +76,10 @@ export default {
   computed: {
     ...mapGetters({
       gettersPost: 'post/post'
-    }),
-    params () {
-      return this.post
-    }
+    })
+    // params () {
+    //   return this.post
+    // }
   },
   mounted () {
     this.setPostContent()
