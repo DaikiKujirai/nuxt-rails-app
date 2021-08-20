@@ -3,7 +3,8 @@
     <v-card
       v-for="post in posts"
       :key="post.id"
-      :to="`/posts/${post.id}`"
+      class="mt-3"
+      @click="toShow(post.id)"
     >
       <v-row>
         <v-col class="d-flex">
@@ -48,13 +49,13 @@ export default {
   },
   data () {
     return {
-      // posts: [],
       src: 'https://picsum.photos/200/200'
     }
   },
   computed: {
     ...mapGetters({
-      posts: 'post/posts'
+      posts: 'post/posts',
+      gettersUser: 'post/user'
     })
   },
   mounted () {
@@ -63,7 +64,10 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPosts: 'post/setPosts'
+      setPosts: 'post/setPosts',
+      setPost: 'post/setPost',
+      setPostUser: 'post/setUser',
+      setComments: 'comment/setComments'
     }),
     async fetchContents () {
       const url = '/api/v1/posts'
@@ -75,14 +79,23 @@ export default {
           // eslint-disable-next-line no-console
           console.error(err)
         })
+    },
+    async toShow (id) {
+      const url = `/api/v1/posts/${id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setPost(res.data)
+          this.setPostUser(res.data.user)
+          this.setComments(res.data.comments)
+          this.$router.push(`posts/${res.data.id}`)
+        })
+        .catch((err) => {
+          console.error(err)
+        })
     }
   }
 }
 </script>
 
 <style scope>
-  /* .card-content {
-    height: 180px;
-    min-width: 490px;
-  } */
 </style>

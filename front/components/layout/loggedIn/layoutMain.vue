@@ -7,7 +7,7 @@
       <v-col
         cols="6"
         offset="3"
-        class="mt-2"
+        class="mt-3"
       >
         <slot name="layout-main" />
       </v-col>

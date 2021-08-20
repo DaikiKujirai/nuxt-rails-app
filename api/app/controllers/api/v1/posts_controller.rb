@@ -5,9 +5,9 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    post = Post.find(params[:id])
+    post = Post.includes(:user).find(params[:id])
     unless Post.nil?
-      render json: post
+      render json: post, include: [:user, { comments: [:user] }]
     else
       render json: { error_message: 'Not Found' }
     end

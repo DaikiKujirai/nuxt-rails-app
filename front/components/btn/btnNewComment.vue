@@ -4,7 +4,7 @@
       :color="color"
       text
       rounded
-      @click="dialog = true, setPostId()"
+      @click="dialog = true, setPostIdAndCommentId(comment)"
     >
       コメント
       <v-icon>
@@ -51,7 +51,6 @@
             <v-spacer />
             <v-card-text>
               返信先：{{ userName }} さん
-              {{ comment }}
             </v-card-text>
           </div>
         </div>
@@ -61,7 +60,7 @@
             v-model="isValid"
           >
             <new-comment-form
-              :content.sync="comment.content"
+              :content.sync="newComment.content"
             />
             <v-btn
               :disabled="!isValid || loading"
@@ -81,11 +80,17 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import newCommentForm from './newCommentForm.vue'
+import newCommentForm from '../comment/newCommentForm.vue'
 
 export default {
   components: {
     newCommentForm
+  },
+  props: {
+    comment: {
+      type: Object,
+      required: true
+    }
   },
   data () {
     return {
@@ -94,7 +99,7 @@ export default {
       loading: false,
       src: 'https://picsum.photos/500/500',
       color: 'deep-purple lighten-2',
-      comment: { content: '' },
+      newComment: { content: '' },
       post: {},
       user: {}
     }
@@ -116,8 +121,8 @@ export default {
     }),
     async submitComment () {
       this.loading = true
-      this.comment.user_uid = this.currentUser.uid
-      await this.$axios.$post('/api/v1/comments', this.comment)
+      this.newComment.user_uid = this.currentUser.uid
+      await this.$axios.$post('/api/v1/comments', this.newComment)
         .then((res) => {
           this.loading = false
           this.dialog = false
@@ -127,8 +132,9 @@ export default {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    setPostId () {
-      this.comment.post_id = this.gettersPost.id
+    setPostIdAndCommentId (value) {
+      this.newComment.post_id = this.gettersPost.id
+      this.newComment.comment_id = value.id
     }
   }
 }
