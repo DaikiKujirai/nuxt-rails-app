@@ -21,7 +21,7 @@
       </v-card-title>
       <v-card-actions>
         <v-btn
-          :color="color"
+          :color="btnColor"
           text
         >
           いいね
@@ -30,8 +30,9 @@
           </v-icon>
         </v-btn>
         <v-spacer />
-        <new-comment-form
-          :comment="{}"
+        <btn-new-comment
+          :is-show-comment-count="false"
+          :post="post"
         />
         <v-spacer />
         <btn-edit-post />
@@ -46,7 +47,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 
-import newCommentForm from '../../components/btn/btnNewComment.vue'
+import btnNewComment from '../../components/btn/btnNewComment.vue'
 import btnDeletePost from '../../components/btn/btnDeletePost.vue'
 import btnEditPost from '../../components/btn/btnEditPost.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
@@ -56,7 +57,7 @@ export default {
   components: {
     btnDeletePost,
     btnEditPost,
-    newCommentForm,
+    btnNewComment,
     layoutMain,
     postComment
   },
@@ -64,18 +65,21 @@ export default {
     return {
       post: {},
       user: {},
-      src: 'https://picsum.photos/500/500',
-      color: 'deep-purple lighten-2'
+      src: 'https://picsum.photos/200/200'
     }
   },
   computed: {
     ...mapGetters({
       gettersPost: 'post/post',
-      postUser: 'post/user'
+      postUser: 'post/user',
+      btnColor: 'btn/color'
     }),
     userName () {
       return this.postUser.name
     }
+  },
+  created () {
+    this.post = this.gettersPost
   },
   methods: {
     ...mapActions({

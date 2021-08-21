@@ -18,6 +18,14 @@
           <v-card-text>
             {{ post.user.name }}
           </v-card-text>
+          <v-card-text
+            class="text-right"
+          >
+            <v-icon size="16">
+              mdi-update
+            </v-icon>
+            {{ $my.format(post.created_at) }}
+          </v-card-text>
         </v-col>
       </v-row>
       <div>
@@ -26,26 +34,40 @@
         >
           {{ post.content }}
         </v-card-title>
-        <v-card-text
-          class="text-right"
-        >
-          <v-icon size="16">
-            mdi-update
-          </v-icon>
-          {{ $my.format(post.created_at) }}
-        </v-card-text>
       </div>
+      <v-card-actions>
+        <v-btn
+          :color="btnColor"
+          text
+        >
+          いいね
+          <v-icon>
+            mdi-heart-outline
+          </v-icon>
+        </v-btn>
+        <v-spacer />
+        <btn-new-comment
+          :is-show-comment-count="true"
+          :post="post"
+        />
+        <v-spacer />
+        <btn-edit-post />
+        <v-spacer />
+        <btn-delete-post />
+      </v-card-actions>
     </v-card>
   </layout-main>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import btnNewComment from '../../components/btn/btnNewComment.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 
 export default {
   components: {
-    layoutMain
+    layoutMain,
+    btnNewComment
   },
   data () {
     return {
@@ -55,7 +77,8 @@ export default {
   computed: {
     ...mapGetters({
       posts: 'post/posts',
-      gettersUser: 'post/user'
+      gettersUser: 'post/user',
+      btnColor: 'btn/color'
     })
   },
   mounted () {
@@ -86,8 +109,9 @@ export default {
         .then((res) => {
           this.setPost(res.data)
           this.setPostUser(res.data.user)
-          this.setComments(res.data.comments)
+          // this.setComments(res.data.comments)
           this.$router.push(`posts/${res.data.id}`)
+          console.log('post', res.data)
         })
         .catch((err) => {
           console.error(err)

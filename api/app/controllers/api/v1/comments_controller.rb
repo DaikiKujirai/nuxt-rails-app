@@ -1,10 +1,15 @@
 class Api::V1::CommentsController < ApplicationController
 
+  def show
+    comment = Comment.where(comment_id: params[:id])
+    render json: comment
+  end
+
   def create
     comment = Comment.new(comment_params)
     comment.user_id = User.find_by(uid: params[:user_uid]).id
     if comment.save
-      render json: { success_message: '保存しました', }
+      render json: comment
     else
       render json: comment.errors.messages
     end

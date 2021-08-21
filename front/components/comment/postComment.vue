@@ -1,9 +1,13 @@
 <template>
   <div>
     <template
-      v-for="comment in comments"
+      v-for="(comment, i) in comments"
     >
-      <v-col :key="comment.id">
+      <v-col
+        :key="comment.id"
+        style="cursor: pointer;"
+        @click="toShow(comment)"
+      >
         <v-divider />
         <v-col class="d-flex">
           <v-img
@@ -22,7 +26,7 @@
         </v-card-text>
         <v-card-actions>
           <v-btn
-            :color="color"
+            :color="btnColor"
             text
           >
             いいね
@@ -31,8 +35,9 @@
             </v-icon>
           </v-btn>
           <v-spacer />
-          <btn-new-comment
+          <btn-comment-comment
             :comment="comment"
+            :comment-index="i"
           />
           <v-spacer />
           <btnEdit-post />
@@ -45,27 +50,47 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import btnEditPost from '../btn/btnEditPost.vue'
 import btnDeletePost from '../btn/btnDeletePost.vue'
-import btnNewComment from '../btn/btnNewComment.vue'
+import btnCommentComment from '../btn/btnCommentComment.vue'
 
 export default {
   components: {
     btnEditPost,
     btnDeletePost,
-    btnNewComment
+    btnCommentComment
   },
   data () {
     return {
-      src: 'https://picsum.photos/500/500',
-      color: 'deep-purple lighten-2'
+      src: 'https://picsum.photos/500/500'
     }
   },
   computed: {
     ...mapGetters({
-      comments: 'comment/comments'
-    })
+      // comments: 'comment/comments'
+      post: 'post/post',
+      btnColor: 'btn/color'
+    }),
+    comments () {
+      return this.post.comments
+    }
+  },
+  methods: {
+    ...mapActions({
+      setComments: 'comment/setComments',
+      setComment: 'comment/setComment'
+    }),
+    async toShow (comment) {
+      this.setComment(comment)
+      const url = `api/v1/comments/${comment.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setComments(res.data)
+          console.log(comment.id)
+          this.$router.push(`comments/${comment.id}`)
+        })
+    }
   }
 }
 </script>

@@ -17,7 +17,6 @@
           <v-card-title>
             新規投稿
           </v-card-title>
-          {{ post }}
           <v-spacer />
           <v-btn
             icon
