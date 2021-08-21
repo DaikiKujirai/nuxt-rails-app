@@ -4,15 +4,14 @@
       :color="btnColor"
       text
       rounded
-      @click.prevent.stop="dialog = true, setPostId()"
+      @click.prevent.stop="dialog = true, setPostIdAndCommentId(comment)"
     >
       <v-icon>
         mdi-chat-processing-outline
       </v-icon>
-      &nbsp;
-      <template v-if="isShowCommentCount && commentsCount !== 0">
-        <!-- {{ commentsCount }} -->
-        {{ post.comments.length }}
+      <template v-if="commentsCommentsCount !== 0">
+        <!-- &nbsp;
+        {{ commentsCommentsCount }} -->
       </template>
     </v-btn>
     <v-dialog
@@ -39,7 +38,7 @@
             class="ml-2"
           />
           <v-card-title>
-            {{ post.user.name }}
+            <!-- {{ userPost.name }} -->
           </v-card-title>
         </div>
         <div class="d-flex">
@@ -50,11 +49,11 @@
           />
           <div>
             <v-card-subtitle>
-              {{ post.content }}
+              <!-- {{ gettersPost.content }} -->
             </v-card-subtitle>
             <v-spacer />
             <v-card-text>
-              返信先：{{ post.user.name }} さん
+              <!-- 返信先：{{ userPost.name }} さん -->
             </v-card-text>
           </div>
         </div>
@@ -91,14 +90,18 @@ export default {
     newCommentForm
   },
   props: {
-    isShowCommentCount: {
-      type: Boolean,
-      default: true
-    },
-    post: {
+    comment: {
       type: Object,
       required: true
+    },
+    commentIndex: {
+      type: Number,
+      default: 0
     }
+    // post: {
+    //   type: Object,
+    //   required: true
+    // }
   },
   data () {
     return {
@@ -107,7 +110,8 @@ export default {
       loading: false,
       newComment: { content: '' },
       user: {},
-      src: 'https://picsum.photos/200/200'
+      src: 'https://picsum.photos/200/200',
+      commentsCommentsCount: 0
     }
   },
   computed: {
@@ -118,10 +122,10 @@ export default {
       currentUser: 'auth/user',
       comments: 'comment/comments',
       btnColor: 'btn/color'
-    }),
-    commentsCount () {
-      return this.gettersPost.comments.length
-    }
+    })
+  },
+  created () {
+    this.searchCommentsCount(this.gettersPost.comments[this.commentIndex].id)
   },
   methods: {
     ...mapActions({
@@ -150,8 +154,21 @@ export default {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    setPostId () {
-      this.newComment.post_id = this.post.id
+    setPostIdAndCommentId (comment) {
+      this.newComment.post_id = this.gettersPost.id
+      this.newComment.comment_id = comment.id
+      console.log(this.newComment)
+    },
+    async searchCommentsCount (id) {
+      const url = `api/v1/comments/${id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          console.log(res.data.length)
+          this.commentsCommentsCount = res.data.length
+        })
+        .catch((err) => {
+          console.error(err)
+        })
     }
   }
 }

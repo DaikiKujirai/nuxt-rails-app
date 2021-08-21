@@ -82,7 +82,7 @@ export default {
     // }
   },
   mounted () {
-    this.setPostContent()
+    // this.setPostContent()
   },
   methods: {
     ...mapActions({

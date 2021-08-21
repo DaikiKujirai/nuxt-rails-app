@@ -1,6 +1,6 @@
 class Api::V1::PostsController < ApplicationController
   def index
-    posts = Post.includes(:user, :comments).all.order(id: :desc)
+    posts = Post.includes(:user).all.order(id: :desc)
     render json: posts, each_serializer: PostSerializer
   end
 

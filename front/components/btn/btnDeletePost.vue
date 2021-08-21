@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn
-      :color="color"
+      :color="btnColor"
       text
       rounded
       @click="openDialog"
@@ -46,18 +46,22 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data () {
     return {
       post: {},
-      dialog: false,
-      color: 'deep-purple lighten-2'
+      dialog: false
     }
   },
+  computed: {
+    ...mapGetters({
+      btnColor: 'btn/color'
+    })
+  },
   mounted () {
-    this.fetchContents()
+    // this.fetchContents()
   },
   methods: {
     ...mapActions({
@@ -81,7 +85,7 @@ export default {
     },
     clickOK () {
       this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
-        .then((res) => {
+        .then(() => {
           this.flashMessage({ message: '削除しました', type: 'primary', status: true })
           this.$router.push('/posts')
         })
