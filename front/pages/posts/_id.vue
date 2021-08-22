@@ -12,12 +12,12 @@
             class="ml-3"
           />
           <v-card-title>
-            {{ userName }}
+            {{ post.user.name }}
           </v-card-title>
         </v-col>
       </v-row>
       <v-card-title>
-        {{ gettersPost.content }}
+        {{ post.content }}
       </v-card-title>
       <v-card-actions>
         <v-btn
@@ -30,8 +30,7 @@
           </v-icon>
         </v-btn>
         <v-spacer />
-        <btn-new-comment
-          :is-show-comment-count="false"
+        <btn-show-post-comment
           :post="post"
         />
         <v-spacer />
@@ -39,53 +38,38 @@
         <v-spacer />
         <btn-delete-post />
       </v-card-actions>
-      <post-comment />
+      <post-comment
+        :post="post"
+      />
     </v-card>
   </layout-main>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-
-import btnNewComment from '../../components/btn/btnNewComment.vue'
+import { mapGetters } from 'vuex'
 import btnDeletePost from '../../components/btn/btnDeletePost.vue'
 import btnEditPost from '../../components/btn/btnEditPost.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import postComment from '../../components/comment/postComment.vue'
+import btnShowPostComment from '../../components/btn/btnShowPostComment.vue'
 
 export default {
   components: {
     btnDeletePost,
     btnEditPost,
-    btnNewComment,
     layoutMain,
-    postComment
+    postComment,
+    btnShowPostComment
   },
   data () {
     return {
-      post: {},
-      user: {},
       src: 'https://picsum.photos/200/200'
     }
   },
   computed: {
     ...mapGetters({
-      gettersPost: 'post/post',
-      postUser: 'post/user',
+      post: 'post/post',
       btnColor: 'btn/color'
-    }),
-    userName () {
-      return this.postUser.name
-    }
-  },
-  created () {
-    this.post = this.gettersPost
-  },
-  methods: {
-    ...mapActions({
-      setPost: 'post/setPost',
-      setUser: 'post/setUser',
-      setComments: 'comment/setComments'
     })
   }
 }

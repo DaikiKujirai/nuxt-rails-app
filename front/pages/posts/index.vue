@@ -47,7 +47,6 @@
         </v-btn>
         <v-spacer />
         <btn-new-comment
-          :is-show-comment-count="true"
           :post="post"
         />
         <v-spacer />
@@ -71,7 +70,8 @@ export default {
   },
   data () {
     return {
-      src: 'https://picsum.photos/200/200'
+      src: 'https://picsum.photos/200/200',
+      isIndex: true
     }
   },
   computed: {
@@ -108,10 +108,7 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.setPost(res.data)
-          this.setPostUser(res.data.user)
-          // this.setComments(res.data.comments)
           this.$router.push(`posts/${res.data.id}`)
-          console.log('post', res.data)
         })
         .catch((err) => {
           console.error(err)

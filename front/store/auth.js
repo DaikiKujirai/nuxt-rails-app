@@ -33,14 +33,6 @@ export const actions = {
     await dispatch('loadData', userInfo.uid)
   },
 
-  async logout ({ commit }) {
-    await firebase.auth().signOut()
-    console.log(firebase.auth())
-
-    commit('setUser', null)
-    commit('setData', null)
-  },
-
   setUser ({ commit }, user) {
     commit('setUser', user)
   },
@@ -53,5 +45,13 @@ export const actions = {
       // eslint-disable-next-line no-console
       console.log(err)
     }
+  },
+
+  async logout ({ commit }) {
+    await firebase.auth().signOut()
+      .then(() => {
+        commit('setUser', null)
+        commit('setData', null)
+      })
   }
 }

@@ -50,7 +50,6 @@ export default {
     'nuxt-i18n',
     '@nuxtjs/dotenv',
     [
-
       '@nuxtjs/firebase',
       {
         config: {
