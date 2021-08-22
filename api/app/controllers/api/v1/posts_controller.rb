@@ -1,11 +1,11 @@
 class Api::V1::PostsController < ApplicationController
   def index
-    posts = Post.includes(:user).all.order(id: :desc)
+    posts = Post.all.includes(:user).order(id: :desc)
     render json: posts, each_serializer: PostSerializer
   end
 
   def show
-    post = Post.includes(:user).find(params[:id])
+    post = Post.includes([:user]).find(params[:id])
     unless Post.nil?
       render json: post, include: [:user, { comments: [:user] }]
     else
