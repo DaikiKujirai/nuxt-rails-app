@@ -1,5 +1,5 @@
 export const state = () => ({
-  commentsComments: [],
+  commentComments: [],
   comments: [],
   comment: {},
   post: {},
@@ -7,8 +7,8 @@ export const state = () => ({
 })
 
 export const getters = {
-  commentsComments (state) {
-    return state.commentsComments
+  commentComments (state) {
+    return state.commentComments
   },
   comments (state) {
     return state.comments
@@ -25,8 +25,8 @@ export const getters = {
 }
 
 export const mutations = {
-  setCommentsComments (state, payload) {
-    state.commentsComments = payload
+  setCommentComments (state, payload) {
+    state.commentComments = payload
   },
   setComments (state, payload) {
     state.comments = payload
@@ -43,8 +43,8 @@ export const mutations = {
 }
 
 export const actions = {
-  setCommentsComments ({ commit }, commentsComments) {
-    commit('setCommentsComments', commentsComments)
+  setCommentComments ({ commit }, commentComments) {
+    commit('setCommentComments', commentComments)
   },
   setComments ({ commit }, comments) {
     commit('setComments', comments)

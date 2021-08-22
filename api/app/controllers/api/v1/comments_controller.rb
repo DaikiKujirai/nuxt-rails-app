@@ -1,7 +1,7 @@
 class Api::V1::CommentsController < ApplicationController
 
   def show
-    comment = Comment.where(comment_id: params[:id])
+    comment = Comment.find(params[:id])
     render json: comment
   end
 
@@ -13,6 +13,11 @@ class Api::V1::CommentsController < ApplicationController
     else
       render json: comment.errors.messages
     end
+  end
+
+  def search_comments
+    comment = Comment.where(comment_id: params[:id]).order(id: :desc)
+    render json: comment
   end
 
   private
