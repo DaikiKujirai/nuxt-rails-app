@@ -1,7 +1,7 @@
 <template>
   <div>
     <template
-      v-for="(comment, i) in post.comments"
+      v-for="(comment, i) in comments"
     >
       <v-col
         :key="comment.id"
@@ -35,7 +35,7 @@
             </v-icon>
           </v-btn>
           <v-spacer />
-          <btn-new-comment-comment
+          <btn-last-comment
             :comment="comment"
             :comment-index="i"
           />
@@ -53,17 +53,17 @@
 import { mapGetters, mapActions } from 'vuex'
 import btnEditPost from '../btn/btnEditPost.vue'
 import btnDeletePost from '../btn/btnDeletePost.vue'
-import btnNewCommentComment from '../btn/btnNewCommentComment.vue'
+import btnLastComment from '../btn/btnLastComment.vue'
 
 export default {
   components: {
     btnEditPost,
     btnDeletePost,
-    btnNewCommentComment
+    btnLastComment
   },
   props: {
-    post: {
-      type: Object,
+    comments: {
+      type: Array,
       required: true
     }
   },
@@ -74,14 +74,13 @@ export default {
   },
   computed: {
     ...mapGetters({
-      comments: 'comment/comments',
       btnColor: 'btn/color'
     })
   },
   methods: {
     ...mapActions({
-      setComment: 'comment/setComment',
-      setComments: 'comment/setComments'
+      setComments: 'comment/setComments',
+      setComment: 'comment/setComment'
     }),
     async toShow (comment) {
       const url = `api/v1/comments/${comment.id}`

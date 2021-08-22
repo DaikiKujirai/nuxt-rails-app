@@ -51,7 +51,7 @@ import btnDeletePost from '../../components/btn/btnDeletePost.vue'
 import btnEditPost from '../../components/btn/btnEditPost.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import postComment from '../../components/comment/postComment.vue'
-import btnShowPostComment from '../../components/btn/btnShowPostComment.vue'
+import btnShowPostComment from '../../components/btn/btnNewPostComment.vue'
 
 export default {
   components: {

@@ -77,7 +77,6 @@ export default {
   computed: {
     ...mapGetters({
       posts: 'post/posts',
-      gettersUser: 'post/user',
       btnColor: 'btn/color'
     })
   },
@@ -88,9 +87,7 @@ export default {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setPosts: 'post/setPosts',
-      setPost: 'post/setPost',
-      setPostUser: 'post/setUser',
-      setComments: 'comment/setComments'
+      setPost: 'post/setPost'
     }),
     async fetchContents () {
       const url = '/api/v1/posts'
@@ -111,6 +108,7 @@ export default {
           this.$router.push(`posts/${res.data.id}`)
         })
         .catch((err) => {
+          // eslint-disable-next-line no-console
           console.error(err)
         })
     }

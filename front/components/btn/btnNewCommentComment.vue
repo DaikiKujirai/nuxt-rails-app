@@ -9,7 +9,7 @@
       <v-icon>
         mdi-chat-processing-outline
       </v-icon>
-      <template v-if="commentsCommentsCount !== 0">
+      <template v-if="commentsCommentsCount">
         &nbsp;
         {{ commentsCommentsCount }}
       </template>
@@ -151,12 +151,13 @@ export default {
       this.newComment.comment_id = comment.id
     },
     async searchCommentsCount (id) {
-      const url = `api/v1/comments/${id}`
+      const url = `api/v1/search_comments/${id}`
       await this.$axios.get(url)
         .then((res) => {
           this.commentsCommentsCount = res.data.length
         })
         .catch((err) => {
+          // eslint-disable-next-line no-console
           console.error(err)
         })
     }
