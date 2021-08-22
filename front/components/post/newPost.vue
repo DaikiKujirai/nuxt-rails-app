@@ -85,12 +85,13 @@ export default {
       this.loading = true
       this.post.user_uid = this.currentUser.uid
       await this.$axios.$post('/api/v1/posts', this.post)
-        .then((res) => {
+        .then(() => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
           this.fetchContents()
           this.loading = false
           this.$router.push('/posts')
           this.dialog = false
+          this.$refs.form.reset()
         })
         .catch((err) => {
           this.flashMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })

@@ -140,6 +140,7 @@ export default {
           this.fetchContents(res.post_id)
           this.searchCommentsCount(res.comment_id)
           this.dialog = false
+          this.$refs.form.reset()
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
         })
         .catch(() => {

@@ -84,13 +84,9 @@ export default {
       setComments: 'comment/setComments'
     }),
     async toShow (comment) {
-      const url = `api/v1/comments/${comment.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setComment(res.data)
-          this.searchAndSetComments(res.data.id)
-          this.$router.push(`/comments/${comment.id}`)
-        })
+      await this.searchAndSetComments(comment.id)
+      await this.setComment(comment)
+      this.$router.push(`/comments/${comment.id}`)
     },
     async searchAndSetComments (id) {
       const url = `api/v1/search_comments/${id}`

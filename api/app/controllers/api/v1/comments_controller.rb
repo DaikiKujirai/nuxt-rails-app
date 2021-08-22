@@ -16,7 +16,7 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def search_comments
-    comment = Comment.where(comment_id: params[:id]).order(id: :desc)
+    comment = Comment.where(comment_id: params[:id]).includes(:post, :user).order(id: :desc)
     render json: comment
   end
 

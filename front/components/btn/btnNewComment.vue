@@ -127,6 +127,7 @@ export default {
           this.fetchContents()
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
+          this.$refs.form.reset()
         })
         .catch(() => {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
