@@ -12,8 +12,8 @@
       >
         <v-list-item
           two-line
-          :to="`/${menu.title}`"
           class="justify-center"
+          @click="goHome"
         >
           <v-icon
             size="28"
@@ -28,6 +28,8 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
+
 export default {
   data () {
     return {
@@ -39,6 +41,23 @@ export default {
         { title: 'follow', icon: 'mdi-account-details' },
         { title: 'follower', icon: 'mdi-account-details-outline' }
       ]
+    }
+  },
+  methods: {
+    ...mapActions({
+      setPosts: 'post/setPosts'
+    }),
+    async goHome () {
+      const url = '/api/v1/posts'
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setPosts(res.data)
+          this.$router.push('/posts')
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(err)
+        })
     }
   }
 }

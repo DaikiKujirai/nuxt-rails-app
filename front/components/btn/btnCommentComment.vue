@@ -10,8 +10,8 @@
         mdi-chat-processing-outline
       </v-icon>
       <template v-if="commentsCommentsCount !== 0">
-        <!-- &nbsp;
-        {{ commentsCommentsCount }} -->
+        &nbsp;
+        {{ commentsCommentsCount }}
       </template>
     </v-btn>
     <v-dialog
@@ -38,7 +38,7 @@
             class="ml-2"
           />
           <v-card-title>
-            <!-- {{ userPost.name }} -->
+            {{ comment.user.name }}
           </v-card-title>
         </div>
         <div class="d-flex">
@@ -49,11 +49,11 @@
           />
           <div>
             <v-card-subtitle>
-              <!-- {{ gettersPost.content }} -->
+              {{ comment.content }}
             </v-card-subtitle>
             <v-spacer />
             <v-card-text>
-              <!-- 返信先：{{ userPost.name }} さん -->
+              返信先：{{ comment.user.name }} さん
             </v-card-text>
           </div>
         </div>
@@ -98,10 +98,6 @@ export default {
       type: Number,
       default: 0
     }
-    // post: {
-    //   type: Object,
-    //   required: true
-    // }
   },
   data () {
     return {
@@ -109,27 +105,22 @@ export default {
       isValid: false,
       loading: false,
       newComment: { content: '' },
-      user: {},
       src: 'https://picsum.photos/200/200',
       commentsCommentsCount: 0
     }
   },
   computed: {
     ...mapGetters({
-      posts: 'post/posts',
-      gettersPost: 'post/post',
-      userPost: 'post/user',
+      post: 'post/post',
       currentUser: 'auth/user',
-      comments: 'comment/comments',
       btnColor: 'btn/color'
     })
   },
   created () {
-    this.searchCommentsCount(this.gettersPost.comments[this.commentIndex].id)
+    this.searchCommentsCount(this.post.comments[this.commentIndex].id)
   },
   methods: {
     ...mapActions({
-      setUser: 'post/setUser',
       flashMessage: 'flash/flashMessage',
       setPost: 'post/setPost'
     }),
@@ -147,6 +138,7 @@ export default {
         .then((res) => {
           this.loading = false
           this.fetchContents(res.post_id)
+          this.searchCommentsCount(res.comment_id)
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
         })
@@ -155,15 +147,13 @@ export default {
         })
     },
     setPostIdAndCommentId (comment) {
-      this.newComment.post_id = this.gettersPost.id
+      this.newComment.post_id = this.post.id
       this.newComment.comment_id = comment.id
-      console.log(this.newComment)
     },
     async searchCommentsCount (id) {
       const url = `api/v1/comments/${id}`
       await this.$axios.get(url)
         .then((res) => {
-          console.log(res.data.length)
           this.commentsCommentsCount = res.data.length
         })
         .catch((err) => {

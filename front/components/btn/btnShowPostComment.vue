@@ -9,10 +9,6 @@
       <v-icon>
         mdi-chat-processing-outline
       </v-icon>
-      &nbsp;
-      <template v-if="post.comments.length">
-        {{ post.comments.length }}
-      </template>
     </v-btn>
     <v-dialog
       v-model="dialog"
@@ -113,10 +109,14 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPosts: 'post/setPosts'
+      setPost: 'post/setPost'
     }),
-    setPostId () {
-      this.newComment.post_id = this.post.id
+    async fetchPostContents (id) {
+      const url = `api/v1/posts/${id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setPost(res.data)
+        })
     },
     async submitComment () {
       this.loading = true
@@ -124,7 +124,7 @@ export default {
       await this.$axios.$post('/api/v1/comments', this.newComment)
         .then((res) => {
           this.loading = false
-          this.fetchContents()
+          this.fetchPostContents(res.post_id)
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
         })
@@ -132,12 +132,8 @@ export default {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    async fetchContents () {
-      const url = 'api/v1/posts'
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setPosts(res.data)
-        })
+    setPostId () {
+      this.newComment.post_id = this.post.id
     }
   }
 }

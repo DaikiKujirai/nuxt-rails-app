@@ -1,7 +1,7 @@
 <template>
   <div>
     <template
-      v-for="(comment, i) in comments"
+      v-for="(comment, i) in post.comments"
     >
       <v-col
         :key="comment.id"
@@ -61,6 +61,12 @@ export default {
     btnDeletePost,
     btnCommentComment
   },
+  props: {
+    post: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
       src: 'https://picsum.photos/500/500'
@@ -68,26 +74,18 @@ export default {
   },
   computed: {
     ...mapGetters({
-      // comments: 'comment/comments'
-      post: 'post/post',
       btnColor: 'btn/color'
-    }),
-    comments () {
-      return this.post.comments
-    }
+    })
   },
   methods: {
     ...mapActions({
-      setComments: 'comment/setComments',
       setComment: 'comment/setComment'
     }),
     async toShow (comment) {
-      this.setComment(comment)
       const url = `api/v1/comments/${comment.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.setComments(res.data)
-          console.log(comment.id)
+          this.setComment(res.data)
           this.$router.push(`comments/${comment.id}`)
         })
     }
