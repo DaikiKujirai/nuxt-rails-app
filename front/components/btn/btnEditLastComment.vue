@@ -97,7 +97,6 @@ export default {
       this.newComment.post_id = this.comment.post_id
       await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
         .then(() => {
-          console.log(this.comment)
           this.fetchContents()
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false

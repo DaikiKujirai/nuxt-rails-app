@@ -50,11 +50,11 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   props: {
-    post: {
+    comment: {
       type: Object,
       required: true
     },
-    isIndex: {
+    isPostComment: {
       type: Boolean,
       required: true
     }
@@ -66,12 +66,15 @@ export default {
   },
   computed: {
     ...mapGetters({
+      post: 'post/post',
+      gettersComment: 'comment/comment',
       btnColor: 'btn/color'
     })
   },
   methods: {
     ...mapActions({
-      setPosts: 'post/setPosts',
+      setPost: 'post/setPost',
+      setComments: 'comment/setComments',
       flashMessage: 'flash/flashMessage'
     }),
     openDialog () {
@@ -81,12 +84,12 @@ export default {
       this.dialog = false
     },
     clickOK () {
-      this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
+      this.$axios.$delete(`/api/v1/comments/${this.comment.id}`)
         .then(() => {
-          if (this.isIndex) {
-            this.fetchContents()
+          if (this.isPostComment) {
+            this.fetchPostContents()
           } else {
-            this.$router.replace('/posts')
+            this.fetchCommentContents()
           }
           this.flashMessage({ message: '削除しました', type: 'primary', status: true })
         })
@@ -95,11 +98,27 @@ export default {
           console.log('投稿の削除に失敗', err)
         })
     },
-    async fetchContents () {
-      const url = '/api/v1/posts'
+    async fetchPostContents () {
+      const url = `/api/v1/posts/${this.post.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.setPosts(res.data)
+          this.setPost(res.data)
+          this.$router.push(`/posts/${res.data.id}`)
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(err)
+        })
+    },
+    async fetchCommentContents () {
+      const url = `/api/v1/search_comments/${this.gettersComment.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setComments(res.data)
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log(err)
         })
     }
   }

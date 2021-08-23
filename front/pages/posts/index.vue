@@ -57,7 +57,10 @@
             />
             <v-spacer />
           </template>
-          <btn-delete-post />
+          <btn-delete-post
+            :post="post"
+            :is-index="isIndex"
+          />
           <v-spacer />
         </v-card-actions>
       </template>
@@ -68,14 +71,16 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import btnEditPostInIndex from '../../components/btn/btnEditPostInIndex.vue'
-import btnNewComment from '../../components/btn/btnNewComment.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
+import btnNewComment from '../../components/btn/btnNewComment.vue'
+import btnDeletePost from '../../components/btn/btnDeletePost.vue'
 
 export default {
   components: {
     layoutMain,
     btnNewComment,
-    btnEditPostInIndex
+    btnEditPostInIndex,
+    btnDeletePost
   },
   data () {
     return {

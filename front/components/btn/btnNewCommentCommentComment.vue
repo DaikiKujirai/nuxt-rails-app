@@ -122,9 +122,8 @@ export default {
     async submitComment () {
       this.loading = true
       this.newComment.user_uid = this.currentUser.uid
-      console.log(this.newComment)
       await this.$axios.$post('/api/v1/comments', this.newComment)
-        .then((res) => {
+        .then(() => {
           this.loading = false
           this.fetchContents()
           this.dialog = false
@@ -136,7 +135,6 @@ export default {
         })
     },
     setPostIdAndCommentId () {
-      console.log(this.post.id)
       this.newComment.post_id = this.post.id
       this.newComment.comment_id = this.comment.id
     }

@@ -27,6 +27,17 @@ class Api::V1::CommentsController < ApplicationController
     end
   end
 
+  def destroy
+    comment = Comment.find(params[:id])
+    comments = Comment.where(comment_id: params[:id])
+    if comment.destroy
+      comments.destroy_all
+      render json: { success_message: '削除しました' }
+    else
+      render json: { error_message: '削除に失敗しました' }
+    end
+  end
+
   def search_comments
     comments = Comment.where(comment_id: params[:id]).includes(:post, :user).order(id: :desc)
     render json: comments
