@@ -35,28 +35,32 @@
           {{ post.content }}
         </v-card-title>
       </div>
-      <v-card-actions>
-        <v-btn
-          :color="btnColor"
-          text
-        >
-          <v-icon>
-            mdi-heart-outline
-          </v-icon>
-        </v-btn>
-        <v-spacer />
-        <btn-new-comment
-          :post="post"
-        />
-        <v-spacer />
-        <template v-if="post.user_id === currentUser.id">
-          <btn-edit-post-in-index
+      <template v-if="isAuthenticated">
+        <v-card-actions>
+          <v-spacer />
+          <v-btn
+            :color="btnColor"
+            text
+          >
+            <v-icon>
+              mdi-heart-outline
+            </v-icon>
+          </v-btn>
+          <v-spacer />
+          <btn-new-comment
             :post="post"
           />
           <v-spacer />
-        </template>
-        <btn-delete-post />
-      </v-card-actions>
+          <template v-if="post.user_id === currentUser.id">
+            <btn-edit-post-in-index
+              :post="post"
+            />
+            <v-spacer />
+          </template>
+          <btn-delete-post />
+          <v-spacer />
+        </v-card-actions>
+      </template>
     </v-card>
   </layout-main>
 </template>
@@ -83,7 +87,8 @@ export default {
     ...mapGetters({
       posts: 'post/posts',
       btnColor: 'btn/color',
-      currentUser: 'auth/data'
+      currentUser: 'auth/data',
+      isAuthenticated: 'auth/isAuthenticated'
     })
   },
   mounted () {

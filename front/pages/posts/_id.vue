@@ -20,11 +20,11 @@
         {{ post.content }}
       </v-card-title>
       <v-card-actions>
+        <v-spacer />
         <v-btn
           :color="btnColor"
           text
         >
-          いいね
           <v-icon>
             mdi-heart-outline
           </v-icon>
@@ -39,6 +39,7 @@
         />
         <v-spacer />
         <btn-delete-post />
+        <v-spacer />
       </v-card-actions>
       <post-comment
         :post="post"

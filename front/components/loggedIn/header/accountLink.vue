@@ -22,7 +22,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-subtitle>
-            ユーザー名が表示されます
+            {{ currentUser.name }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -59,12 +59,13 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
-  data () {
-    return {
-    }
+  computed: {
+    ...mapGetters({
+      currentUser: 'auth/data'
+    })
   },
   methods: {
     ...mapActions({
@@ -83,6 +84,5 @@ export default {
         })
     }
   }
-
 }
 </script>

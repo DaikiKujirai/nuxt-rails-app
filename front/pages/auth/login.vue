@@ -67,14 +67,14 @@ export default {
       firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password)
         .then((res) => {
           this.login(res.user)
-          this.flashMessage({ message: 'ログインしました', type: 'success', status: true })
-          this.$router.push('/posts')
-          this.loading = false
+          setTimeout(() => {
+            this.flashMessage({ message: 'ログインしました', type: 'success', status: true })
+            this.$router.push('/posts')
+            this.loading = false
+          }, 1500)
         })
-        .catch((err) => {
+        .catch(() => {
           this.loading = false
-          // eslint-disable-next-line no-console
-          console.log(err)
           this.flashMessage({ message: 'メールアドレスまたはパスワードが正しくありません', type: 'error', status: true })
         })
     }

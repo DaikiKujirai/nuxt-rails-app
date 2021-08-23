@@ -15,7 +15,6 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     post = Post.new(post_params)
-    post.user_id = User.find_by(uid: params[:user_uid]).id
     if post.save
       render json: { success_message: '保存しました', }
     else
@@ -44,6 +43,6 @@ class Api::V1::PostsController < ApplicationController
   private
 
   def post_params
-    params.require(:post).permit(:title, :content)
+    params.require(:post).permit(:user_id, :content)
   end
 end
