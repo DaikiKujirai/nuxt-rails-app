@@ -34,7 +34,9 @@
           :post="post"
         />
         <v-spacer />
-        <btn-edit-post />
+        <btn-edit-post-in-id
+          :post="post"
+        />
         <v-spacer />
         <btn-delete-post />
       </v-card-actions>
@@ -48,18 +50,18 @@
 <script>
 import { mapGetters } from 'vuex'
 import btnDeletePost from '../../components/btn/btnDeletePost.vue'
-import btnEditPost from '../../components/btn/btnEditPost.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import postComment from '../../components/comment/postComment.vue'
 import btnShowPostComment from '../../components/btn/btnNewPostComment.vue'
+import btnEditPostInId from '../../components/btn/btnEditPostInId.vue'
 
 export default {
   components: {
     btnDeletePost,
-    btnEditPost,
     layoutMain,
     postComment,
-    btnShowPostComment
+    btnShowPostComment,
+    btnEditPostInId
   },
   data () {
     return {

@@ -7,20 +7,25 @@ class Api::V1::UsersController < ApplicationController
   def show
     user = User.find_by(id: params[:id])
     unless User.nil?
-      render json: user.as_json(only: %i[id name introduction])
+      render json: user
     else
       render json: { error_message: 'Not Found' }
     end
   end
 
   def create
-    @user = User.new(user_params)
-    @user.is_active = true
-    if @user.save
-      render json: @user, status: :created
+    user = User.new(user_params)
+    user.is_active = true
+    if user.save
+      render json: user, status: :created
     else
-      render json: @user.errors, status: :unprocessable_entity
+      render json: user.errors, status: :unprocessable_entity
     end
+  end
+
+  def find_login_user
+    user = User.find_by(uid: params[:uid])
+    render json: user.as_json(only: %i[id name])
   end
 
   private

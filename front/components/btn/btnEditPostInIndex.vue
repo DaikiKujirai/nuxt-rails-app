@@ -4,7 +4,7 @@
       :color="color"
       text
       rounded
-      @click="dialog = true"
+      @click.prevent.stop="dialog = true"
     >
       編集
       <v-icon>
@@ -34,7 +34,7 @@
             v-model="isValid"
           >
             <edit-post-form-content
-              :content.sync="post.content"
+              :content.sync="editPost.content"
             />
             <v-btn
               :disabled="!isValid || loading"
@@ -53,61 +53,45 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import editPostFormContent from '../post/editPostFormContent.vue'
 
 export default {
   components: {
     editPostFormContent
   },
-  // props: [
-  //   'userName',
-  //   'post'
-  // ],
+  props: {
+    post: {
+      type: Object,
+      required: true
+    }
+  },
   data () {
     return {
       dialog: false,
       isValid: false,
       loading: false,
       color: 'deep-purple lighten-2',
-      post: {}
+      editPost: { content: '' }
     }
   },
-  computed: {
-    ...mapGetters({
-      gettersPost: 'post/post'
-    })
-    // params () {
-    //   return this.post
-    // }
-  },
-  mounted () {
-    // this.setPostContent()
+  created () {
+    this.editPost.content = this.post.content
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setPost: 'post/setPost'
     }),
-    setPostContent () {
-      const url = `/api/v1/posts/${this.$route.params.id}`
-      this.$axios.get(url)
-        .then((res) => {
-          this.post = res.data
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
     async updatePost () {
       this.loading = true
-      await this.$axios.$patch(`/api/v1/posts/${this.$route.params.id}`, this.post)
+      await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
         .then((res) => {
           this.setPost(res)
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
+          this.$router.push(`posts/${res.id}`)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
