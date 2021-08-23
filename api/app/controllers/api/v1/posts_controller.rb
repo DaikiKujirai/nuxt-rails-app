@@ -26,7 +26,7 @@ class Api::V1::PostsController < ApplicationController
   def update
     post = Post.find(params[:id])
     if post.update(post_params)
-      render json: post
+      render json: post, include: [:user, { comments: [:user] }]
     else
       render json: post.errors.messages
     end

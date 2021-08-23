@@ -39,7 +39,7 @@ export const actions = {
 
   async loadData ({ commit }, payload) {
     try {
-      const data = await this.$axios.$get(`/api/v1/users?uid=${payload}`)
+      const data = await this.$axios.$get(`/api/v1/find_login_user/${payload}`)
       commit('setData', data)
     } catch (err) {
       // eslint-disable-next-line no-console

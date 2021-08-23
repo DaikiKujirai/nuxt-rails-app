@@ -34,7 +34,9 @@
           :comment="comment"
         />
         <v-spacer />
-        <btn-edit-post />
+        <btn-edit-comment-comment
+          :comment="comment"
+        />
         <v-spacer />
         <btn-delete-post />
       </v-card-actions>
@@ -48,7 +50,7 @@
 <script>
 import { mapGetters } from 'vuex'
 import btnDeletePost from '../../components/btn/btnDeletePost.vue'
-import btnEditPost from '../../components/btn/btnEditPost.vue'
+import btnEditCommentComment from '../../components/btn/btnEditCommentComment.vue'
 import btnNewCommentCommentComment from '../../components/btn/btnNewCommentCommentComment.vue'
 import commentComments from '../../components/comment/commentComments.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
@@ -57,7 +59,7 @@ export default {
   components: {
     layoutMain,
     btnNewCommentCommentComment,
-    btnEditPost,
+    btnEditCommentComment,
     btnDeletePost,
     commentComments
   },

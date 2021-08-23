@@ -18,7 +18,7 @@
             style="border-radius: 50%;"
           />
           <v-card-subtitle>
-            {{ comment.user.name }}
+            <!-- {{ comment.user.name }} -->
           </v-card-subtitle>
         </v-col>
         <v-card-text>
@@ -40,7 +40,9 @@
             :comment-index="i"
           />
           <v-spacer />
-          <btnEdit-post />
+          <btn-edit-comment
+            :comment="comment"
+          />
           <v-spacer />
           <btnDelete-post />
         </v-card-actions>
@@ -51,13 +53,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import btnEditPost from '../btn/btnEditPost.vue'
+import btnEditComment from '../btn/btnEditComment.vue'
 import btnDeletePost from '../btn/btnDeletePost.vue'
 import btnNewCommentComment from '../btn/btnNewCommentComment.vue'
 
 export default {
   components: {
-    btnEditPost,
+    btnEditComment,
     btnDeletePost,
     btnNewCommentComment
   },

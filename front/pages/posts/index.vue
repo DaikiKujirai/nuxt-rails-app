@@ -40,7 +40,6 @@
           :color="btnColor"
           text
         >
-          いいね
           <v-icon>
             mdi-heart-outline
           </v-icon>
@@ -50,8 +49,12 @@
           :post="post"
         />
         <v-spacer />
-        <btn-edit-post />
-        <v-spacer />
+        <template v-if="post.user_id === currentUser.id">
+          <btn-edit-post-in-index
+            :post="post"
+          />
+          <v-spacer />
+        </template>
         <btn-delete-post />
       </v-card-actions>
     </v-card>
@@ -60,13 +63,15 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import btnEditPostInIndex from '../../components/btn/btnEditPostInIndex.vue'
 import btnNewComment from '../../components/btn/btnNewComment.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 
 export default {
   components: {
     layoutMain,
-    btnNewComment
+    btnNewComment,
+    btnEditPostInIndex
   },
   data () {
     return {
@@ -77,7 +82,8 @@ export default {
   computed: {
     ...mapGetters({
       posts: 'post/posts',
-      btnColor: 'btn/color'
+      btnColor: 'btn/color',
+      currentUser: 'auth/data'
     })
   },
   mounted () {

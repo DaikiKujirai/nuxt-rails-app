@@ -40,7 +40,9 @@
             :comment-index="i"
           />
           <v-spacer />
-          <btnEdit-post />
+          <!-- <btn-edit-comment
+            :comment="comment"
+          /> -->
           <v-spacer />
           <btnDelete-post />
         </v-card-actions>
@@ -51,13 +53,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import btnEditPost from '../btn/btnEditPost.vue'
+// import btnEditComment from '../btn/btnEditComment.vue'
 import btnDeletePost from '../btn/btnDeletePost.vue'
 import btnLastComment from '../btn/btnLastComment.vue'
 
 export default {
   components: {
-    btnEditPost,
+    // btnEditComment,
     btnDeletePost,
     btnLastComment
   },

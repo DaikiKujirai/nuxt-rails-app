@@ -15,6 +15,17 @@ class Api::V1::CommentsController < ApplicationController
     end
   end
 
+  def update
+    comment = Comment.find(params[:id])
+    comment.content = params[:content]
+    if comment.update(comment_params)
+      post = Post.find(params[:post_id])
+      render json: post, include: [:user, { comments: [:user] }]
+    else
+      comment.errors.messages
+    end
+  end
+
   def search_comments
     comment = Comment.where(comment_id: params[:id]).includes(:post, :user).order(id: :desc)
     render json: comment
