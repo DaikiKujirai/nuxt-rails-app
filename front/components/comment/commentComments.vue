@@ -25,11 +25,11 @@
           {{ comment.content }}
         </v-card-text>
         <v-card-actions>
+          <v-spacer />
           <v-btn
             :color="btnColor"
             text
           >
-            いいね
             <v-icon>
               mdi-heart-outline
             </v-icon>
@@ -40,11 +40,12 @@
             :comment-index="i"
           />
           <v-spacer />
-          <!-- <btn-edit-comment
+          <btn-edit-last-comment
             :comment="comment"
-          /> -->
+          />
           <v-spacer />
           <btnDelete-post />
+          <v-spacer />
         </v-card-actions>
       </v-col>
     </template>
@@ -53,21 +54,15 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-// import btnEditComment from '../btn/btnEditComment.vue'
 import btnDeletePost from '../btn/btnDeletePost.vue'
+import btnEditLastComment from '../btn/btnEditLastComment.vue'
 import btnLastComment from '../btn/btnLastComment.vue'
 
 export default {
   components: {
-    // btnEditComment,
     btnDeletePost,
-    btnLastComment
-  },
-  props: {
-    comments: {
-      type: Array,
-      required: true
-    }
+    btnLastComment,
+    btnEditLastComment
   },
   data () {
     return {
@@ -76,6 +71,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      comments: 'comment/comments',
       btnColor: 'btn/color'
     })
   },

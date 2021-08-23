@@ -1,12 +1,15 @@
 <template>
   <div>
     <v-btn
+      :color="color"
+      text
       rounded
-      color="info"
-      class="open-modal-btn mr-2"
-      @click="dialog = true"
+      @click.prevent.stop="dialog = true"
     >
-      新規投稿
+      編集
+      <v-icon>
+        mdi-lead-pencil
+      </v-icon>
     </v-btn>
     <v-dialog
       v-model="dialog"
@@ -15,7 +18,7 @@
       <v-card>
         <div class="d-flex">
           <v-card-title>
-            新規投稿
+            投稿編集
           </v-card-title>
           <v-spacer />
           <v-btn
@@ -30,17 +33,17 @@
             ref="form"
             v-model="isValid"
           >
-            <new-post-form-content
-              :content.sync="post.content"
+            <edit-comment-form-content
+              :content.sync="newComment.content"
             />
             <v-btn
               :disabled="!isValid || loading"
               :loading="loading"
               block
               color="info"
-              @click="newPost"
+              @click="updateComment"
             >
-              投稿する
+              更新する
             </v-btn>
           </v-form>
         </v-container>
@@ -50,49 +53,59 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import newPostFormContent from './newPostFormContent.vue'
+import { mapActions } from 'vuex'
+import editCommentFormContent from '../post/editPostFormContent.vue'
 
 export default {
   components: {
-    newPostFormContent
+    editCommentFormContent
+  },
+  props: {
+    comment: {
+      type: Object,
+      required: true
+    }
   },
   data () {
     return {
       dialog: false,
       isValid: false,
       loading: false,
-      post: { content: '' }
+      color: 'deep-purple lighten-2',
+      newComment: { content: '' }
     }
   },
-  computed: {
-    ...mapGetters({
-      currentUser: 'auth/data'
-    })
+  created () {
+    this.newComment.content = this.comment.content
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPosts: 'post/setPosts'
+      setComments: 'comment/setComments'
     }),
     async fetchContents () {
-      await this.$axios.get('/api/v1/posts')
+      const url = `/api/v1/search_comments/${this.$route.params.id}`
+      await this.$axios.get(url)
         .then((res) => {
-          this.setPosts(res.data)
+          // eslint-disable-next-line no-console
+          console.log(res)
+          this.setComments(res.data)
         })
     },
-    async newPost () {
+    async updateComment () {
       this.loading = true
-      this.post.user_id = this.currentUser.id
-      await this.$axios.$post('/api/v1/posts', this.post)
+      this.newComment.post_id = this.comment.post_id
+      await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
         .then(() => {
-          this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
+          console.log(this.comment)
           this.fetchContents()
+          this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
-          this.$refs.form.reset()
         })
         .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log(err.response)
           this.flashMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
           this.loading = false
         })

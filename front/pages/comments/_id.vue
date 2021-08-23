@@ -20,11 +20,11 @@
         {{ comment.content }}
       </v-card-title>
       <v-card-actions>
+        <v-spacer />
         <v-btn
           :color="btnColor"
           text
         >
-          いいね
           <v-icon>
             mdi-heart-outline
           </v-icon>
@@ -39,10 +39,9 @@
         />
         <v-spacer />
         <btn-delete-post />
+        <v-spacer />
       </v-card-actions>
-      <comment-comments
-        :comments="comments"
-      />
+      <comment-comments />
     </v-card>
   </layout-main>
 </template>
@@ -70,7 +69,6 @@ export default {
   },
   computed: {
     ...mapGetters({
-      comments: 'comment/comments',
       comment: 'comment/comment',
       btnColor: 'btn/color'
     })

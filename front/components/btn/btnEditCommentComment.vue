@@ -81,14 +81,21 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPost: 'post/setPost'
+      setComment: 'comment/setComment'
     }),
+    async fetchContents () {
+      const url = `api/v1/comments/${this.comment.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setComment(res.data)
+        })
+    },
     async updateComment () {
       this.loading = true
       this.newComment.post_id = this.comment.post_id
       await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
         .then((res) => {
-          this.setPost(res)
+          this.fetchContents()
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false

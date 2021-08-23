@@ -9,11 +9,11 @@ export const getters = {
   user (state) {
     return state.user
   },
-  isAuthenticated (state) {
-    return !!state.user && !!state.user.uid
-  },
   data (state) {
     return state.data
+  },
+  isAuthenticated (state) {
+    return !!state.user && !!state.user.uid
   }
 }
 

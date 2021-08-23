@@ -68,45 +68,33 @@ export default {
       this.loading = true
       firebase.auth().createUserWithEmailAndPassword(this.user.email, this.user.password)
         .then((res) => {
-          // eslint-disable-next-line no-console
-          console.log('サインアップ成功', res)
-          const user = {
-            name: this.user.name,
-            email: res.user.email,
-            uid: res.user.uid
-          }
-          this.$axios.$post('/api/v1/users', { user })
-            .then(() => {
-              // eslint-disable-next-line no-console
-              console.log('アカウント作成', res)
-              this.login(res.user)
-              this.flashMessage({ message: '登録に成功しました', type: 'success', status: true })
-              this.loading = false
-              this.$router.push('/posts')
-            })
-            .catch((err) => {
-              // eslint-disable-next-line no-console
-              console.log('アカウント作成失敗', err)
-            })
+          this.createUser(res)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.log('サインアップエラー', err)
         })
-      this.loading = true
-      setTimeout(() => {
-        // this.formReset()
-        this.loading = false
-      }, 1500)
+    },
+    createUser (res) {
+      const user = {
+        name: this.user.name,
+        email: res.user.email,
+        uid: res.user.uid
+      }
+      this.$axios.$post('/api/v1/users', { user })
+        .then(() => {
+          this.login(res.user)
+          setTimeout(() => {
+            this.flashMessage({ message: '登録に成功しました', type: 'success', status: true })
+            this.$router.push('/posts')
+            this.loading = false
+          }, 1000)
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log('アカウント作成失敗', err)
+        })
     }
-    // formReset () {
-    //   this.$refs.form.reset()
-    //   this.user = {
-    //     name: '',
-    //     email: '',
-    //     password: ''
-    //   }
-    // }
   }
 }
 </script>
