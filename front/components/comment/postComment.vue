@@ -44,7 +44,10 @@
             :comment="comment"
           />
           <v-spacer />
-          <btnDelete-post />
+          <btn-delete-comment
+            :comment="comment"
+            :is-post-comment="isPostComment"
+          />
           <v-spacer />
         </v-card-actions>
       </v-col>
@@ -55,13 +58,13 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import btnEditComment from '../btn/btnEditComment.vue'
-import btnDeletePost from '../btn/btnDeletePost.vue'
 import btnNewCommentComment from '../btn/btnNewCommentComment.vue'
+import btnDeleteComment from '../btn/btnDeleteComment.vue'
 
 export default {
   components: {
     btnEditComment,
-    btnDeletePost,
+    btnDeleteComment,
     btnNewCommentComment
   },
   props: {
@@ -72,6 +75,7 @@ export default {
   },
   data () {
     return {
+      isPostComment: true,
       src: 'https://picsum.photos/500/500'
     }
   },

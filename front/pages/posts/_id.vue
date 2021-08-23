@@ -38,7 +38,10 @@
           :post="post"
         />
         <v-spacer />
-        <btn-delete-post />
+        <btn-delete-post
+          :post="post"
+          :is-index="isIndex"
+        />
         <v-spacer />
       </v-card-actions>
       <post-comment
@@ -66,7 +69,8 @@ export default {
   },
   data () {
     return {
-      src: 'https://picsum.photos/200/200'
+      src: 'https://picsum.photos/200/200',
+      isIndex: false
     }
   },
   computed: {
