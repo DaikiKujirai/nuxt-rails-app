@@ -21,27 +21,36 @@
       </v-card-title>
       <v-card-actions>
         <v-spacer />
+        <btn-show-post-comment
+          :post="post"
+        />
+        <template v-if="post.user_id !== currentUser.id">
+          <v-spacer />
+          <v-btn
+            :color="btnColor"
+            text
+          >
+            <v-icon v-text="'mdi-twitter-retweet'" />
+          </v-btn>
+        </template>
+        <v-spacer />
         <v-btn
           :color="btnColor"
           text
         >
-          <v-icon>
-            mdi-heart-outline
-          </v-icon>
+          <v-icon v-text="'mdi-heart-outline'" />
         </v-btn>
-        <v-spacer />
-        <btn-show-post-comment
-          :post="post"
-        />
-        <v-spacer />
-        <btn-edit-post-in-id
-          :post="post"
-        />
-        <v-spacer />
-        <btn-delete-post
-          :post="post"
-          :is-index="isIndex"
-        />
+        <template v-if="post.user_id === currentUser.id">
+          <v-spacer />
+          <btn-edit-post-in-id
+            :post="post"
+          />
+          <v-spacer />
+          <btn-delete-post
+            :post="post"
+            :is-index="isIndex"
+          />
+        </template>
         <v-spacer />
       </v-card-actions>
       <post-comment
@@ -76,6 +85,7 @@ export default {
   computed: {
     ...mapGetters({
       post: 'post/post',
+      currentUser: 'auth/data',
       btnColor: 'btn/color'
     })
   }

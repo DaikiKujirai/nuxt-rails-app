@@ -7,9 +7,7 @@
       @click.prevent.stop="openDialog"
     >
       削除
-      <v-icon>
-        mdi-delete-empty
-      </v-icon>
+      <v-icon v-text="'mdi-delete-empty'" />
     </v-btn>
     <v-dialog
       v-model="dialog"

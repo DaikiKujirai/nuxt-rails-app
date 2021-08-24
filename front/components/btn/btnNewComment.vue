@@ -6,9 +6,7 @@
       rounded
       @click.prevent.stop="dialog = true, setPostId()"
     >
-      <v-icon>
-        mdi-chat-processing-outline
-      </v-icon>
+      <v-icon v-text="'mdi-chat-processing-outline'" />
       &nbsp;
       <template v-if="post.comments.length">
         {{ post.comments.length }}

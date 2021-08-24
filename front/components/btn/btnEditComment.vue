@@ -7,9 +7,7 @@
       @click.prevent.stop="dialog = true"
     >
       編集
-      <v-icon>
-        mdi-lead-pencil
-      </v-icon>
+      <v-icon v-text="'mdi-lead-pencil'" />
     </v-btn>
     <v-dialog
       v-model="dialog"
