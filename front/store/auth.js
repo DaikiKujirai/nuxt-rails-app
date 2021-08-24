@@ -47,8 +47,8 @@ export const actions = {
     }
   },
 
-  async logout ({ commit }) {
-    await firebase.auth().signOut()
+  logout ({ commit }) {
+    firebase.auth().signOut()
       .then(() => {
         commit('setUser', null)
         commit('setData', null)

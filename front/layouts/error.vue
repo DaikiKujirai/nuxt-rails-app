@@ -9,16 +9,10 @@
 
 <script>
 export default {
-  data () {
-
-  },
   created () {
-    this.toTop()
+    // this.toTop()
   },
   methods: {
-    toTop () {
-      this.$router.replace('/posts')
-    }
   }
 }
 </script>

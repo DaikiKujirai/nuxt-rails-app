@@ -76,6 +76,7 @@ export default {
     btnShowPostComment,
     btnEditPostInId
   },
+  middleware: 'authenticated',
   data () {
     return {
       src: 'https://picsum.photos/200/200',

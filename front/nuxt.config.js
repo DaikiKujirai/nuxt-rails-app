@@ -114,5 +114,10 @@ export default {
   },
   publicRuntimeConfig: {
     appName: process.env.APP_NAME
+  },
+  router: {
+    middleware: [
+      'reload'
+    ]
   }
 }

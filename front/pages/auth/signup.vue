@@ -43,10 +43,7 @@ export default {
     userFormPassword
   },
   layout: 'beforeLogin',
-  // middleware: [
-  //   'handle-login-route',
-  //   'disable-direct-access'
-  // ],
+  // middleware: 'authenticated.js',
   data () {
     return {
       isValid: false,

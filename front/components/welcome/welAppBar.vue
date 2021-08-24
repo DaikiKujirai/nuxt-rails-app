@@ -5,7 +5,9 @@
     hide-on-scroll
     clipped-left
   >
-    <app-logo />
+    <app-logo
+      :to="'/posts'"
+    />
     <app-title
       class="hidden-mobile-and-down"
     />

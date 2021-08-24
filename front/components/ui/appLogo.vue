@@ -6,9 +6,8 @@
   >
     <v-icon
       class="white--text text-subtitle-2"
-    >
-      mdi-twitter
-    </v-icon>
+      v-text="'mdi-twitter'"
+    />
   </v-avatar>
 </template>
 

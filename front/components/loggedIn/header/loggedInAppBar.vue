@@ -5,7 +5,7 @@
     hide-on-scroll
   >
     <nuxt-link
-      to="/"
+      to="/posts"
       class="text-decoration-none"
     >
       <app-logo />
