@@ -78,8 +78,8 @@ export default {
     closeDialog () {
       this.dialog = false
     },
-    clickOK () {
-      this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
+    async clickOK () {
+      await this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
           if (this.isIndex) {
             this.fetchContents()
