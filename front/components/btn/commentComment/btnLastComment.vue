@@ -81,7 +81,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import newCommentForm from '../comment/newCommentForm.vue'
+import newCommentForm from '../../comment/newCommentForm.vue'
 
 export default {
   components: {
@@ -110,12 +110,12 @@ export default {
   computed: {
     ...mapGetters({
       post: 'post/post',
-      currentUser: 'auth/user',
+      currentUser: 'auth/data',
       btnColor: 'btn/color'
     })
   },
   created () {
-    this.searchCommentsCount(this.post.comments[this.commentIndex].id)
+    this.searchCommentsCount(this.comment.id)
   },
   methods: {
     ...mapActions({
@@ -131,15 +131,15 @@ export default {
     },
     async submitComment () {
       this.loading = true
-      this.newComment.user_uid = this.currentUser.uid
+      this.newComment.user_id = this.currentUser.id
       await this.$axios.$post('/api/v1/comments', this.newComment)
         .then((res) => {
           this.loading = false
           this.fetchContents(res.post_id)
           this.searchCommentsCount(res.comment_id)
           this.dialog = false
-          this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
           this.$refs.form.reset()
+          this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
         })
         .catch(() => {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })

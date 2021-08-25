@@ -4,6 +4,7 @@ class User < ApplicationRecord
 
   has_many :posts   , dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :likes   , dependent: :destroy
 
   before_validation :downcase_email
 

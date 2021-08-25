@@ -22,7 +22,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-subtitle>
-            {{ currentUser.name }}
+            <!-- {{ currentUser.name }} -->
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>

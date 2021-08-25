@@ -7,10 +7,6 @@
       @click.prevent.stop="dialog = true, setPostId()"
     >
       <v-icon v-text="'mdi-chat-processing-outline'" />
-      &nbsp;
-      <template v-if="post.comments.length">
-        {{ post.comments.length }}
-      </template>
     </v-btn>
     <v-dialog
       v-model="dialog"
@@ -81,7 +77,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import newCommentForm from '../comment/newCommentForm.vue'
+import newCommentForm from '../../comment/newCommentForm.vue'
 
 export default {
   components: {
@@ -104,25 +100,29 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentUser: 'auth/user',
+      currentUser: 'auth/data',
       btnColor: 'btn/color'
     })
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPosts: 'post/setPosts'
+      setPost: 'post/setPost'
     }),
-    setPostId () {
-      this.newComment.post_id = this.post.id
+    async fetchPostContents (id) {
+      const url = `api/v1/posts/${id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setPost(res.data)
+        })
     },
     async submitComment () {
       this.loading = true
-      this.newComment.user_uid = this.currentUser.uid
+      this.newComment.user_id = this.currentUser.id
       await this.$axios.$post('/api/v1/comments', this.newComment)
         .then((res) => {
           this.loading = false
-          this.fetchContents()
+          this.fetchPostContents(res.post_id)
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
           this.$refs.form.reset()
@@ -131,12 +131,8 @@ export default {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    async fetchContents () {
-      const url = 'api/v1/posts'
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setPosts(res.data)
-        })
+    setPostId () {
+      this.newComment.post_id = this.post.id
     }
   }
 }

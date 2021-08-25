@@ -52,7 +52,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import editPostFormContent from '../post/editPostFormContent.vue'
+import editPostFormContent from '../../post/editPostFormContent.vue'
 
 export default {
   components: {
@@ -89,6 +89,7 @@ export default {
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
+          this.$router.push(`posts/${res.id}`)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

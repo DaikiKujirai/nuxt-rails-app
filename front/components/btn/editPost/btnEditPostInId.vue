@@ -31,15 +31,15 @@
             ref="form"
             v-model="isValid"
           >
-            <edit-comment-form-content
-              :content.sync="newComment.content"
+            <edit-post-form-content
+              :content.sync="editPost.content"
             />
             <v-btn
               :disabled="!isValid || loading"
               :loading="loading"
               block
               color="info"
-              @click="updateComment"
+              @click="updatePost"
             >
               更新する
             </v-btn>
@@ -52,14 +52,14 @@
 
 <script>
 import { mapActions } from 'vuex'
-import editCommentFormContent from '../post/editPostFormContent.vue'
+import editPostFormContent from '../../post/editPostFormContent.vue'
 
 export default {
   components: {
-    editCommentFormContent
+    editPostFormContent
   },
   props: {
-    comment: {
+    post: {
       type: Object,
       required: true
     }
@@ -70,30 +70,22 @@ export default {
       isValid: false,
       loading: false,
       color: 'deep-purple lighten-2',
-      newComment: { content: '' }
+      editPost: { content: '' }
     }
   },
   created () {
-    this.newComment.content = this.comment.content
+    this.editPost.content = this.post.content
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setComment: 'comment/setComment'
+      setPost: 'post/setPost'
     }),
-    async fetchContents () {
-      const url = `api/v1/comments/${this.comment.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setComment(res.data)
-        })
-    },
-    async updateComment () {
+    async updatePost () {
       this.loading = true
-      this.newComment.post_id = this.comment.post_id
-      await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
+      await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
         .then((res) => {
-          this.fetchContents()
+          this.setPost(res)
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false

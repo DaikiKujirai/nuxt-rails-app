@@ -66,9 +66,9 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import btnEditComment from '../btn/btnEditComment.vue'
-import btnNewCommentComment from '../btn/btnNewCommentComment.vue'
-import btnDeleteComment from '../btn/btnDeleteComment.vue'
+import btnEditComment from '../btn/editComment/btnEditComment.vue'
+import btnNewCommentComment from '../btn/commentComment/btnNewCommentComment.vue'
+import btnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
 
 export default {
   components: {

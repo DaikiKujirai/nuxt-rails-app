@@ -62,11 +62,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import btnDeletePost from '../../components/btn/btnDeletePost.vue'
+import btnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import postComment from '../../components/comment/postComment.vue'
-import btnShowPostComment from '../../components/btn/btnNewPostComment.vue'
-import btnEditPostInId from '../../components/btn/btnEditPostInId.vue'
+import btnShowPostComment from '../../components/btn/comment/btnNewCommentInId.vue'
+import btnEditPostInId from '../../components/btn/editPost/btnEditPostInId.vue'
 
 export default {
   components: {

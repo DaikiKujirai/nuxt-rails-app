@@ -31,15 +31,15 @@
             ref="form"
             v-model="isValid"
           >
-            <edit-post-form-content
-              :content.sync="editPost.content"
+            <edit-comment-form-content
+              :content.sync="newComment.content"
             />
             <v-btn
               :disabled="!isValid || loading"
               :loading="loading"
               block
               color="info"
-              @click="updatePost"
+              @click="updateComment"
             >
               更新する
             </v-btn>
@@ -52,14 +52,14 @@
 
 <script>
 import { mapActions } from 'vuex'
-import editPostFormContent from '../post/editPostFormContent.vue'
+import editCommentFormContent from '../../post/editPostFormContent.vue'
 
 export default {
   components: {
-    editPostFormContent
+    editCommentFormContent
   },
   props: {
-    post: {
+    comment: {
       type: Object,
       required: true
     }
@@ -70,26 +70,33 @@ export default {
       isValid: false,
       loading: false,
       color: 'deep-purple lighten-2',
-      editPost: { content: '' }
+      newComment: { content: '' }
     }
   },
   created () {
-    this.editPost.content = this.post.content
+    this.newComment.content = this.comment.content
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPost: 'post/setPost'
+      setComment: 'comment/setComment'
     }),
-    async updatePost () {
-      this.loading = true
-      await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
+    async fetchContents () {
+      const url = `api/v1/comments/${this.comment.id}`
+      await this.$axios.get(url)
         .then((res) => {
-          this.setPost(res)
+          this.setComment(res.data)
+        })
+    },
+    async updateComment () {
+      this.loading = true
+      this.newComment.post_id = this.comment.post_id
+      await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
+        .then((res) => {
+          this.fetchContents()
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
-          this.$router.push(`posts/${res.id}`)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

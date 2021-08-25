@@ -25,7 +25,7 @@ class Api::V1::UsersController < ApplicationController
 
   def find_login_user
     user = User.find_by(uid: params[:uid])
-    render json: user.as_json(only: %i[id name])
+    render json: user, each_serializer: UserSerializer
   end
 
   private

@@ -7,7 +7,6 @@ class Api::V1::CommentsController < ApplicationController
 
   def create
     comment = Comment.new(comment_params)
-    comment.user_id = User.find_by(uid: params[:user_uid]).id
     if comment.save
       render json: comment
     else
@@ -22,6 +21,7 @@ class Api::V1::CommentsController < ApplicationController
       post = Post.find(params[:post_id])
       render json: post, include: [:user, { comments: [:user] }]
     elsif comment.update(comment_params) && comment.comment_id != 0
+      render json: { success_message: '更新しました' }
     else
       comment.errors.messages
     end
@@ -39,7 +39,7 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def search_comments
-    comments = Comment.where(comment_id: params[:id]).includes(:post, :user).order(id: :desc)
+    comments = Comment.where(comment_id: params[:id]).includes(:post, :user).order(created_at: :desc)
     render json: comments
   end
 

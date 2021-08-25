@@ -21,9 +21,10 @@
           <v-card-text
             class="text-right"
           >
-            <v-icon size="16">
-              mdi-update
-            </v-icon>
+            <v-icon
+              size="16"
+              v-text="'mdi-update'"
+            />
             {{ $my.format(post.created_at) }}
           </v-card-text>
         </v-col>
@@ -51,12 +52,9 @@
             </v-btn>
           </template>
           <v-spacer />
-          <v-btn
-            :color="btnColor"
-            text
-          >
-            <v-icon v-text="'mdi-heart-outline'" />
-          </v-btn>
+          <like-post
+            :post="post"
+          />
           <template v-if="post.user_id === currentUser.id">
             <v-spacer />
             <btn-edit-post-in-index
@@ -77,17 +75,19 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import btnEditPostInIndex from '../../components/btn/btnEditPostInIndex.vue'
+import btnEditPostInIndex from '../../components/btn/editPost/btnEditPostInIndex.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import btnNewComment from '../../components/btn/btnNewComment.vue'
-import btnDeletePost from '../../components/btn/btnDeletePost.vue'
+import btnNewComment from '../../components/btn/comment/btnNewCommentInIndex.vue'
+import btnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
+import likePost from '../../components/btn/like/likePost.vue'
 
 export default {
   components: {
     layoutMain,
     btnNewComment,
     btnEditPostInIndex,
-    btnDeletePost
+    btnDeletePost,
+    likePost
   },
   data () {
     return {
@@ -100,7 +100,8 @@ export default {
       posts: 'post/posts',
       btnColor: 'btn/color',
       currentUser: 'auth/data',
-      isAuthenticated: 'auth/isAuthenticated'
+      isAuthenticated: 'auth/isAuthenticated',
+      likes: 'like/likes'
     })
   },
   mounted () {
@@ -110,13 +111,15 @@ export default {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setPosts: 'post/setPosts',
-      setPost: 'post/setPost'
+      setPost: 'post/setPost',
+      setLikes: 'like/setLikes'
     }),
     async fetchContents () {
       const url = '/api/v1/posts'
       await this.$axios.get(url)
         .then((res) => {
           this.setPosts(res.data)
+          this.setLikes(this.currentUser.likes)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

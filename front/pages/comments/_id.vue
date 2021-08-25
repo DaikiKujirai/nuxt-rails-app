@@ -60,9 +60,9 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import btnDeleteComment from '../../components/btn/btnDeleteComment.vue'
-import btnEditCommentComment from '../../components/btn/btnEditCommentComment.vue'
-import btnNewCommentCommentComment from '../../components/btn/btnNewCommentCommentComment.vue'
+import btnDeleteComment from '../../components/btn/deleteComment/btnDeleteComment.vue'
+import btnEditCommentComment from '../../components/btn/editComment/btnEditCommentComment.vue'
+import btnNewCommentCommentComment from '../../components/btn/commentComment/btnNewCommentCommentComment.vue'
 import commentComments from '../../components/comment/commentComments.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 

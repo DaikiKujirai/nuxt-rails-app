@@ -52,7 +52,7 @@
 
 <script>
 import { mapActions } from 'vuex'
-import editCommentFormContent from '../post/editPostFormContent.vue'
+import editCommentFormContent from '../../post/editPostFormContent.vue'
 
 export default {
   components: {
@@ -79,14 +79,21 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPost: 'post/setPost'
+      setComments: 'comment/setComments'
     }),
+    async fetchContents () {
+      const url = `/api/v1/search_comments/${this.$route.params.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setComments(res.data)
+        })
+    },
     async updateComment () {
       this.loading = true
       this.newComment.post_id = this.comment.post_id
       await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
-        .then((res) => {
-          this.setPost(res)
+        .then(() => {
+          this.fetchContents()
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false

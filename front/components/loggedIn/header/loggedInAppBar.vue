@@ -18,11 +18,17 @@
     />
     <v-spacer />
     <new-post />
+    <v-btn
+      @click="signout"
+    >
+      logout
+    </v-btn>
     <account-link />
   </v-app-bar>
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import appLogo from '../../ui/appLogo.vue'
 import newPost from '../../post/newPost.vue'
 import appTitle from '../../ui/appTitle.vue'
@@ -41,6 +47,15 @@ export default {
     notTopPage () {
       return this.$route.name !== 'index'
     }
+  },
+  methods: {
+    ...mapActions({
+      logout: 'auth/logout'
+    }),
+    signout () {
+      this.logout()
+    }
   }
+
 }
 </script>

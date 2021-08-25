@@ -4,13 +4,9 @@
       :color="btnColor"
       text
       rounded
-      @click.prevent.stop="dialog = true, setPostIdAndCommentId(comment)"
+      @click.prevent.stop="dialog = true, setPostIdAndCommentId()"
     >
       <v-icon v-text="'mdi-chat-processing-outline'" />
-      <template v-if="commentsCommentsCount">
-        &nbsp;
-        {{ commentsCommentsCount }}
-      </template>
     </v-btn>
     <v-dialog
       v-model="dialog"
@@ -81,7 +77,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import newCommentForm from '../comment/newCommentForm.vue'
+import newCommentForm from '../../comment/newCommentForm.vue'
 
 export default {
   components: {
@@ -91,10 +87,6 @@ export default {
     comment: {
       type: Object,
       required: true
-    },
-    commentIndex: {
-      type: Number,
-      default: 0
     }
   },
   data () {
@@ -103,62 +95,46 @@ export default {
       isValid: false,
       loading: false,
       newComment: { content: '' },
-      src: 'https://picsum.photos/200/200',
-      commentsCommentsCount: 0
+      src: 'https://picsum.photos/200/200'
     }
   },
   computed: {
     ...mapGetters({
       post: 'post/post',
-      currentUser: 'auth/user',
+      currentUser: 'auth/data',
       btnColor: 'btn/color'
     })
-  },
-  created () {
-    this.searchCommentsCount(this.comment.id)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPost: 'post/setPost'
+      setComments: 'comment/setComments'
     }),
-    async fetchContents (id) {
-      const url = `api/v1/posts/${id}`
+    async fetchContents () {
+      const url = `api/v1/search_comments/${this.comment.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.setPost(res.data)
+          this.setComments(res.data)
         })
     },
     async submitComment () {
       this.loading = true
-      this.newComment.user_uid = this.currentUser.uid
+      this.newComment.user_id = this.currentUser.id
       await this.$axios.$post('/api/v1/comments', this.newComment)
-        .then((res) => {
+        .then(() => {
           this.loading = false
-          this.fetchContents(res.post_id)
-          this.searchCommentsCount(res.comment_id)
+          this.fetchContents()
           this.dialog = false
-          this.$refs.form.reset()
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
+          this.$refs.form.reset()
         })
         .catch(() => {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    setPostIdAndCommentId (comment) {
+    setPostIdAndCommentId () {
       this.newComment.post_id = this.post.id
-      this.newComment.comment_id = comment.id
-    },
-    async searchCommentsCount (id) {
-      const url = `api/v1/search_comments/${id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.commentsCommentsCount = res.data.length
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
+      this.newComment.comment_id = this.comment.id
     }
   }
 }
