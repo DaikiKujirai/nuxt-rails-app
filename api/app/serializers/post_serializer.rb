@@ -6,6 +6,6 @@ class PostSerializer < ActiveModel::Serializer
   has_many :likes, as: :likeable
 
   def comments
-    object.comments.where(comment_id: 0).order(id: :desc)
+    object.comments.where(comment_id: 0).order(created_at: :desc)
   end
 end

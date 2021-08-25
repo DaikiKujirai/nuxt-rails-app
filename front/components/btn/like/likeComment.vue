@@ -57,7 +57,7 @@ export default {
       this.newLike.user_id = this.currentUser.id
       this.newLike.likeable_id = this.comment.id
       this.newLike.likeable_type = 'comment'
-      const url = 'api/v1/like_comment'
+      const url = 'api/v1/like'
       await this.$axios.post(url, this.newLike)
         .then((res) => {
           this.setLikes(res.data)
@@ -69,7 +69,7 @@ export default {
         })
     },
     async unLikeComment () {
-      const url = `api/v1/unlike_comment/${this.comment.id}`
+      const url = `api/v1/unlike/${this.comment.id}`
       await this.$axios.delete(url)
         .then((res) => {
           this.setLikes(res.data)

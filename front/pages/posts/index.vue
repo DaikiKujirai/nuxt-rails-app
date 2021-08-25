@@ -120,7 +120,9 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.setPosts(res.data)
-          this.setCurrentUserData()
+          if (this.isAuthenticated) {
+            this.setCurrentUserData()
+          }
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

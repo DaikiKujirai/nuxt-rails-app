@@ -19,7 +19,7 @@ class Api::V1::UsersController < ApplicationController
     if user.save
       render json: user, status: :created
     else
-      render json: user.errors, status: :unprocessable_entity
+      render json: { errors_message: 'メールアドレスまたはパスワードが正しくありません' }
     end
   end
 
