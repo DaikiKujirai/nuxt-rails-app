@@ -34,12 +34,9 @@
           </v-btn>
         </template>
         <v-spacer />
-        <v-btn
-          :color="btnColor"
-          text
-        >
-          <v-icon v-text="'mdi-heart-outline'" />
-        </v-btn>
+        <like-post
+          :post="post"
+        />
         <template v-if="post.user_id === currentUser.id">
           <v-spacer />
           <btn-edit-post-in-id
@@ -67,6 +64,7 @@ import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import postComment from '../../components/comment/postComment.vue'
 import btnShowPostComment from '../../components/btn/comment/btnNewCommentInId.vue'
 import btnEditPostInId from '../../components/btn/editPost/btnEditPostInId.vue'
+import likePost from '../../components/btn/like/likePost.vue'
 
 export default {
   components: {
@@ -74,7 +72,8 @@ export default {
     layoutMain,
     postComment,
     btnShowPostComment,
-    btnEditPostInId
+    btnEditPostInId,
+    likePost
   },
   middleware: 'authenticated',
   data () {

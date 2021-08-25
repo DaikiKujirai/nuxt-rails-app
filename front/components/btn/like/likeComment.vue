@@ -1,11 +1,11 @@
 <template>
   <div>
-    <template v-if="!isLikePost">
+    <template v-if="!isLikeComment">
       <v-btn
         :color="btnColor"
         text
         rounded
-        @click.prevent.stop="likePost"
+        @click.prevent.stop="likeComment"
       >
         <v-icon v-text="'mdi-heart-outline'" />
       </v-btn>
@@ -15,7 +15,7 @@
         :color="btnColor"
         text
         rounded
-        @click.prevent.stop="unLikePost"
+        @click.prevent.stop="unLikeComment"
       >
         <v-icon v-text="'mdi-heart'" />
       </v-btn>
@@ -28,7 +28,7 @@ import { mapGetters, mapActions } from 'vuex'
 
 export default {
   props: {
-    post: {
+    comment: {
       type: Object,
       required: true
     }
@@ -42,11 +42,10 @@ export default {
     ...mapGetters({
       btnColor: 'btn/color',
       currentUser: 'auth/data',
-      likePostIds: 'like/likePostIds',
       likeCommentIds: 'like/likeCommentIds'
     }),
-    isLikePost () {
-      return this.likePostIds.includes(this.post.id)
+    isLikeComment () {
+      return this.likeCommentIds.includes(this.comment.id)
     }
   },
   methods: {
@@ -54,11 +53,11 @@ export default {
       setLikes: 'like/setLikes',
       flashMessage: 'flash/flashMessage'
     }),
-    async likePost () {
+    async likeComment () {
       this.newLike.user_id = this.currentUser.id
-      this.newLike.likeable_id = this.post.id
-      this.newLike.likeable_type = 'post'
-      const url = 'api/v1/like_post'
+      this.newLike.likeable_id = this.comment.id
+      this.newLike.likeable_type = 'comment'
+      const url = 'api/v1/like_comment'
       await this.$axios.post(url, this.newLike)
         .then((res) => {
           this.setLikes(res.data)
@@ -69,8 +68,8 @@ export default {
           console.error(err)
         })
     },
-    async unLikePost () {
-      const url = `api/v1/unlike_post/${this.post.id}`
+    async unLikeComment () {
+      const url = `api/v1/unlike_comment/${this.comment.id}`
       await this.$axios.delete(url)
         .then((res) => {
           this.setLikes(res.data)

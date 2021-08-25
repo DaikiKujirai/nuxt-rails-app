@@ -42,6 +42,7 @@
           <btn-new-comment
             :post="post"
           />
+          {{ post.comments.length }}
           <template v-if="post.user_id !== currentUser.id">
             <v-spacer />
             <v-btn
@@ -119,11 +120,18 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.setPosts(res.data)
-          this.setLikes(this.currentUser.likes)
+          this.setCurrentUserData()
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err)
+        })
+    },
+    async setCurrentUserData () {
+      const url = `/api/v1/users/${this.currentUser.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setLikes(res.data.likes)
         })
     },
     async toShow (id) {

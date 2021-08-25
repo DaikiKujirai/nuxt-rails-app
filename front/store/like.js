@@ -30,7 +30,7 @@ export const mutations = {
 
 export const actions = {
   setLikes ({ commit, dispatch }, likes) {
-    console.log(likes)
+    console.log('likes', likes)
     commit('setLikes', likes)
     dispatch('setLikePostIds', likes)
     dispatch('setLikeCommentIds', likes)
@@ -42,7 +42,7 @@ export const actions = {
         ids.push(likes[i].likeable_id)
       }
     }
-    console.log(ids)
+    console.log('post', ids)
     commit('setLikePostIds', ids)
   },
   setLikeCommentIds ({ commit }, likes) {
@@ -52,7 +52,7 @@ export const actions = {
         ids.push(likes[i].likeable_id)
       }
     }
-    console.log(ids)
+    console.log('comment', ids)
     commit('setLikeCommentIds', ids)
   }
 }

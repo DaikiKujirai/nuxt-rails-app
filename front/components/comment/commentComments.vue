@@ -40,12 +40,9 @@
             </v-btn>
           </template>
           <v-spacer />
-          <v-btn
-            :color="btnColor"
-            text
-          >
-            <v-icon v-text="'mdi-heart-outline'" />
-          </v-btn>
+          <like-comment
+            :comment="comment"
+          />
           <template v-if="comment.user_id === currentUser.id">
             <v-spacer />
             <btn-edit-last-comment
@@ -69,12 +66,14 @@ import { mapGetters, mapActions } from 'vuex'
 import btnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
 import btnEditLastComment from '../btn/editComment/btnEditLastComment.vue'
 import btnLastComment from '../btn/commentComment/btnLastComment.vue'
+import likeComment from '../btn/like/likeComment.vue'
 
 export default {
   components: {
     btnLastComment,
     btnEditLastComment,
-    btnDeleteComment
+    btnDeleteComment,
+    likeComment
   },
   data () {
     return {
@@ -100,7 +99,7 @@ export default {
         .then((res) => {
           this.setComment(res.data)
           this.searchAndSetComments(res.data.id)
-          this.$router.push(`/comments/${comment.id}`)
+          this.$router.replace(`/comments/${comment.id}`)
         })
     },
     async searchAndSetComments (id) {

@@ -40,12 +40,9 @@
             </v-btn>
           </template>
           <v-spacer />
-          <v-btn
-            :color="btnColor"
-            text
-          >
-            <v-icon v-text="'mdi-heart-outline'" />
-          </v-btn>
+          <like-comment
+            :comment="comment"
+          />
           <template v-if="comment.user_id === currentUser.id">
             <v-spacer />
             <btn-edit-comment
@@ -69,12 +66,14 @@ import { mapGetters, mapActions } from 'vuex'
 import btnEditComment from '../btn/editComment/btnEditComment.vue'
 import btnNewCommentComment from '../btn/commentComment/btnNewCommentComment.vue'
 import btnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
+import likeComment from '../btn/like/likeComment.vue'
 
 export default {
   components: {
     btnEditComment,
     btnDeleteComment,
-    btnNewCommentComment
+    btnNewCommentComment,
+    likeComment
   },
   props: {
     post: {

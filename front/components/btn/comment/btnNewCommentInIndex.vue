@@ -8,9 +8,6 @@
     >
       <v-icon v-text="'mdi-chat-processing-outline'" />
       &nbsp;
-      <template v-if="post.comments.length">
-        {{ post.comments.length }}
-      </template>
     </v-btn>
     <v-dialog
       v-model="dialog"

@@ -34,12 +34,9 @@
           </v-btn>
         </template>
         <v-spacer />
-        <v-btn
-          :color="btnColor"
-          text
-        >
-          <v-icon v-text="'mdi-heart-outline'" />
-        </v-btn>
+        <like-comment
+          :comment="comment"
+        />
         <template v-if="comment.user_id === currentUser.id">
           <v-spacer />
           <btn-edit-comment-comment
@@ -65,6 +62,7 @@ import btnEditCommentComment from '../../components/btn/editComment/btnEditComme
 import btnNewCommentCommentComment from '../../components/btn/commentComment/btnNewCommentCommentComment.vue'
 import commentComments from '../../components/comment/commentComments.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
+import likeComment from '../../components/btn/like/likeComment.vue'
 
 export default {
   components: {
@@ -72,7 +70,8 @@ export default {
     btnNewCommentCommentComment,
     btnEditCommentComment,
     commentComments,
-    btnDeleteComment
+    btnDeleteComment,
+    likeComment
   },
   data () {
     return {
