@@ -20,6 +20,9 @@
         <v-icon v-text="'mdi-heart'" />
       </v-btn>
     </template>
+    <template v-if="likePostCount">
+      {{ likePostCount }}
+    </template>
   </div>
 </template>
 
@@ -35,7 +38,8 @@ export default {
   },
   data () {
     return {
-      newLike: {}
+      newLike: {},
+      likePostCount: this.post.like_posts.length
     }
   },
   computed: {
@@ -60,6 +64,7 @@ export default {
       const url = '/api/v1/like_posts'
       await this.$axios.post(url, this.newLike)
         .then((res) => {
+          this.likePostCount++
           this.setLikePosts(res.data)
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
@@ -77,6 +82,7 @@ export default {
         }
       })
         .then((res) => {
+          this.likePostCount--
           this.setLikePosts(res)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
