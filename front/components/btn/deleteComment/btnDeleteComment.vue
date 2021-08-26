@@ -51,11 +51,11 @@ export default {
     comment: {
       type: Object,
       required: true
-    },
-    isPostComment: {
-      type: Boolean,
-      required: true
     }
+    // isPostComment: {
+    //   type: Boolean,
+    //   required: true
+    // }
   },
   data () {
     return {

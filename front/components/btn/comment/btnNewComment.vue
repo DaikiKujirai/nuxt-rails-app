@@ -4,7 +4,7 @@
       :color="btnColor"
       text
       rounded
-      @click.prevent.stop="dialog = true, setPostId()"
+      @click.prevent.stop="dialog = true"
     >
       <v-icon v-text="'mdi-chat-processing-outline'" />
       &nbsp;
@@ -73,6 +73,9 @@
         </v-container>
       </v-card>
     </v-dialog>
+    <template v-if="isIndex">
+      {{ commentCount }}
+    </template>
   </div>
 </template>
 
@@ -88,6 +91,10 @@ export default {
     post: {
       type: Object,
       required: true
+    },
+    isIndex: {
+      type: Boolean,
+      required: true
     }
   },
   data () {
@@ -96,6 +103,7 @@ export default {
       isValid: false,
       loading: false,
       newComment: { content: '' },
+      commentCount: this.post.comments.length,
       src: 'https://picsum.photos/200/200'
     }
   },
@@ -108,18 +116,20 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPosts: 'post/setPosts'
+      setPost: 'post/setPost'
     }),
-    setPostId () {
-      this.newComment.post_id = this.post.id
-    },
     async submitComment () {
       this.loading = true
       this.newComment.user_id = this.currentUser.id
+      this.newComment.post_id = this.post.id
       await this.$axios.$post('/api/v1/comments', this.newComment)
         .then(() => {
+          if (this.isIndex) {
+            this.commentCount++
+          } else {
+            this.fetchContents()
+          }
           this.loading = false
-          this.fetchContents()
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
           this.$refs.form.reset()
@@ -129,15 +139,12 @@ export default {
         })
     },
     async fetchContents () {
-      const url = 'api/v1/posts'
+      const url = `/api/v1/posts/${this.post.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.setPosts(res.data)
+          this.setPost(res.data)
         })
     }
   }
 }
 </script>
-
-<style scoped>
-</style>

@@ -1,7 +1,12 @@
 class Api::V1::PostsController < ApplicationController
   def index
     posts = Post.all.includes(:user).order(created_at: :desc)
-    render json: posts, each_serializer: PostSerializer
+    render json: posts, include: [
+      :user,
+      :like_posts,
+      { comments: [:user] },
+      { comments: [:like_comment] }
+    ]
   end
 
   def show
@@ -9,7 +14,7 @@ class Api::V1::PostsController < ApplicationController
     unless Post.nil?
       render json: post, include: [
         :user,
-        :like_post,
+        :like_posts,
         { comments: [:user] },
         { comments: [:like_comment] }
       ]

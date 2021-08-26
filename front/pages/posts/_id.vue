@@ -1,79 +1,101 @@
 <template>
   <layout-main #layout-main> <!--eslint-disable-line-->
-    <v-card>
-      <v-row>
-        <v-col class="d-flex">
-          <v-img
-            :src="src"
-            max-height="70"
-            max-width="70"
-            style="border-radius: 50%;"
-            contain
-            class="ml-3"
-          />
-          <v-card-title>
-            {{ post.user.name }}
-          </v-card-title>
-        </v-col>
-      </v-row>
-      <v-card-title>
-        {{ post.content }}
-      </v-card-title>
-      <v-card-actions>
-        <v-spacer />
-        <btn-show-post-comment
-          :post="post"
-        />
-        <template v-if="post.user_id !== currentUser.id">
-          <v-spacer />
-          <v-btn
-            :color="btnColor"
-            text
-          >
-            <v-icon v-text="'mdi-twitter-retweet'" />
-          </v-btn>
-        </template>
-        <v-spacer />
-        <like-post
-          :post="post"
-        />
-        <template v-if="post.user_id === currentUser.id">
-          <v-spacer />
-          <btn-edit-post-in-id
-            :post="post"
-          />
-          <v-spacer />
-          <btn-delete-post
-            :post="post"
-            :is-index="isIndex"
-          />
-        </template>
-        <v-spacer />
-      </v-card-actions>
-      <post-comment
-        :post="post"
-      />
-    </v-card>
+    <v-row>
+      <v-col>
+        <v-card>
+          <v-row>
+            <v-col
+              class="d-flex"
+            >
+              <v-img
+                :src="src"
+                max-height="70"
+                max-width="70"
+                contain
+                style="border-radius: 50%;"
+                class="ml-3"
+              />
+              <v-card-text>
+                {{ post.user.name }}
+              </v-card-text>
+              <v-card-text
+                class="text-right"
+              >
+                <v-icon
+                  size="16"
+                  v-text="'mdi-update'"
+                />
+                {{ $my.format(post.created_at) }}
+              </v-card-text>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-card-title
+                class="card-content"
+              >
+                {{ post.content }}
+              </v-card-title>
+            </v-col>
+          </v-row>
+          <template v-if="isAuthenticated">
+            <v-row>
+              <v-col>
+                <v-card-actions class="justify-space-around">
+                  <btn-new-comment
+                    :post="post"
+                    :is-index="isIndex"
+                  />
+                  <template v-if="post.user_id !== currentUser.id">
+                    <v-btn
+                      :color="btnColor"
+                      text
+                    >
+                      <v-icon v-text="'mdi-twitter-retweet'" />
+                    </v-btn>
+                  </template>
+                  <like-post
+                    :post="post"
+                  />
+                  <template v-if="post.user_id === currentUser.id">
+                    <btn-edit-post-in-id
+                      :post="post"
+                    />
+                    <btn-delete-post
+                      :post="post"
+                      :is-index="isIndex"
+                    />
+                  </template>
+                </v-card-actions>
+              </v-col>
+            </v-row>
+          </template>
+        </v-card>
+      </v-col>
+    </v-row>
+    <post-comment
+      :post="post"
+    />
   </layout-main>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import btnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
-import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import postComment from '../../components/comment/postComment.vue'
-import btnShowPostComment from '../../components/btn/comment/btnNewCommentInId.vue'
-import btnEditPostInId from '../../components/btn/editPost/btnEditPostInId.vue'
-import likePost from '../../components/btn/like/likePost.vue'
+import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
+import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
+import PostComment from '../../components/comment/postComment.vue'
+import BtnEditPostInId from '../../components/btn/editPost/btnEditPostInId.vue'
+import LikePost from '../../components/btn/like/likePost.vue'
+import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
 
 export default {
   components: {
-    btnDeletePost,
-    layoutMain,
-    postComment,
-    btnShowPostComment,
-    btnEditPostInId,
-    likePost
+    BtnDeletePost,
+    LayoutMain,
+    PostComment,
+    BtnEditPostInId,
+    LikePost,
+    BtnNewComment
   },
   middleware: 'authenticated',
   data () {
@@ -86,6 +108,7 @@ export default {
     ...mapGetters({
       post: 'post/post',
       currentUser: 'auth/data',
+      isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color'
     })
   }

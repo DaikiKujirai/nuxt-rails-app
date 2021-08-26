@@ -1,5 +1,5 @@
 class PostSerializer < ActiveModel::Serializer
-  attributes %i[id user_id content created_at user like_posts]
+  attributes %i[id user_id content created_at]
 
   belongs_to :user
   has_many :comments

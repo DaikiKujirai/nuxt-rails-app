@@ -1,63 +1,84 @@
 <template>
   <div>
-    <template
-      v-for="(comment, i) in post.comments"
+    <v-row
+      v-for="comment in post.comments"
+      :key="comment.id"
     >
-      <v-col
-        :key="comment.id"
-        style="cursor: pointer;"
-        @click="toShow(comment)"
-      >
-        <v-divider />
-        <v-col class="d-flex">
-          <v-img
-            :src="src"
-            max-height="70"
-            max-width="70"
-            contain
-            style="border-radius: 50%;"
-          />
-          <v-card-subtitle>
-            {{ comment.user.name }}
-          </v-card-subtitle>
-        </v-col>
-        <v-card-text>
-          {{ comment.content }}
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <btn-new-comment-comment
-            :comment="comment"
-            :comment-index="i"
-          />
-          <template v-if="comment.user_id !== currentUser.id">
-            <v-spacer />
-            <v-btn
-              :color="btnColor"
-              text
+      <v-col>
+        <v-card
+          @click="toShow(comment)"
+        >
+          <v-row>
+            <v-col
+              class="d-flex"
             >
-              <v-icon v-text="'mdi-twitter-retweet'" />
-            </v-btn>
+              <v-img
+                :src="src"
+                max-height="70"
+                max-width="70"
+                contain
+                style="border-radius: 50%;"
+                class="ml-3"
+              />
+              <v-card-text>
+                {{ comment.user.name }}
+              </v-card-text>
+              <v-card-text
+                class="text-right"
+              >
+                <v-icon
+                  size="16"
+                  v-text="'mdi-update'"
+                />
+                {{ $my.format(comment.created_at) }}
+              </v-card-text>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-card-title
+                class="card-content"
+              >
+                {{ comment.content }}
+              </v-card-title>
+            </v-col>
+          </v-row>
+          <template v-if="isAuthenticated">
+            <v-row>
+              <v-col>
+                <v-card-actions class="justify-space-around">
+                  <btn-new-comment-comment
+                    :comment="comment"
+                    :is-index="isIndex"
+                  />
+                  <template v-if="comment.user_id !== currentUser.id">
+                    <v-btn
+                      :color="btnColor"
+                      text
+                    >
+                      <v-icon v-text="'mdi-twitter-retweet'" />
+                    </v-btn>
+                  </template>
+                  <like-comment
+                    :comment="comment"
+                  />
+                  <template v-if="comment.user_id === currentUser.id">
+                    <btn-edit-comment
+                      :comment="comment"
+                      :is-index="isIndex"
+                    />
+                    <btn-delete-comment
+                      :comment="comment"
+                      :is-index="isIndex"
+                    />
+                  </template>
+                </v-card-actions>
+              </v-col>
+            </v-row>
           </template>
-          <v-spacer />
-          <like-comment
-            :comment="comment"
-          />
-          <template v-if="comment.user_id === currentUser.id">
-            <v-spacer />
-            <btn-edit-comment
-              :comment="comment"
-            />
-            <v-spacer />
-            <btn-delete-comment
-              :comment="comment"
-              :is-post-comment="isPostComment"
-            />
-          </template>
-          <v-spacer />
-        </v-card-actions>
+        </v-card>
       </v-col>
-    </template>
+    </v-row>
   </div>
 </template>
 
@@ -83,7 +104,7 @@ export default {
   },
   data () {
     return {
-      isPostComment: true,
+      isIndex: true,
       src: 'https://picsum.photos/500/500'
     }
   },
@@ -91,6 +112,7 @@ export default {
     ...mapGetters({
       comments: 'comment/comments',
       currentUser: 'auth/data',
+      isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color'
     })
   },

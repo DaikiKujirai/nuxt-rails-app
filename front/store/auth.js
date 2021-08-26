@@ -13,7 +13,7 @@ export const getters = {
     return state.data
   },
   isAuthenticated (state) {
-    return !!state.user && !!state.user.uid
+    return !!state.user
   }
 }
 

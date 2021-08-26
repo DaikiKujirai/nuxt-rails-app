@@ -7,9 +7,9 @@ Rails.application.routes.draw do
       resources   :like_posts   , only: %i[create destroy]
       resources   :like_comments, only: %i[create destroy]
       # user
-      get 'find_login_user/:uid'        => 'users#find_login_user'
+      get 'find_login_user/:uid' => 'users#find_login_user'
       # comment
-      get 'search_comments/:id'         => 'comments#search_comments'
+      get 'search_comments/:id'  => 'comments#search_comments'
     end
   end
 end

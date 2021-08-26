@@ -1,75 +1,83 @@
 <template>
   <layout-main #layout-main> <!--eslint-disable-line-->
-    <v-card
+    <v-row
       v-for="post in posts"
       :key="post.id"
-      class="mt-3"
-      @click="toShow(post.id)"
     >
-      <v-row>
-        <v-col class="d-flex">
-          <v-img
-            :src="src"
-            max-height="70"
-            max-width="70"
-            contain
-            style="border-radius: 50%;"
-          />
-          <v-card-text>
-            {{ post.user.name }}
-          </v-card-text>
-          <v-card-text
-            class="text-right"
-          >
-            <v-icon
-              size="16"
-              v-text="'mdi-update'"
-            />
-            {{ $my.format(post.created_at) }}
-          </v-card-text>
-        </v-col>
-      </v-row>
-      <div>
-        <v-card-title
-          class="card-content"
+      <v-col>
+        <v-card
+          @click="toShow(post.id)"
         >
-          {{ post.content }}
-        </v-card-title>
-      </div>
-      <template v-if="isAuthenticated">
-        <v-card-actions>
-          <v-spacer />
-          <btn-new-comment
-            :post="post"
-          />
-          <template v-if="post.user_id !== currentUser.id">
-            <v-spacer />
-            <v-btn
-              :color="btnColor"
-              text
+          <v-row>
+            <v-col
+              class="d-flex"
             >
-              <v-icon v-text="'mdi-twitter-retweet'" />
-            </v-btn>
+              <v-img
+                :src="src"
+                max-height="70"
+                max-width="70"
+                contain
+                style="border-radius: 50%;"
+                class="ml-3"
+              />
+              <v-card-text>
+                {{ post.user.name }}
+              </v-card-text>
+              <v-card-text
+                class="text-right"
+              >
+                <v-icon
+                  size="16"
+                  v-text="'mdi-update'"
+                />
+                {{ $my.format(post.created_at) }}
+              </v-card-text>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-card-title
+                class="card-content"
+              >
+                {{ post.content }}
+              </v-card-title>
+            </v-col>
+          </v-row>
+          <template v-if="isAuthenticated">
+            <v-row>
+              <v-col>
+                <v-card-actions class="justify-space-around">
+                  <btn-new-comment
+                    :post="post"
+                    :is-index="isIndex"
+                  />
+                  <template v-if="post.user_id !== currentUser.id">
+                    <v-btn
+                      :color="btnColor"
+                      text
+                    >
+                      <v-icon v-text="'mdi-twitter-retweet'" />
+                    </v-btn>
+                  </template>
+                  <like-post
+                    :post="post"
+                  />
+                  <template v-if="post.user_id === currentUser.id">
+                    <btn-edit-post-in-index
+                      :post="post"
+                    />
+                    <btn-delete-post
+                      :post="post"
+                      :is-index="isIndex"
+                    />
+                  </template>
+                </v-card-actions>
+              </v-col>
+            </v-row>
           </template>
-          <v-spacer />
-          <like-post
-            :post="post"
-          />
-          <template v-if="post.user_id === currentUser.id">
-            <v-spacer />
-            <btn-edit-post-in-index
-              :post="post"
-            />
-            <v-spacer />
-            <btn-delete-post
-              :post="post"
-              :is-index="isIndex"
-            />
-          </template>
-          <v-spacer />
-        </v-card-actions>
-      </template>
-    </v-card>
+        </v-card>
+      </v-col>
+    </v-row>
   </layout-main>
 </template>
 
@@ -77,7 +85,7 @@
 import { mapGetters, mapActions } from 'vuex'
 import btnEditPostInIndex from '../../components/btn/editPost/btnEditPostInIndex.vue'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import btnNewComment from '../../components/btn/comment/btnNewCommentInIndex.vue'
+import btnNewComment from '../../components/btn/comment/btnNewComment.vue'
 import btnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
 import likePost from '../../components/btn/like/likePost.vue'
 
@@ -142,7 +150,7 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.setPost(res.data)
-          this.$router.push(`posts/${res.data.id}`)
+          this.$router.push(`posts/${id}`)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

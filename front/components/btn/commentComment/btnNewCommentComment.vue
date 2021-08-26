@@ -4,13 +4,9 @@
       :color="btnColor"
       text
       rounded
-      @click.prevent.stop="dialog = true, setPostIdAndCommentId(comment)"
+      @click.prevent.stop="dialog = true"
     >
       <v-icon v-text="'mdi-chat-processing-outline'" />
-      <template v-if="commentsCommentsCount">
-        &nbsp;
-        {{ commentsCommentsCount }}
-      </template>
     </v-btn>
     <v-dialog
       v-model="dialog"
@@ -76,6 +72,9 @@
         </v-container>
       </v-card>
     </v-dialog>
+    <template v-if="commentsCount && isIndex">
+      {{ commentsCount }}
+    </template>
   </div>
 </template>
 
@@ -92,9 +91,9 @@ export default {
       type: Object,
       required: true
     },
-    commentIndex: {
-      type: Number,
-      default: 0
+    isIndex: {
+      type: Boolean,
+      required: true
     }
   },
   data () {
@@ -104,7 +103,7 @@ export default {
       loading: false,
       newComment: { content: '' },
       src: 'https://picsum.photos/200/200',
-      commentsCommentsCount: 0
+      commentsCount: 0
     }
   },
   computed: {
@@ -115,28 +114,26 @@ export default {
     })
   },
   created () {
-    this.searchCommentsCount(this.post.comments[this.commentIndex].id)
+    this.setCommentsAndSearchCommentsCount(this.comment.id)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setPost: 'post/setPost'
+      setComments: 'comment/setComments'
     }),
-    async fetchContents (id) {
-      const url = `api/v1/posts/${id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setPost(res.data)
-        })
-    },
     async submitComment () {
       this.loading = true
       this.newComment.user_id = this.currentUser.id
+      this.newComment.post_id = this.post.id
+      this.newComment.comment_id = this.comment.id
       await this.$axios.$post('/api/v1/comments', this.newComment)
-        .then((res) => {
+        .then(() => {
           this.loading = false
-          this.fetchContents(res.post_id)
-          this.searchCommentsCount(res.comment_id)
+          if (this.isIndex) {
+            this.commentsCount++
+          } else {
+            this.setCommentsAndSearchCommentsCount(this.comment.id)
+          }
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
           this.$refs.form.reset()
@@ -145,15 +142,14 @@ export default {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    setPostIdAndCommentId (comment) {
-      this.newComment.post_id = this.post.id
-      this.newComment.comment_id = comment.id
-    },
-    async searchCommentsCount (id) {
+    async setCommentsAndSearchCommentsCount (id) {
       const url = `api/v1/search_comments/${id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.commentsCommentsCount = res.data.length
+          if (!this.isIndex) {
+            this.setComments(res.data)
+          }
+          this.commentsCount = res.data.length
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
