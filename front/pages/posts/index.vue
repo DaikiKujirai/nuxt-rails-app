@@ -102,10 +102,7 @@ export default {
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       likePosts: 'like/likePosts'
-    }),
-    likePostCount (post) {
-      return post.like_posts
-    }
+    })
   },
   mounted () {
     this.fetchContents()

@@ -20,6 +20,9 @@
         <v-icon v-text="'mdi-heart'" />
       </v-btn>
     </template>
+    <template v-if="likeCommentCount">
+      {{ likeCommentCount }}
+    </template>
   </div>
 </template>
 
@@ -35,7 +38,8 @@ export default {
   },
   data () {
     return {
-      newLike: {}
+      newLike: {},
+      likeCommentCount: this.comment.like_comments.length
     }
   },
   computed: {
@@ -50,17 +54,17 @@ export default {
   },
   methods: {
     ...mapActions({
-      setLikes: 'like/setLikes',
+      setLikeComments: 'like/setLikeComments',
       flashMessage: 'flash/flashMessage'
     }),
     async likeComment () {
       this.newLike.user_id = this.currentUser.id
-      this.newLike.likeable_id = this.comment.id
-      this.newLike.likeable_type = 'comment'
-      const url = 'api/v1/like'
+      this.newLike.comment_id = this.comment.id
+      const url = 'api/v1/like_comments'
       await this.$axios.post(url, this.newLike)
         .then((res) => {
-          this.setLikes(res.data)
+          this.likeCommentCount++
+          this.setLikeComments(res.data)
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
         .catch((err) => {
@@ -69,10 +73,16 @@ export default {
         })
     },
     async unLikeComment () {
-      const url = `api/v1/unlike/${this.comment.id}`
-      await this.$axios.delete(url)
+      const url = 'api/v1/like_comments/delete'
+      await this.$axios.$delete(url, {
+        data: {
+          user_id: this.currentUser.id,
+          comment_id: this.comment.id
+        }
+      })
         .then((res) => {
-          this.setLikes(res.data)
+          this.likeCommentCount--
+          this.setLikeComments(res)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
         .catch((err) => {

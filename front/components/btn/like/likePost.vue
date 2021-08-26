@@ -46,8 +46,7 @@ export default {
     ...mapGetters({
       btnColor: 'btn/color',
       currentUser: 'auth/data',
-      likePostIds: 'like/likePostIds',
-      likeCommentIds: 'like/likeCommentIds'
+      likePostIds: 'like/likePostIds'
     }),
     isLikePost () {
       return this.likePostIds.includes(this.post.id)

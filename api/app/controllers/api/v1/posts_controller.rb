@@ -9,7 +9,9 @@ class Api::V1::PostsController < ApplicationController
     unless Post.nil?
       render json: post, include: [
         :user,
-        { comments: [:user] }
+        :like_post,
+        { comments: [:user] },
+        { comments: [:like_comment] }
       ]
     else
       render json: { error_message: 'Not Found' }

@@ -15,7 +15,7 @@ class Api::V1::LikePostsController < ApplicationController
       user_likes = LikePost.where(user_id: params[:user_id])
       render json: user_likes.as_json
     else
-      render json: { error_message: '失敗しました' }
+      render json: { errors_message: '失敗しました' }
     end
   end
 
