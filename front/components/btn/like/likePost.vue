@@ -51,17 +51,16 @@ export default {
   },
   methods: {
     ...mapActions({
-      setLikes: 'like/setLikes',
+      setLikePosts: 'like/setLikePosts',
       flashMessage: 'flash/flashMessage'
     }),
     async likePost () {
       this.newLike.user_id = this.currentUser.id
-      this.newLike.likeable_id = this.post.id
-      this.newLike.likeable_type = 'post'
-      const url = 'api/v1/like'
+      this.newLike.post_id = this.post.id
+      const url = '/api/v1/like_posts'
       await this.$axios.post(url, this.newLike)
         .then((res) => {
-          this.setLikes(res.data)
+          this.setLikePosts(res.data)
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
         .catch((err) => {
@@ -69,11 +68,16 @@ export default {
           console.error(err)
         })
     },
-    async unLikePost () {
-      const url = `api/v1/unlike/${this.post.id}`
-      await this.$axios.delete(url)
+    unLikePost () {
+      const url = '/api/v1/like_posts/delete'
+      this.$axios.$delete(url, {
+        data: {
+          user_id: this.currentUser.id,
+          post_id: this.post.id
+        }
+      })
         .then((res) => {
-          this.setLikes(res.data)
+          this.setLikePosts(res)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
         .catch((err) => {

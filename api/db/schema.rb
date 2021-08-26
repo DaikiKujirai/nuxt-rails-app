@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_25_142821) do
+ActiveRecord::Schema.define(version: 2021_08_25_211414) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,14 +26,22 @@ ActiveRecord::Schema.define(version: 2021_08_25_142821) do
     t.index ["user_id"], name: "index_comments_on_user_id"
   end
 
-  create_table "likes", force: :cascade do |t|
+  create_table "like_comments", force: :cascade do |t|
     t.bigint "user_id"
-    t.string "likeable_type"
-    t.bigint "likeable_id"
+    t.bigint "comment_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["likeable_type", "likeable_id"], name: "index_likes_on_likeable_type_and_likeable_id"
-    t.index ["user_id"], name: "index_likes_on_user_id"
+    t.index ["comment_id"], name: "index_like_comments_on_comment_id"
+    t.index ["user_id"], name: "index_like_comments_on_user_id"
+  end
+
+  create_table "like_posts", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "post_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["post_id"], name: "index_like_posts_on_post_id"
+    t.index ["user_id"], name: "index_like_posts_on_user_id"
   end
 
   create_table "notifications", force: :cascade do |t|
@@ -80,7 +88,10 @@ ActiveRecord::Schema.define(version: 2021_08_25_142821) do
 
   add_foreign_key "comments", "posts"
   add_foreign_key "comments", "users"
-  add_foreign_key "likes", "users"
+  add_foreign_key "like_comments", "comments"
+  add_foreign_key "like_comments", "users"
+  add_foreign_key "like_posts", "posts"
+  add_foreign_key "like_posts", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "relationships", "users"
   add_foreign_key "relationships", "users", column: "follow_id"

@@ -2,9 +2,10 @@ require "validator/email_validator"
 
 class User < ApplicationRecord
 
-  has_many :posts   , dependent: :destroy
-  has_many :comments, dependent: :destroy
-  has_many :likes   , dependent: :destroy
+  has_many :posts         , dependent: :destroy
+  has_many :comments      , dependent: :destroy
+  has_many :like_posts    , dependent: :destroy
+  has_many :like_comments , dependent: :destroy
 
   before_validation :downcase_email
 

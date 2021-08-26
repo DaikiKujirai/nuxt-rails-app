@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class Api::V1::LikesControllerTest < ActionDispatch::IntegrationTest
+class Api::V1::LikeCommentsControllerTest < ActionDispatch::IntegrationTest
   # test "the truth" do
   #   assert true
   # end

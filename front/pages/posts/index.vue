@@ -42,7 +42,6 @@
           <btn-new-comment
             :post="post"
           />
-          {{ post.comments.length }}
           <template v-if="post.user_id !== currentUser.id">
             <v-spacer />
             <v-btn
@@ -102,7 +101,7 @@ export default {
       btnColor: 'btn/color',
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
-      likes: 'like/likes'
+      likePosts: 'like/likePosts'
     })
   },
   mounted () {
@@ -113,7 +112,8 @@ export default {
       flashMessage: 'flash/flashMessage',
       setPosts: 'post/setPosts',
       setPost: 'post/setPost',
-      setLikes: 'like/setLikes'
+      setLikePosts: 'like/setLikePosts',
+      setLikeComments: 'like/setLikeComments'
     }),
     async fetchContents () {
       const url = '/api/v1/posts'
@@ -133,7 +133,8 @@ export default {
       const url = `/api/v1/users/${this.currentUser.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.setLikes(res.data.likes)
+          this.setLikePosts(res.data.like_posts)
+          this.setLikeComments(res.data.like_comments)
         })
     },
     async toShow (id) {
