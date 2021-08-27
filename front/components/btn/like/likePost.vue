@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{ isLikePost }}
     <template v-if="!isLikePost">
       <v-btn
         :color="btnColor"
@@ -38,19 +39,23 @@ export default {
   },
   data () {
     return {
+      likePosts: [],
+      likePostIds: [],
       newLike: {},
-      likePostCount: this.post.like_posts.length
+      likePostCount: 0,
+      isLikePost: false
     }
   },
   computed: {
     ...mapGetters({
-      btnColor: 'btn/color',
       currentUser: 'auth/data',
-      likePostIds: 'like/likePostIds'
-    }),
-    isLikePost () {
-      return this.likePostIds.includes(this.post.id)
-    }
+      btnColor: 'btn/color'
+    })
+  },
+  mounted () {
+    this.likePosts = this.post.like_posts
+    this.setLikePostIdsAndSearchMyLike()
+    this.likePostCount = this.likePosts.length
   },
   methods: {
     ...mapActions({
@@ -62,9 +67,10 @@ export default {
       this.newLike.post_id = this.post.id
       const url = '/api/v1/like_posts'
       await this.$axios.post(url, this.newLike)
-        .then((res) => {
+        .then(() => {
           this.likePostCount++
-          this.setLikePosts(res.data)
+          this.isLikePost = true
+          this.likePostIds.push(this.currentUser.id)
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
         .catch((err) => {
@@ -80,15 +86,24 @@ export default {
           post_id: this.post.id
         }
       })
-        .then((res) => {
+        .then(() => {
           this.likePostCount--
-          this.setLikePosts(res)
+          this.isLikePost = false
+          this.likePostIds.filter(item => item === this.currentUser.id)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err)
         })
+    },
+    setLikePostIdsAndSearchMyLike () {
+      for (let i = 0; i < this.likePosts.length; i++) {
+        this.likePostIds.push(this.likePosts[i].user_id)
+      }
+      if (this.likePostIds.includes(this.currentUser.id)) {
+        this.isLikePost = true
+      }
     }
   }
 }

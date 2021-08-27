@@ -1,10 +1,12 @@
 <template>
   <v-textarea
     v-model="setContent"
-    label="内容"
+    label="いまなにしてる？"
+    auto-grow
+    counter="140"
     :placeholder="form.placeholder"
     :rules="rules"
-    outlined
+    class="mx-3"
   />
 </template>
 
@@ -25,7 +27,7 @@ export default {
   },
   computed: {
     form () {
-      const placeholder = this.noValidation ? undefined : 'コンテンツ'
+      const placeholder = this.noValidation ? undefined : 'いまなにしてる？'
       return { placeholder }
     },
     setContent: {

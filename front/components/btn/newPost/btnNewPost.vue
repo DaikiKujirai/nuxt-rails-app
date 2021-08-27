@@ -38,7 +38,7 @@
               :loading="loading"
               block
               color="info"
-              @click="newPost"
+              @click="submitPost"
             >
               投稿する
             </v-btn>
@@ -81,7 +81,7 @@ export default {
           this.setPosts(res.data)
         })
     },
-    async newPost () {
+    async submitPost () {
       this.loading = true
       this.post.user_id = this.currentUser.id
       await this.$axios.$post('/api/v1/posts', this.post)

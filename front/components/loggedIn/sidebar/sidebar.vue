@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -42,6 +42,12 @@ export default {
         { title: 'follower', icon: 'mdi-account-details-outline' }
       ]
     }
+  },
+  computed: {
+    ...mapGetters({
+      isAuthenticated: 'auth/isAuthenticated',
+      currentUser: 'auth/data'
+    })
   },
   methods: {
     ...mapActions({

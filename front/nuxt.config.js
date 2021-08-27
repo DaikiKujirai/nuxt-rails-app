@@ -119,5 +119,11 @@ export default {
     middleware: [
       'reload'
     ]
+  },
+  // loading: '~/components/LoadingBar.vue',
+  loadingIndicator: {
+    name: 'wandering-cubes',
+    color: '#3B8070',
+    background: 'white'
   }
 }

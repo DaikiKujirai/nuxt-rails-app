@@ -1,5 +1,6 @@
 <template>
   <layout-main #layout-main> <!--eslint-disable-line-->
+    <home-new-post />
     <v-row
       v-for="post in posts"
       :key="post.id"
@@ -89,6 +90,7 @@ import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
 import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
 import LikePost from '../../components/btn/like/likePost.vue'
+import HomeNewPost from '../../components/post/homeNewPost.vue'
 
 export default {
   components: {
@@ -96,71 +98,47 @@ export default {
     BtnNewComment,
     BtnEditPost,
     BtnDeletePost,
-    LikePost
+    LikePost,
+    HomeNewPost
   },
   data () {
     return {
+      posts: [],
       src: 'https://picsum.photos/200/200',
       isIndex: true
     }
   },
   computed: {
     ...mapGetters({
-      posts: 'post/posts',
       btnColor: 'btn/color',
       currentUser: 'auth/data',
-      isAuthenticated: 'auth/isAuthenticated',
-      likePosts: 'like/likePosts'
+      isAuthenticated: 'auth/isAuthenticated'
     })
   },
-  beforecreate () {
+  mounted () {
     this.fetchContents()
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage',
-      setPosts: 'post/setPosts',
-      setPost: 'post/setPost',
-      setLikePosts: 'like/setLikePosts',
-      setLikeComments: 'like/setLikeComments'
+      flashMessage: 'flash/flashMessage'
     }),
     async fetchContents () {
       const url = '/api/v1/posts'
       await this.$axios.get(url)
         .then((res) => {
-          this.setPosts(res.data)
-          if (this.isAuthenticated) {
-            this.setCurrentUserData()
-          }
+          this.posts = res.data
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err)
         })
     },
-    async setCurrentUserData () {
-      const url = `/api/v1/users/${this.currentUser.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setLikePosts(res.data.like_posts)
-          this.setLikeComments(res.data.like_comments)
-        })
-    },
-    async toShow (id) {
-      const url = `/api/v1/posts/${id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setPost(res.data)
-          this.$router.push(`posts/${id}`)
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
+    toShow (id) {
+      this.$router.push(`posts/${id}`)
     }
   }
 }
 </script>
 
-<style scope>
+<style scoped>
 </style>

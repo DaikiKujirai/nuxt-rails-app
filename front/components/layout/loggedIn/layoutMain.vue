@@ -7,9 +7,32 @@
       <v-col
         cols="6"
         offset="3"
-        class="mt-3"
       >
-        <slot name="layout-main" />
+        <v-row>
+          <v-col
+            class="breadcrumbs"
+            cols="6"
+          >
+            <v-card class="d-flex align-center">
+              <v-btn
+                icon
+                class="ml-3"
+                @click="pageBack"
+              >
+                <v-icon
+                  size="40"
+                  v-text="'mdi-arrow-left'"
+                />
+              </v-btn>
+              <breadcrumbs />
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-main>
+          <div class="mt-4">
+            <slot name="layout-main" />
+          </div>
+        </v-main>
       </v-col>
       <v-col cols="3">
         <v-card>
@@ -21,11 +44,26 @@
 </template>
 
 <script>
-import sidebar from '../../loggedIn/sidebar/sidebar.vue'
+import Sidebar from '../../loggedIn/sidebar/sidebar.vue'
+import Breadcrumbs from '../../loggedIn/ui/breadcrumbs.vue'
 
 export default {
   components: {
-    sidebar
+    Sidebar,
+    Breadcrumbs
+  },
+  methods: {
+    pageBack () {
+      this.$router.go(-1)
+    }
   }
 }
 </script>
+
+<style scoped>
+  .breadcrumbs {
+    position: fixed;
+    z-index: 1;
+    padding-top: 0;
+  }
+</style>

@@ -2,8 +2,6 @@
   <v-app-bar
     app
     dark
-    hide-on-scroll
-    clipped-left
   >
     <app-logo
       :to="'/posts'"

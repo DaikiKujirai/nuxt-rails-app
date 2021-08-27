@@ -1,7 +1,6 @@
 export const state = () => ({
   posts: [],
-  post: {},
-  user: {}
+  post: {}
 })
 
 export const getters = {
@@ -10,9 +9,6 @@ export const getters = {
   },
   post (state) {
     return state.post
-  },
-  user (state) {
-    return state.user
   }
 }
 
@@ -22,9 +18,6 @@ export const mutations = {
   },
   setPost (state, payload) {
     state.post = payload
-  },
-  setUser (state, payload) {
-    state.user = payload
   }
 }
 
@@ -34,8 +27,5 @@ export const actions = {
   },
   setPost ({ commit }, post) {
     commit('setPost', post)
-  },
-  setUser ({ commit }, user) {
-    commit('setUser', user)
   }
 }

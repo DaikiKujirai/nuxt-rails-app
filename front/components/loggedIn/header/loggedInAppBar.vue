@@ -2,7 +2,6 @@
   <v-app-bar
     app
     dark
-    hide-on-scroll
   >
     <nuxt-link
       to="/posts"
@@ -17,7 +16,7 @@
       v-if="notTopPage"
     />
     <v-spacer />
-    <new-post />
+    <btn-new-post />
     <v-btn
       @click="signout"
     >
@@ -29,19 +28,19 @@
 
 <script>
 import { mapActions } from 'vuex'
-import appLogo from '../../ui/appLogo.vue'
-import newPost from '../../post/newPost.vue'
-import appTitle from '../../ui/appTitle.vue'
+import AppLogo from '../../ui/appLogo.vue'
+import AppTitle from '../../ui/appTitle.vue'
 import Breadcrumbs from '../ui/breadcrumbs.vue'
-import accountLink from './accountLink.vue'
+import AccountLink from './accountLink.vue'
+import BtnNewPost from '~/components/btn/newPost/btnNewPost.vue'
 
 export default {
   components: {
-    appLogo,
-    appTitle,
-    newPost,
-    accountLink,
-    Breadcrumbs
+    AppLogo,
+    AppTitle,
+    AccountLink,
+    Breadcrumbs,
+    BtnNewPost
   },
   computed: {
     notTopPage () {

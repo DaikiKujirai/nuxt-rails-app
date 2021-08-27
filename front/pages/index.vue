@@ -1,13 +1,18 @@
 <template>
-  <div>
-    1
-  </div>
+  <layout-main #layout-main>　<!--eslint-disable-line-->
+    ロード中
+  </layout-main>
 </template>
 
 <script>
+import layoutMain from '../components/layout/loggedIn/layoutMain.vue'
+
 export default {
-  beforeCreate () {
-    this.$store.$router.push('/posts')
+  components: {
+    layoutMain
   }
+  // beforeCreate () {
+  //   this.$store.$router.push('/posts')
+  // }
 }
 </script>

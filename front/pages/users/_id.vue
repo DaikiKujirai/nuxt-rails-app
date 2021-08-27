@@ -1,59 +1,88 @@
 <template>
-  <v-container
-    class="mt-3"
-  >
+  <layout-main #layout-main> <!--eslint-disable-line-->
     <v-row>
-      <v-col
-        cols="8"
-        offset="2"
-      >
-        <v-card
-          align="center"
-          class="pt-4"
-        >
-          <v-img
-            :src="src"
-            max-height="500"
-            max-width="500"
-            contain
-          />
-          <v-card-title>
-            {{ user.name }}
-          </v-card-title>
-          <v-card-text>
-            {{ user.introduction }}
-          </v-card-text>
-          <v-card-actions>
-            <v-btn
-              color="deep-purple lighten-2"
-              text
+      <v-col>
+        <v-card>
+          <v-row>
+            <v-col
+              class="d-flex"
             >
-              フォロー中
-            </v-btn>
-            <v-btn
-              color="deep-purple lighten-2"
-              text
-            >
-              フォロワー
-            </v-btn>
-          </v-card-actions>
+              <v-img
+                :src="src"
+                max-height="70"
+                max-width="70"
+                contain
+                style="border-radius: 50%;"
+                class="ml-3"
+              />
+              <v-card-text>
+                {{ user.name }}
+              </v-card-text>
+              <v-card-text
+                class="text-right"
+              >
+                <v-icon
+                  size="16"
+                  v-text="'mdi-update'"
+                />
+              </v-card-text>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
+              <v-card-title
+                class="card-content"
+              >
+                {{ user }}
+                {{ user.introduction }}
+              </v-card-title>
+            </v-col>
+          </v-row>
+          <template v-if="isAuthenticated">
+            <v-row>
+              <v-col>
+                <v-card-actions>
+                  <v-btn
+                    :color="btnColor"
+                    text
+                    rounded
+                    @click="toFollow"
+                  >
+                    フォロー
+                  </v-btn>
+                  <v-btn
+                    :color="btnColor"
+                    text
+                    rounded
+                    @click="toFollower"
+                  >
+                    フォロワー
+                  </v-btn>
+                </v-card-actions>
+              </v-col>
+            </v-row>
+          </template>
         </v-card>
       </v-col>
     </v-row>
-  </v-container>
+  </layout-main>
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
-  layout: 'loggedIn',
   data: () => {
     return {
-      user: {},
       src: 'https://picsum.photos/500/500'
     }
   },
-  mounted () {
-    this.fetchContents()
+  computed: {
+    ...mapGetters({
+      user: 'user/user',
+      isAuthenticated: 'auth/isAuthenticated',
+      btnColor: 'btn/color'
+    })
   },
   methods: {
     fetchContents () {
@@ -67,6 +96,14 @@ export default {
         .catch((err) => {
           console.error(err) // eslint-disable-line
         })
+    },
+    toFollow () {
+      // eslint-disable-next-line no-console
+      console.log('toFolow')
+    },
+    toFollower () {
+      // eslint-disable-next-line no-console
+      console.log('toFolower')
     }
   }
 }

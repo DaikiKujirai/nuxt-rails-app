@@ -22,7 +22,7 @@
       <v-list-item>
         <v-list-item-content>
           <v-list-item-subtitle>
-            <!-- {{ currentUser.name }} -->
+            {{ currentUser.name }}
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
@@ -31,12 +31,26 @@
         アカウント
       </v-subheader>
       <v-list-item
+        @click="toMyPage"
+      >
+        <v-list-item-icon class="mr-2">
+          <v-icon
+            size="22"
+            v-text="'mdi-account'"
+          />
+        </v-list-item-icon>
+        <v-list-item-title>
+          マイページ
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
         to="/account/settings"
       >
         <v-list-item-icon class="mr-2">
-          <v-icon size="22">
-            mdi-account-cog
-          </v-icon>
+          <v-icon
+            size="22"
+            v-text="'mdi-account-cog'"
+          />
         </v-list-item-icon>
         <v-list-item-title>
           アカウント設定
@@ -46,9 +60,10 @@
         @click="logoutUser"
       >
         <v-list-item-icon class="mr-2">
-          <v-icon size="22">
-            mdi-logout-variant
-          </v-icon>
+          <v-icon
+            size="22"
+            v-text="'mdi-logout-variant'"
+          />
         </v-list-item-icon>
         <v-list-item-title>
           ログアウト
@@ -64,11 +79,14 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   computed: {
     ...mapGetters({
-      currentUser: 'auth/data'
+      isAuthenticated: 'auth/isAuthenticated',
+      currentUser: 'auth/data',
+      user: 'user/user'
     })
   },
   methods: {
     ...mapActions({
+      setUser: 'user/setUser',
       logout: 'auth/logout',
       flashMessage: 'flash/flashMessage'
     }),
@@ -82,6 +100,10 @@ export default {
           // eslint-disable-next-line no-console
           console.log(err)
         })
+    },
+    toMyPage () {
+      this.setUser(this.currentUser)
+      this.$router.push(`/users/${this.currentUser.id}`)
     }
   }
 }

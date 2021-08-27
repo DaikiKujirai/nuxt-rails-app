@@ -115,20 +115,20 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage',
-      setPost: 'post/setPost'
+      flashMessage: 'flash/flashMessage'
     }),
     async submitComment () {
       this.loading = true
       this.newComment.user_id = this.currentUser.id
       this.newComment.post_id = this.post.id
       await this.$axios.$post('/api/v1/comments', this.newComment)
-        .then(() => {
-          if (this.isIndex) {
-            this.commentCount++
-          } else {
+        .then((res) => {
+          if (!this.isIndex) {
             this.fetchContents()
+          } else {
+            // this.$router.push(res)
           }
+          console.log(res)
           this.loading = false
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
@@ -142,7 +142,9 @@ export default {
       const url = `/api/v1/posts/${this.post.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.setPost(res.data)
+          console.log(res)
+          // eslint-disable-next-line vue/no-mutating-props
+          this.post = res.data
         })
     }
   }
