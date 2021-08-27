@@ -114,7 +114,7 @@ export default {
     })
   },
   created () {
-    this.setCommentsAndSearchCommentsCount(this.comment.id)
+    this.searchCommentsAndsetCommentsCount()
   },
   methods: {
     ...mapActions({
@@ -127,12 +127,13 @@ export default {
       this.newComment.post_id = this.post.id
       this.newComment.comment_id = this.comment.id
       await this.$axios.$post('/api/v1/comments', this.newComment)
-        .then(() => {
+        .then((res) => {
           this.loading = false
           if (this.isIndex) {
             this.commentsCount++
           } else {
-            this.setCommentsAndSearchCommentsCount(this.comment.id)
+            console.log(res)
+            this.searchCommentsAndsetCommentsCount()
           }
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
@@ -142,12 +143,14 @@ export default {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    async setCommentsAndSearchCommentsCount (id) {
-      const url = `api/v1/search_comments/${id}`
+    async searchCommentsAndsetCommentsCount () {
+      const url = `api/v1/search_comments/${this.comment.id}`
       await this.$axios.get(url)
         .then((res) => {
           if (!this.isIndex) {
+            console.log(res)
             this.setComments(res.data)
+            console.log('btncommentcomment', res.data)
           }
           this.commentsCount = res.data.length
         })

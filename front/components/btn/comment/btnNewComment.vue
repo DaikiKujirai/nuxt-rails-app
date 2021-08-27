@@ -73,7 +73,7 @@
         </v-container>
       </v-card>
     </v-dialog>
-    <template v-if="isIndex">
+    <template v-if="isIndex && commentCount">
       {{ commentCount }}
     </template>
   </div>

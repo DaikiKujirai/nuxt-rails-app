@@ -17,11 +17,8 @@ class Api::V1::CommentsController < ApplicationController
   def update
     comment = Comment.find(params[:id])
     comment.content = params[:content]
-    if comment.update(comment_params) && comment.comment_id == 0
-      post = Post.find(params[:post_id])
-      render json: post, include: [:user, { comments: [:user] }]
-    elsif comment.update(comment_params) && comment.comment_id != 0
-      render json: { success_message: '更新しました' }
+    if comment.update(comment_params)
+      render json: comment, include: [:user, :like_comments]
     else
       comment.errors.messages
     end
@@ -39,7 +36,7 @@ class Api::V1::CommentsController < ApplicationController
   end
 
   def search_comments
-    comments = Comment.where(comment_id: params[:id]).includes(:post, :user).order(created_at: :desc)
+    comments = Comment.where(comment_id: params[:id]).includes(:post, :user, :like_comments).order(created_at: :desc)
     render json: comments
   end
 

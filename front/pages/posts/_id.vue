@@ -58,8 +58,9 @@
                     :post="post"
                   />
                   <template v-if="post.user_id === currentUser.id">
-                    <btn-edit-post-in-id
+                    <btn-edit-post
                       :post="post"
+                      :is-index="isIndex"
                     />
                     <btn-delete-post
                       :post="post"
@@ -84,18 +85,18 @@ import { mapGetters } from 'vuex'
 import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import PostComment from '../../components/comment/postComment.vue'
-import BtnEditPostInId from '../../components/btn/editPost/btnEditPostInId.vue'
 import LikePost from '../../components/btn/like/likePost.vue'
 import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
+import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
 
 export default {
   components: {
     BtnDeletePost,
     LayoutMain,
     PostComment,
-    BtnEditPostInId,
     LikePost,
-    BtnNewComment
+    BtnNewComment,
+    BtnEditPost
   },
   middleware: 'authenticated',
   data () {

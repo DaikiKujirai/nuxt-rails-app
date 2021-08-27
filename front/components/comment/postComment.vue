@@ -84,17 +84,17 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import btnEditComment from '../btn/editComment/btnEditComment.vue'
-import btnNewCommentComment from '../btn/commentComment/btnNewCommentComment.vue'
-import btnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
-import likeComment from '../btn/like/likeComment.vue'
+import BtnEditComment from '../btn/editComment/btnEditComment.vue'
+import BtnNewCommentComment from '../btn/commentComment/btnNewCommentComment.vue'
+import BtnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
+import LikeComment from '../btn/like/likeComment.vue'
 
 export default {
   components: {
-    btnEditComment,
-    btnDeleteComment,
-    btnNewCommentComment,
-    likeComment
+    BtnEditComment,
+    BtnDeleteComment,
+    BtnNewCommentComment,
+    LikeComment
   },
   props: {
     post: {
@@ -131,6 +131,7 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.setComments(res.data)
+          console.log('postComment', res.data)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

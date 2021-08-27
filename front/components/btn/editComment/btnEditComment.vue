@@ -4,7 +4,7 @@
       :color="color"
       text
       rounded
-      @click.prevent.stop="dialog = true"
+      @click.prevent.stop="dialog = true, setContent(comment)"
     >
       編集
       <v-icon v-text="'mdi-lead-pencil'" />
@@ -62,6 +62,10 @@ export default {
     comment: {
       type: Object,
       required: true
+    },
+    isIndex: {
+      type: Boolean,
+      required: true
     }
   },
   data () {
@@ -73,20 +77,27 @@ export default {
       newComment: { content: '' }
     }
   },
-  created () {
-    this.newComment.content = this.comment.content
-  },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
+      setComments: 'comment/setComments',
+      setComment: 'comment/setComment',
       setPost: 'post/setPost'
     }),
+    setContent (comment) {
+      this.newComment.content = comment.content
+    },
     async updateComment () {
       this.loading = true
-      this.newComment.post_id = this.comment.post_id
       await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
         .then((res) => {
-          this.setPost(res)
+          if (this.$route.name === 'posts-id' && this.isIndex) {
+            this.setPostContents()
+          } else if (this.$route.name !== 'posts-id' && this.isIndex) {
+            this.searchAndSetComments()
+          } else {
+            this.setComment(res)
+          }
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
@@ -96,6 +107,20 @@ export default {
           console.log(err.response)
           this.flashMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
           this.loading = false
+        })
+    },
+    async setPostContents () {
+      const url = `/api/v1/posts/${this.comment.post_id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setPost(res.data)
+        })
+    },
+    async searchAndSetComments () {
+      const url = `/api/v1/search_comments/${this.$route.params.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.setComments(res.data)
         })
     }
   }

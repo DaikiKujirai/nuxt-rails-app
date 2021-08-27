@@ -31,15 +31,15 @@
             ref="form"
             v-model="isValid"
           >
-            <edit-comment-form-content
-              :content.sync="newComment.content"
+            <edit-post-form-content
+              :content.sync="editPost.content"
             />
             <v-btn
               :disabled="!isValid || loading"
               :loading="loading"
               block
               color="info"
-              @click="updateComment"
+              @click="updatePost"
             >
               更新する
             </v-btn>
@@ -52,15 +52,19 @@
 
 <script>
 import { mapActions } from 'vuex'
-import editCommentFormContent from '../../post/editPostFormContent.vue'
+import editPostFormContent from '../../post/editPostFormContent.vue'
 
 export default {
   components: {
-    editCommentFormContent
+    editPostFormContent
   },
   props: {
-    comment: {
+    post: {
       type: Object,
+      required: true
+    },
+    isIndex: {
+      type: Boolean,
       required: true
     }
   },
@@ -70,33 +74,28 @@ export default {
       isValid: false,
       loading: false,
       color: 'deep-purple lighten-2',
-      newComment: { content: '' }
+      editPost: { content: '' }
     }
   },
-  created () {
-    this.newComment.content = this.comment.content
+  mounted () {
+    this.editPost.content = this.post.content
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setComments: 'comment/setComments'
+      setPost: 'post/setPost'
     }),
-    async fetchContents () {
-      const url = `/api/v1/search_comments/${this.$route.params.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setComments(res.data)
-        })
-    },
-    async updateComment () {
+    async updatePost () {
       this.loading = true
-      this.newComment.post_id = this.comment.post_id
-      await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
-        .then(() => {
-          this.fetchContents()
+      await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
+        .then((res) => {
+          this.setPost(res)
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
+          if (this.isIndex) {
+            this.$router.push(`posts/${res.id}`)
+          }
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

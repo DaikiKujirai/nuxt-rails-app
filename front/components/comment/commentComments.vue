@@ -63,8 +63,9 @@
                     :comment="comment"
                   />
                   <template v-if="comment.user_id === currentUser.id">
-                    <btn-edit-comment-comment
+                    <btn-edit-comment
                       :comment="comment"
+                      :is-index="isIndex"
                     />
                     <btn-delete-comment
                       :comment="comment"
@@ -86,14 +87,14 @@ import { mapGetters, mapActions } from 'vuex'
 import BtnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
 import LikeComment from '../btn/like/likeComment.vue'
 import BtnNewCommentComment from '../btn/commentComment/btnNewCommentComment.vue'
-import BtnEditCommentComment from '../btn/editComment/btnEditCommentComment.vue'
+import BtnEditComment from '../btn/editComment/btnEditComment.vue'
 
 export default {
   components: {
     BtnNewCommentComment,
     BtnDeleteComment,
     LikeComment,
-    BtnEditCommentComment
+    BtnEditComment
   },
   data () {
     return {
@@ -120,7 +121,7 @@ export default {
         .then((res) => {
           this.searchAndSetComments(res.data.id)
           this.setComment(res.data)
-          this.$router.replace(`/comments/${comment.id}`)
+          this.$router.push(`/comments/${comment.id}`)
         })
     },
     async searchAndSetComments (id) {
@@ -128,6 +129,7 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.setComments(res.data)
+          console.log('commentcomment', res.data)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

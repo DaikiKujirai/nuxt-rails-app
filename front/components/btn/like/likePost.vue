@@ -15,7 +15,7 @@
         :color="btnColor"
         text
         rounded
-        @click.prevent.stop="unLikePost"
+        @click.prevent.stop="disLikePost"
       >
         <v-icon v-text="'mdi-heart'" />
       </v-btn>
@@ -72,7 +72,7 @@ export default {
           console.error(err)
         })
     },
-    unLikePost () {
+    disLikePost () {
       const url = '/api/v1/like_posts/delete'
       this.$axios.$delete(url, {
         data: {

@@ -63,8 +63,9 @@
                     :post="post"
                   />
                   <template v-if="post.user_id === currentUser.id">
-                    <btn-edit-post-in-index
+                    <btn-edit-post
                       :post="post"
+                      :is-index="isIndex"
                     />
                     <btn-delete-post
                       :post="post"
@@ -83,19 +84,19 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import btnEditPostInIndex from '../../components/btn/editPost/btnEditPostInIndex.vue'
-import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import btnNewComment from '../../components/btn/comment/btnNewComment.vue'
-import btnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
-import likePost from '../../components/btn/like/likePost.vue'
+import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
+import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
+import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
+import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
+import LikePost from '../../components/btn/like/likePost.vue'
 
 export default {
   components: {
-    layoutMain,
-    btnNewComment,
-    btnEditPostInIndex,
-    btnDeletePost,
-    likePost
+    LayoutMain,
+    BtnNewComment,
+    BtnEditPost,
+    BtnDeletePost,
+    LikePost
   },
   data () {
     return {
@@ -112,7 +113,7 @@ export default {
       likePosts: 'like/likePosts'
     })
   },
-  mounted () {
+  beforecreate () {
     this.fetchContents()
   },
   methods: {

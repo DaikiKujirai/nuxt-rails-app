@@ -1,6 +1,11 @@
 class Api::V1::PostsController < ApplicationController
   def index
-    posts = Post.all.includes(:user).order(created_at: :desc)
+    posts = Post.all.includes(
+      :user,
+      :like_posts,
+      { comments: [:user] },
+      { comments: [:like_comments] }
+    ).order(created_at: :desc)
     render json: posts, include: [
       :user,
       :like_posts,
@@ -10,7 +15,12 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    post = Post.includes([:user]).find(params[:id])
+    post = Post.includes(
+        :user,
+        :like_posts,
+        { comments: [:user] },
+        { comments: [:like_comments] }
+    ).find(params[:id])
     unless Post.nil?
       render json: post, include: [
         :user,
@@ -35,7 +45,12 @@ class Api::V1::PostsController < ApplicationController
   def update
     post = Post.find(params[:id])
     if post.update(post_params)
-      render json: post, include: [:user, { comments: [:user] }]
+      render json: post, include: [
+        :user,
+        :like_posts,
+        { comments: [:user] },
+        { comments: [:like_comment] }
+      ]
     else
       render json: post.errors.messages
     end

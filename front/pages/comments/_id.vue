@@ -58,8 +58,9 @@
                     :comment="comment"
                   />
                   <template v-if="comment.user_id === currentUser.id">
-                    <btn-edit-comment-comment
+                    <btn-edit-comment
                       :comment="comment"
+                      :is-index="isIndex"
                     />
                     <btn-delete-comment
                       :comment="comment"
@@ -79,21 +80,21 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import btnDeleteComment from '../../components/btn/deleteComment/btnDeleteComment.vue'
-import btnEditCommentComment from '../../components/btn/editComment/btnEditCommentComment.vue'
-import btnNewCommentComment from '../../components/btn/commentComment/btnNewCommentComment.vue'
-import commentComments from '../../components/comment/commentComments.vue'
-import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import likeComment from '../../components/btn/like/likeComment.vue'
+import BtnDeleteComment from '../../components/btn/deleteComment/btnDeleteComment.vue'
+import BtnEditComment from '../../components/btn/editComment/btnEditComment.vue'
+import BtnNewCommentComment from '../../components/btn/commentComment/btnNewCommentComment.vue'
+import CommentComments from '../../components/comment/commentComments.vue'
+import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
+import LikeComment from '../../components/btn/like/likeComment.vue'
 
 export default {
   components: {
-    layoutMain,
-    btnNewCommentComment,
-    btnEditCommentComment,
-    commentComments,
-    btnDeleteComment,
-    likeComment
+    LayoutMain,
+    BtnNewCommentComment,
+    BtnEditComment,
+    CommentComments,
+    BtnDeleteComment,
+    LikeComment
   },
   data () {
     return {
