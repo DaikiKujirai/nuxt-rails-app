@@ -6,7 +6,6 @@
       rounded
       @click.prevent.stop="dialog = true, setContent(comment)"
     >
-      編集
       <v-icon v-text="'mdi-lead-pencil'" />
     </v-btn>
     <v-dialog
@@ -79,10 +78,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage',
-      setComments: 'comment/setComments',
-      setComment: 'comment/setComment',
-      setPost: 'post/setPost'
+      flashMessage: 'flash/flashMessage'
     }),
     setContent (comment) {
       this.newComment.content = comment.content
@@ -90,13 +86,14 @@ export default {
     async updateComment () {
       this.loading = true
       await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
-        .then((res) => {
+        .then(() => {
           if (this.$route.name === 'posts-id' && this.isIndex) {
-            this.setPostContents()
+            this.fetchPost()
+            console.log('here!!')
           } else if (this.$route.name !== 'posts-id' && this.isIndex) {
             this.searchAndSetComments()
           } else {
-            this.setComment(res)
+            this.fetchComment()
           }
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
@@ -109,12 +106,11 @@ export default {
           this.loading = false
         })
     },
-    async setPostContents () {
-      const url = `/api/v1/posts/${this.comment.post_id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setPost(res.data)
-        })
+    fetchPost () {
+      this.$emit('fetchPost')
+    },
+    fetchComment () {
+      this.$emit('fetchComment')
     },
     async searchAndSetComments () {
       const url = `/api/v1/search_comments/${this.$route.params.id}`

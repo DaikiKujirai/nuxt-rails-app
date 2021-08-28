@@ -53,17 +53,8 @@ export default {
     ...mapActions({
       setPosts: 'post/setPosts'
     }),
-    async goHome () {
-      const url = '/api/v1/posts'
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setPosts(res.data)
-          this.$router.push('/posts')
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
+    goHome () {
+      this.$router.push('/posts')
     }
   }
 }

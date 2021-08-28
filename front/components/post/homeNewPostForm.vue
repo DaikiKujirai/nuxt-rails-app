@@ -4,7 +4,6 @@
     label="いまなにしてる？"
     auto-grow
     counter="140"
-    :placeholder="form.placeholder"
     :rules="rules"
     class="mx-3"
   />

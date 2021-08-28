@@ -4,7 +4,7 @@
       :color="btnColor"
       text
       rounded
-      @click.prevent.stop="openDialog"
+      @click.prevent.stop="dialog = true"
     >
       削除
       <v-icon v-text="'mdi-delete-empty'" />
@@ -26,7 +26,7 @@
           <v-btn
             rounded
             color="info"
-            @click="closeDialog"
+            @click="dialog = false"
           >
             キャンセル
           </v-btn>
@@ -64,28 +64,18 @@ export default {
   },
   computed: {
     ...mapGetters({
-      post: 'post/post',
-      gettersComment: 'comment/comment',
       btnColor: 'btn/color'
     })
   },
   methods: {
     ...mapActions({
-      setPost: 'post/setPost',
-      setComments: 'comment/setComments',
       flashMessage: 'flash/flashMessage'
     }),
-    openDialog () {
-      this.dialog = true
-    },
-    closeDialog () {
-      this.dialog = false
-    },
     clickOK () {
       this.$axios.$delete(`/api/v1/comments/${this.comment.id}`)
         .then(() => {
-          if (this.isPostComment) {
-            this.fetchPostContents()
+          if (this.$route.name === 'posts-id') {
+            this.fetchPost()
           } else {
             this.fetchCommentContents()
           }
@@ -96,17 +86,8 @@ export default {
           console.log('投稿の削除に失敗', err)
         })
     },
-    async fetchPostContents () {
-      const url = `/api/v1/posts/${this.post.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setPost(res.data)
-          this.$router.push(`/posts/${res.data.id}`)
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
+    fetchPost () {
+      this.$emit('fetchPost')
     },
     async fetchCommentContents () {
       const url = `/api/v1/search_comments/${this.gettersComment.id}`

@@ -29,7 +29,7 @@
           </v-col>
         </v-row>
         <v-main>
-          <div class="mt-4">
+          <div class="mt-5">
             <slot name="layout-main" />
           </div>
         </v-main>

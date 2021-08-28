@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div class="mt-3">
     <v-row
       v-for="comment in post.comments"
       :key="comment.id"
+      class="mb-1"
     >
       <v-col>
         <v-card
@@ -61,15 +62,18 @@
                   </template>
                   <like-comment
                     :comment="comment"
+                    :like-comments="comment.like_comments"
                   />
                   <template v-if="comment.user_id === currentUser.id">
                     <btn-edit-comment
                       :comment="comment"
                       :is-index="isIndex"
+                      @fetchPost="fetchPost"
                     />
                     <btn-delete-comment
                       :comment="comment"
                       :is-index="isIndex"
+                      @fetchPost="fetchPost"
                     />
                   </template>
                 </v-card-actions>
@@ -83,18 +87,18 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import BtnEditComment from '../btn/editComment/btnEditComment.vue'
+import { mapGetters } from 'vuex'
 import BtnNewCommentComment from '../btn/commentComment/btnNewCommentComment.vue'
-import BtnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
 import LikeComment from '../btn/like/likeComment.vue'
+import BtnEditComment from '../btn/editComment/btnEditComment.vue'
+import BtnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
 
 export default {
   components: {
-    BtnEditComment,
-    BtnDeleteComment,
     BtnNewCommentComment,
-    LikeComment
+    LikeComment,
+    BtnEditComment,
+    BtnDeleteComment
   },
   props: {
     post: {
@@ -104,39 +108,24 @@ export default {
   },
   data () {
     return {
+      comments: [],
       isIndex: true,
       src: 'https://picsum.photos/500/500'
     }
   },
   computed: {
     ...mapGetters({
-      comments: 'comment/comments',
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color'
     })
   },
   methods: {
-    ...mapActions({
-      setComment: 'comment/setComment',
-      setComments: 'comment/setComments'
-    }),
-    async toShow (comment) {
-      await this.searchAndSetComments(comment.id)
-      await this.setComment(comment)
+    toShow (comment) {
       this.$router.push(`/comments/${comment.id}`)
     },
-    async searchAndSetComments (id) {
-      const url = `api/v1/search_comments/${id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setComments(res.data)
-          console.log('postComment', res.data)
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
+    fetchPost () {
+      this.$emit('fetchPost')
     }
   }
 }

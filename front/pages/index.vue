@@ -10,9 +10,9 @@ import layoutMain from '../components/layout/loggedIn/layoutMain.vue'
 export default {
   components: {
     layoutMain
+  },
+  beforeCreate () {
+    this.$store.$router.push('/posts')
   }
-  // beforeCreate () {
-  //   this.$store.$router.push('/posts')
-  // }
 }
 </script>

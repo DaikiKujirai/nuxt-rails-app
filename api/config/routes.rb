@@ -7,8 +7,8 @@ Rails.application.routes.draw do
       end
       resources   :posts        , only: %i[index show create update destroy]
       resources   :comments     , only: %i[show create update destroy]
-      resources   :like_posts   , only: %i[create destroy]
-      resources   :like_comments, only: %i[create destroy]
+      resources   :like_posts   , only: %i[show create destroy]
+      resources   :like_comments, only: %i[show create destroy]
       # user
       get 'find_login_user/:uid' => 'users#find_login_user'
       # comment

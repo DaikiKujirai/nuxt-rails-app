@@ -17,7 +17,6 @@ class Api::V1::PostsController < ApplicationController
   def show
     post = Post.includes(
         :user,
-        :like_posts,
         { comments: [:user] },
         { comments: [:like_comments] }
     ).find(params[:id])
@@ -45,12 +44,7 @@ class Api::V1::PostsController < ApplicationController
   def update
     post = Post.find(params[:id])
     if post.update(post_params)
-      render json: post, include: [
-        :user,
-        :like_posts,
-        { comments: [:user] },
-        { comments: [:like_comment] }
-      ]
+      render json: post
     else
       render json: post.errors.messages
     end
@@ -59,7 +53,7 @@ class Api::V1::PostsController < ApplicationController
   def destroy
     post = Post.find(params[:id])
     if post.destroy
-      render json: { success_message: '削除しました' }
+      render json: post
     else
       render json: post.errors
     end

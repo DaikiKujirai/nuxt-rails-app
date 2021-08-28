@@ -4,7 +4,7 @@
       :color="btnColor"
       text
       rounded
-      @click.prevent.stop="openDialog"
+      @click.prevent.stop="dialog = true"
     >
       削除
       <v-icon v-text="'mdi-delete-empty'" />
@@ -26,7 +26,7 @@
           <v-btn
             rounded
             color="info"
-            @click="closeDialog"
+            @click="dialog = false"
           >
             キャンセル
           </v-btn>
@@ -69,23 +69,17 @@ export default {
   },
   methods: {
     ...mapActions({
-      setPosts: 'post/setPosts',
       flashMessage: 'flash/flashMessage'
     }),
-    openDialog () {
-      this.dialog = true
-    },
-    closeDialog () {
-      this.dialog = false
-    },
     async clickOK () {
       await this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
           if (this.isIndex) {
-            this.fetchContents()
+            this.fetchPosts()
           } else {
             this.$router.replace('/posts')
           }
+          this.dialog = false
           this.flashMessage({ message: '削除しました', type: 'primary', status: true })
         })
         .catch((err) => {
@@ -93,12 +87,8 @@ export default {
           console.log('投稿の削除に失敗', err)
         })
     },
-    async fetchContents () {
-      const url = '/api/v1/posts'
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setPosts(res.data)
-        })
+    fetchPosts () {
+      this.$emit('fetchPosts')
     }
   }
 }

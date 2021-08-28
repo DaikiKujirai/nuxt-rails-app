@@ -73,8 +73,8 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
-      color: 'deep-purple lighten-2',
-      editPost: { content: '' }
+      editPost: { content: '' },
+      color: 'deep-purple lighten-2'
     }
   },
   mounted () {
@@ -82,27 +82,33 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage',
-      setPost: 'post/setPost'
+      flashMessage: 'flash/flashMessage'
     }),
     async updatePost () {
       this.loading = true
       await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
-        .then((res) => {
-          this.setPost(res)
+        .then(() => {
+          if (this.isIndex) {
+            this.fetchPosts()
+          } else {
+            this.fetchPost()
+          }
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
-          if (this.isIndex) {
-            this.$router.push(`posts/${res.id}`)
-          }
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.log(err.response)
-          this.flashMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
+          this.flashMessage({ message: '更新に失敗しました', type: 'error', status: true })
           this.loading = false
         })
+    },
+    fetchPosts () {
+      this.$emit('fetchPosts')
+    },
+    fetchPost () {
+      this.$emit('fetchPost')
     }
   }
 }

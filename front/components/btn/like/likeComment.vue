@@ -1,6 +1,6 @@
 <template>
   <div>
-    <template v-if="!isLikeComment">
+    <template v-if="!isLike">
       <v-btn
         :color="btnColor"
         text
@@ -15,12 +15,15 @@
         :color="btnColor"
         text
         rounded
-        @click.prevent.stop="unLikeComment"
+        @click.prevent.stop="disLikeComment"
       >
         <v-icon v-text="'mdi-heart'" />
       </v-btn>
     </template>
-    <template v-if="likeCommentCount">
+    <template
+      v-if="likeCommentCount"
+      class="pl-0"
+    >
       {{ likeCommentCount }}
     </template>
   </div>
@@ -34,37 +37,45 @@ export default {
     comment: {
       type: Object,
       required: true
+    },
+    likeComments: {
+      type: Array,
+      required: true
     }
   },
   data () {
     return {
+      likeCommentIds: [],
       newLike: {},
-      likeCommentCount: this.comment.like_comments.length
+      likeCommentCount: 0,
+      isLike: false
     }
   },
   computed: {
     ...mapGetters({
-      btnColor: 'btn/color',
       currentUser: 'auth/data',
-      likeCommentIds: 'like/likeCommentIds'
-    }),
-    isLikeComment () {
-      return this.likeCommentIds.includes(this.comment.id)
-    }
+      btnColor: 'btn/color'
+    })
+  },
+  mounted () {
+    setTimeout(() => {
+      this.setLikeCommentIds()
+      this.likeCommentCount = this.likeComments.length
+    }, 400)
   },
   methods: {
     ...mapActions({
-      setLikeComments: 'like/setLikeComments',
       flashMessage: 'flash/flashMessage'
     }),
     async likeComment () {
       this.newLike.user_id = this.currentUser.id
       this.newLike.comment_id = this.comment.id
-      const url = 'api/v1/like_comments'
+      const url = '/api/v1/like_comments'
       await this.$axios.post(url, this.newLike)
-        .then((res) => {
+        .then(() => {
           this.likeCommentCount++
-          this.setLikeComments(res.data)
+          this.likeCommentIds.push(this.currentUser.id)
+          this.isLike = true
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
         .catch((err) => {
@@ -72,23 +83,50 @@ export default {
           console.error(err)
         })
     },
-    async unLikeComment () {
-      const url = 'api/v1/like_comments/delete'
-      await this.$axios.$delete(url, {
+    disLikeComment () {
+      const url = '/api/v1/like_comments/delete'
+      this.$axios.$delete(url, {
         data: {
           user_id: this.currentUser.id,
           comment_id: this.comment.id
         }
       })
-        .then((res) => {
+        .then(() => {
           this.likeCommentCount--
-          this.setLikeComments(res)
+          this.isLike = false
+          const th = this.likeCommentIds.indexOf(this.currentUser.id)
+          this.likeCommentIds.splice(th, 1)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err)
         })
+    },
+    // async fetchContents () {
+    //   console.log('post', this.post)
+    //   const url = `/api/v1/like_posts/${this.post.id}`
+    //   await this.$axios.get(url)
+    //     .then((res) => {
+    //       this.likePosts = res.data
+    //       this.likePostCount = this.likePosts.length
+    //       this.setLikePostIds()
+    //     })
+    //     .catch((err) => {
+    //       // eslint-disable-next-line no-console
+    //       console.error(err)
+    //     })
+    // },
+    setLikeCommentIds () {
+      for (let i = 0; i < this.likeComments.length; i++) {
+        this.likeCommentIds.push(this.likeComments[i].user_id)
+      }
+      this.searchMyLike()
+    },
+    searchMyLike () {
+      if (this.likeCommentIds.includes(this.currentUser.id)) {
+        this.isLike = true
+      }
     }
   }
 }

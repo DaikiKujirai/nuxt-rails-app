@@ -1,9 +1,14 @@
 <template>
   <layout-main #layout-main> <!--eslint-disable-line-->
-    <home-new-post />
+    <template v-if="isAuthenticated">
+      <home-new-post
+        @fetchPosts="fetchPosts"
+      />
+    </template>
     <v-row
       v-for="post in posts"
       :key="post.id"
+      class="mb-1"
     >
       <v-col>
         <v-card
@@ -50,6 +55,8 @@
                 <v-card-actions class="justify-space-around">
                   <btn-new-comment
                     :post="post"
+                    :user="post.user"
+                    :comments="post.comments"
                     :is-index="isIndex"
                   />
                   <template v-if="post.user_id !== currentUser.id">
@@ -62,15 +69,18 @@
                   </template>
                   <like-post
                     :post="post"
+                    :like-posts="post.like_posts"
                   />
                   <template v-if="post.user_id === currentUser.id">
                     <btn-edit-post
                       :post="post"
                       :is-index="isIndex"
+                      @fetchPosts="fetchPosts"
                     />
                     <btn-delete-post
                       :post="post"
                       :is-index="isIndex"
+                      @fetchPosts="fetchPosts"
                     />
                   </template>
                 </v-card-actions>
@@ -115,14 +125,14 @@ export default {
       isAuthenticated: 'auth/isAuthenticated'
     })
   },
-  mounted () {
-    this.fetchContents()
+  created () {
+    this.fetchPosts()
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
     }),
-    async fetchContents () {
+    async fetchPosts () {
       const url = '/api/v1/posts'
       await this.$axios.get(url)
         .then((res) => {

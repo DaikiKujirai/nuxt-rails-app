@@ -1,7 +1,6 @@
 <template>
   <div>
-    {{ isLikePost }}
-    <template v-if="!isLikePost">
+    <template v-if="!isLike">
       <v-btn
         :color="btnColor"
         text
@@ -35,15 +34,18 @@ export default {
     post: {
       type: Object,
       required: true
+    },
+    likePosts: {
+      type: Array,
+      required: true
     }
   },
   data () {
     return {
-      likePosts: [],
       likePostIds: [],
       newLike: {},
       likePostCount: 0,
-      isLikePost: false
+      isLike: false
     }
   },
   computed: {
@@ -53,9 +55,10 @@ export default {
     })
   },
   mounted () {
-    this.likePosts = this.post.like_posts
-    this.setLikePostIdsAndSearchMyLike()
-    this.likePostCount = this.likePosts.length
+    setTimeout(() => {
+      this.setLikePostIds()
+      this.likePostCount = this.likePosts.length
+    }, 400)
   },
   methods: {
     ...mapActions({
@@ -69,8 +72,9 @@ export default {
       await this.$axios.post(url, this.newLike)
         .then(() => {
           this.likePostCount++
-          this.isLikePost = true
+          this.likeCountIncrement()
           this.likePostIds.push(this.currentUser.id)
+          this.isLike = true
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
         .catch((err) => {
@@ -88,8 +92,10 @@ export default {
       })
         .then(() => {
           this.likePostCount--
-          this.isLikePost = false
-          this.likePostIds.filter(item => item === this.currentUser.id)
+          this.likeCountDecrement()
+          this.isLike = false
+          const th = this.likePostIds.indexOf(this.currentUser.id)
+          this.likePostIds.splice(th, 1)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
         .catch((err) => {
@@ -97,13 +103,36 @@ export default {
           console.error(err)
         })
     },
-    setLikePostIdsAndSearchMyLike () {
+    // async fetchContents () {
+    //   console.log('post', this.post)
+    //   const url = `/api/v1/like_posts/${this.post.id}`
+    //   await this.$axios.get(url)
+    //     .then((res) => {
+    //       this.likePosts = res.data
+    //       this.likePostCount = this.likePosts.length
+    //       this.setLikePostIds()
+    //     })
+    //     .catch((err) => {
+    //       // eslint-disable-next-line no-console
+    //       console.error(err)
+    //     })
+    // },
+    setLikePostIds () {
       for (let i = 0; i < this.likePosts.length; i++) {
         this.likePostIds.push(this.likePosts[i].user_id)
       }
+      this.searchMyLike()
+    },
+    searchMyLike () {
       if (this.likePostIds.includes(this.currentUser.id)) {
-        this.isLikePost = true
+        this.isLike = true
       }
+    },
+    likeCountIncrement () {
+      this.$emit('likeCountIncrement')
+    },
+    likeCountDecrement () {
+      this.$emit('likeCountDecrement')
     }
   }
 }

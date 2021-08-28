@@ -1,4 +1,10 @@
 class Api::V1::LikePostsController < ApplicationController
+
+  def show
+    likes = LikePost.where(post_id: params[:id])
+    render json: likes
+  end
+
   def create
     like = LikePost.new(like_post_params)
     if like.save
