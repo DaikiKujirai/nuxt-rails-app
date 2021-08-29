@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div class="mt-3">
     <v-row
       v-for="comment in comments"
       :key="comment.id"
+      class="mb-1"
     >
       <v-col>
         <v-card
@@ -49,6 +50,7 @@
                 <v-card-actions class="justify-space-around">
                   <btn-new-comment-comment
                     :comment="comment"
+                    :user="comment.user"
                     :is-index="isIndex"
                   />
                   <template v-if="comment.user_id !== currentUser.id">
@@ -61,15 +63,18 @@
                   </template>
                   <like-comment
                     :comment="comment"
+                    :like-comments="comment.like_comments"
+                    :is-index="isIndex"
                   />
                   <template v-if="comment.user_id === currentUser.id">
                     <btn-edit-comment
                       :comment="comment"
-                      :is-index="isIndex"
+                      @fetchComment="fetchComment"
                     />
                     <btn-delete-comment
                       :comment="comment"
                       :is-index="isIndex"
+                      @fetchComment="fetchComment"
                     />
                   </template>
                 </v-card-actions>
@@ -83,58 +88,46 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
-import BtnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
-import LikeComment from '../btn/like/likeComment.vue'
+import { mapGetters } from 'vuex'
 import BtnNewCommentComment from '../btn/commentComment/btnNewCommentComment.vue'
+import LikeComment from '../btn/like/likeComment.vue'
 import BtnEditComment from '../btn/editComment/btnEditComment.vue'
+import BtnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
 
 export default {
   components: {
     BtnNewCommentComment,
-    BtnDeleteComment,
     LikeComment,
-    BtnEditComment
+    BtnEditComment,
+    BtnDeleteComment
+  },
+  props: {
+    comments: {
+      type: Array,
+      required: true
+    }
   },
   data () {
     return {
+      user: {},
+      likeComments: [],
       isIndex: true,
       src: 'https://picsum.photos/500/500'
     }
   },
   computed: {
     ...mapGetters({
-      comments: 'comment/comments',
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color'
     })
   },
   methods: {
-    ...mapActions({
-      setComments: 'comment/setComments',
-      setComment: 'comment/setComment'
-    }),
-    async toShow (comment) {
-      const url = `api/v1/comments/${comment.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.searchAndSetComments(res.data.id)
-          this.setComment(res.data)
-          this.$router.push(`/comments/${comment.id}`)
-        })
+    toShow (comment) {
+      this.$router.push(`/comments/${comment.id}`)
     },
-    async searchAndSetComments (id) {
-      const url = `api/v1/search_comments/${id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setComments(res.data)
-          console.log('commentcomment', res.data)
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
+    fetchComment () {
+      this.$emit('fetchComment')
     }
   }
 }

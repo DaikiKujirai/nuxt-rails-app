@@ -89,8 +89,6 @@ export default {
       const url = `/api/v1/users/${this.$route.params.id}`
       this.$axios.get(url)
         .then((res) => {
-          // eslint-disable-next-line
-          console.log('投稿詳細')
           this.user = res.data
         })
         .catch((err) => {

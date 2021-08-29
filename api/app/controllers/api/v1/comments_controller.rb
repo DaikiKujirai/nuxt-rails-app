@@ -8,7 +8,7 @@ class Api::V1::CommentsController < ApplicationController
   def create
     comment = Comment.new(comment_params)
     if comment.save
-      render json: comment
+      render json: { success_message: 'コメントしました' }
     else
       render json: comment.errors.messages
     end

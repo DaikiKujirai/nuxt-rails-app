@@ -1,35 +1,26 @@
 class Api::V1::PostsController < ApplicationController
   def index
-    posts = Post.all.includes(
-      :user,
-      :like_posts,
-      { comments: [:user] },
-      { comments: [:like_comments] }
-    ).order(created_at: :desc)
+    posts = Post.includes(:user, :comments, :like_posts).all.order(created_at: :desc)
     render json: posts, include: [
-      :user,
-      :like_posts,
-      { comments: [:user] },
-      { comments: [:like_comment] }
-    ]
+                               :user,
+                               :like_posts,
+                               { comments: [:user] },
+                               { comments: [:like_comment] }
+                              ]
   end
 
   def show
     post = Post.includes(
-        :user,
-        { comments: [:user] },
-        { comments: [:like_comments] }
-    ).find(params[:id])
-    unless Post.nil?
-      render json: post, include: [
-        :user,
-        :like_posts,
-        { comments: [:user] },
-        { comments: [:like_comment] }
-      ]
-    else
-      render json: { error_message: 'Not Found' }
-    end
+                  :user,
+                  { comments: [:user] },
+                  { comments: [:like_comments] }
+                ).find(params[:id])
+    render json: post, include: [
+                              :user,
+                              :like_posts,
+                              { comments: [:user] },
+                              { comments: [:like_comment] }
+                            ]
   end
 
   def create

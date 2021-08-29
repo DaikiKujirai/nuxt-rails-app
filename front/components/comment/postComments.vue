@@ -50,6 +50,7 @@
                 <v-card-actions class="justify-space-around">
                   <btn-new-comment-comment
                     :comment="comment"
+                    :user="user"
                     :is-index="isIndex"
                   />
                   <template v-if="comment.user_id !== currentUser.id">
@@ -62,12 +63,12 @@
                   </template>
                   <like-comment
                     :comment="comment"
+                    :is-index="isIndex"
                     :like-comments="comment.like_comments"
                   />
                   <template v-if="comment.user_id === currentUser.id">
                     <btn-edit-comment
                       :comment="comment"
-                      :is-index="isIndex"
                       @fetchPost="fetchPost"
                     />
                     <btn-delete-comment
@@ -104,11 +105,14 @@ export default {
     post: {
       type: Object,
       required: true
+    },
+    user: {
+      type: Object,
+      required: true
     }
   },
   data () {
     return {
-      comments: [],
       isIndex: true,
       src: 'https://picsum.photos/500/500'
     }

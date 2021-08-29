@@ -33,7 +33,7 @@
           <v-btn
             rounded
             color="error"
-            @click="clickOK"
+            @click="deleteComment"
           >
             削除する
           </v-btn>
@@ -51,11 +51,11 @@ export default {
     comment: {
       type: Object,
       required: true
+    },
+    isIndex: {
+      type: Boolean,
+      required: true
     }
-    // isPostComment: {
-    //   type: Boolean,
-    //   required: true
-    // }
   },
   data () {
     return {
@@ -71,13 +71,15 @@ export default {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
     }),
-    clickOK () {
+    deleteComment () {
       this.$axios.$delete(`/api/v1/comments/${this.comment.id}`)
         .then(() => {
           if (this.$route.name === 'posts-id') {
             this.fetchPost()
+          } else if (this.$route.name === 'comments-id' && this.isIndex) {
+            this.fetchComment()
           } else {
-            this.fetchCommentContents()
+            this.$router.replace(`/posts/${this.comment.post_id}`)
           }
           this.flashMessage({ message: '削除しました', type: 'primary', status: true })
         })
@@ -89,16 +91,8 @@ export default {
     fetchPost () {
       this.$emit('fetchPost')
     },
-    async fetchCommentContents () {
-      const url = `/api/v1/search_comments/${this.gettersComment.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setComments(res.data)
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.log(err)
-        })
+    fetchComment () {
+      this.$emit('fetchComment')
     }
   }
 }

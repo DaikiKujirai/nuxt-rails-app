@@ -5,7 +5,7 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show
-    user = User.find_by(id: params[:id])
+    user = User.find(params[:id])
     unless User.nil?
       render json: user
     else
@@ -25,7 +25,7 @@ class Api::V1::UsersController < ApplicationController
 
   def find_login_user
     user = User.find_by(uid: params[:uid])
-    render json: user, each_serializer: UserSerializer
+    render json: user
   end
 
   private

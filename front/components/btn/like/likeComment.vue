@@ -21,7 +21,7 @@
       </v-btn>
     </template>
     <template
-      v-if="likeCommentCount"
+      v-if="likeCommentCount && isIndex"
       class="pl-0"
     >
       {{ likeCommentCount }}
@@ -41,11 +41,15 @@ export default {
     likeComments: {
       type: Array,
       required: true
+    },
+    isIndex: {
+      type: Boolean,
+      required: true
     }
   },
   data () {
     return {
-      likeCommentIds: [],
+      likeCommentUserIds: [],
       newLike: {},
       likeCommentCount: 0,
       isLike: false
@@ -59,7 +63,7 @@ export default {
   },
   mounted () {
     setTimeout(() => {
-      this.setLikeCommentIds()
+      this.pushLikeCommentUserIds()
       this.likeCommentCount = this.likeComments.length
     }, 400)
   },
@@ -74,7 +78,8 @@ export default {
       await this.$axios.post(url, this.newLike)
         .then(() => {
           this.likeCommentCount++
-          this.likeCommentIds.push(this.currentUser.id)
+          this.likeCountIncrement()
+          this.likeCommentUserIds.push(this.currentUser.id)
           this.isLike = true
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
@@ -93,9 +98,10 @@ export default {
       })
         .then(() => {
           this.likeCommentCount--
+          this.likeCountDecrement()
           this.isLike = false
-          const th = this.likeCommentIds.indexOf(this.currentUser.id)
-          this.likeCommentIds.splice(th, 1)
+          const th = this.likeCommentUserIds.indexOf(this.currentUser.id)
+          this.likeCommentUserIds.splice(th, 1)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
         .catch((err) => {
@@ -117,16 +123,22 @@ export default {
     //       console.error(err)
     //     })
     // },
-    setLikeCommentIds () {
+    pushLikeCommentUserIds () {
       for (let i = 0; i < this.likeComments.length; i++) {
-        this.likeCommentIds.push(this.likeComments[i].user_id)
+        this.likeCommentUserIds.push(this.likeComments[i].user_id)
       }
       this.searchMyLike()
     },
     searchMyLike () {
-      if (this.likeCommentIds.includes(this.currentUser.id)) {
+      if (this.likeCommentUserIds.includes(this.currentUser.id)) {
         this.isLike = true
       }
+    },
+    likeCountIncrement () {
+      this.$emit('likeCountIncrement')
+    },
+    likeCountDecrement () {
+      this.$emit('likeCountDecrement')
     }
   }
 }

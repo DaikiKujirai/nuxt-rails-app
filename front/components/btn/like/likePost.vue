@@ -20,7 +20,7 @@
         <v-icon v-text="'mdi-heart'" />
       </v-btn>
     </template>
-    <template v-if="likePostCount">
+    <template v-if="likePostCount && $route.name !== 'posts-id'">
       {{ likePostCount }}
     </template>
   </div>
@@ -42,7 +42,7 @@ export default {
   },
   data () {
     return {
-      likePostIds: [],
+      likePostUserIds: [],
       newLike: {},
       likePostCount: 0,
       isLike: false
@@ -56,13 +56,12 @@ export default {
   },
   mounted () {
     setTimeout(() => {
-      this.setLikePostIds()
+      this.setLikePostUserIds()
       this.likePostCount = this.likePosts.length
-    }, 400)
+    }, 500)
   },
   methods: {
     ...mapActions({
-      setLikePosts: 'like/setLikePosts',
       flashMessage: 'flash/flashMessage'
     }),
     async likePost () {
@@ -73,7 +72,7 @@ export default {
         .then(() => {
           this.likePostCount++
           this.likeCountIncrement()
-          this.likePostIds.push(this.currentUser.id)
+          this.likePostUserIds.push(this.currentUser.id)
           this.isLike = true
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
@@ -94,8 +93,8 @@ export default {
           this.likePostCount--
           this.likeCountDecrement()
           this.isLike = false
-          const th = this.likePostIds.indexOf(this.currentUser.id)
-          this.likePostIds.splice(th, 1)
+          const th = this.likePostUserIds.indexOf(this.currentUser.id)
+          this.likePostUserIds.splice(th, 1)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
         .catch((err) => {
@@ -103,28 +102,14 @@ export default {
           console.error(err)
         })
     },
-    // async fetchContents () {
-    //   console.log('post', this.post)
-    //   const url = `/api/v1/like_posts/${this.post.id}`
-    //   await this.$axios.get(url)
-    //     .then((res) => {
-    //       this.likePosts = res.data
-    //       this.likePostCount = this.likePosts.length
-    //       this.setLikePostIds()
-    //     })
-    //     .catch((err) => {
-    //       // eslint-disable-next-line no-console
-    //       console.error(err)
-    //     })
-    // },
-    setLikePostIds () {
+    setLikePostUserIds () {
       for (let i = 0; i < this.likePosts.length; i++) {
-        this.likePostIds.push(this.likePosts[i].user_id)
+        this.likePostUserIds.push(this.likePosts[i].user_id)
       }
       this.searchMyLike()
     },
     searchMyLike () {
-      if (this.likePostIds.includes(this.currentUser.id)) {
+      if (this.likePostUserIds.includes(this.currentUser.id)) {
         this.isLike = true
       }
     },

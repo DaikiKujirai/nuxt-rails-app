@@ -32,7 +32,7 @@
             class="ml-2"
           />
           <v-card-title>
-            {{ comment.user.name }}
+            {{ user.name }}
           </v-card-title>
         </div>
         <div class="d-flex">
@@ -47,7 +47,7 @@
             </v-card-subtitle>
             <v-spacer />
             <v-card-text>
-              返信先：{{ comment.user.name }} さん
+              返信先：{{ user.name }} さん
             </v-card-text>
           </div>
         </div>
@@ -91,6 +91,10 @@ export default {
       type: Object,
       required: true
     },
+    user: {
+      type: Object,
+      required: true
+    },
     isIndex: {
       type: Boolean,
       required: true
@@ -101,63 +105,60 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
+      commentsCount: 0,
       newComment: { content: '' },
-      src: 'https://picsum.photos/200/200',
-      commentsCount: 0
+      src: 'https://picsum.photos/200/200'
     }
   },
   computed: {
     ...mapGetters({
-      post: 'post/post',
       currentUser: 'auth/data',
       btnColor: 'btn/color'
     })
   },
-  created () {
-    this.searchCommentsAndsetCommentsCount()
+  mounted () {
+    if (this.$route.name === 'comments-id') {
+      this.searchCommentsCount()
+    }
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage',
-      setComments: 'comment/setComments'
+      flashMessage: 'flash/flashMessage'
     }),
     async submitComment () {
       this.loading = true
       this.newComment.user_id = this.currentUser.id
-      this.newComment.post_id = this.post.id
+      this.newComment.post_id = this.comment.post_id
       this.newComment.comment_id = this.comment.id
       await this.$axios.$post('/api/v1/comments', this.newComment)
-        .then((res) => {
+        .then(() => {
           this.loading = false
-          if (this.isIndex) {
-            this.commentsCount++
-          } else {
-            console.log(res)
-            this.searchCommentsAndsetCommentsCount()
-          }
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
           this.$refs.form.reset()
+          if (this.isIndex) {
+            this.$router.push(`/comments/${this.comment.id}`)
+          } else {
+            this.fetchComment()
+          }
         })
         .catch(() => {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    async searchCommentsAndsetCommentsCount () {
+    async searchCommentsCount () {
       const url = `api/v1/search_comments/${this.comment.id}`
       await this.$axios.get(url)
         .then((res) => {
-          if (!this.isIndex) {
-            console.log(res)
-            this.setComments(res.data)
-            console.log('btncommentcomment', res.data)
-          }
           this.commentsCount = res.data.length
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err)
         })
+    },
+    fetchComment () {
+      this.$emit('fetchComment')
     }
   }
 }

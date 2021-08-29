@@ -61,10 +61,6 @@ export default {
     comment: {
       type: Object,
       required: true
-    },
-    isIndex: {
-      type: Boolean,
-      required: true
     }
   },
   data () {
@@ -87,11 +83,8 @@ export default {
       this.loading = true
       await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
         .then(() => {
-          if (this.$route.name === 'posts-id' && this.isIndex) {
+          if (this.$route.name === 'posts-id') {
             this.fetchPost()
-            console.log('here!!')
-          } else if (this.$route.name !== 'posts-id' && this.isIndex) {
-            this.searchAndSetComments()
           } else {
             this.fetchComment()
           }
@@ -111,13 +104,6 @@ export default {
     },
     fetchComment () {
       this.$emit('fetchComment')
-    },
-    async searchAndSetComments () {
-      const url = `/api/v1/search_comments/${this.$route.params.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setComments(res.data)
-        })
     }
   }
 }

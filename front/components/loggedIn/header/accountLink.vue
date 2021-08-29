@@ -80,13 +80,11 @@ export default {
   computed: {
     ...mapGetters({
       isAuthenticated: 'auth/isAuthenticated',
-      currentUser: 'auth/data',
-      user: 'user/user'
+      currentUser: 'auth/data'
     })
   },
   methods: {
     ...mapActions({
-      setUser: 'user/setUser',
       logout: 'auth/logout',
       flashMessage: 'flash/flashMessage'
     }),
@@ -102,7 +100,6 @@ export default {
         })
     },
     toMyPage () {
-      this.setUser(this.currentUser)
       this.$router.push(`/users/${this.currentUser.id}`)
     }
   }

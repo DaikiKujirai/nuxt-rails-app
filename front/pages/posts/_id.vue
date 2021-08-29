@@ -47,6 +47,9 @@
                 0 件のリツイート
               </v-card-text>
               <v-card-text>
+                {{ commentsCount }} 件のコメント
+              </v-card-text>
+              <v-card-text>
                 {{ likeCount }} 件のいいね
               </v-card-text>
             </v-col>
@@ -101,10 +104,11 @@
         </v-card>
       </v-col>
     </v-row>
-    <post-comment
+    <!-- <post-comment
       :post="post"
+      :user="user"
       @fetchPost="fetchPost"
-    />
+    /> -->
   </layout-main>
 </template>
 
@@ -115,7 +119,7 @@ import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
 import LikePost from '../../components/btn/like/likePost.vue'
 import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
 import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
-import PostComment from '../../components/comment/postComment.vue'
+// import PostComment from '../../components/comment/postComments.vue'
 import PageIdPostCommentForm from '../../components/comment/pageIdPostComment.vue'
 
 export default {
@@ -124,7 +128,7 @@ export default {
     BtnNewComment,
     LikePost,
     BtnEditPost,
-    PostComment,
+    // PostComment,
     BtnDeletePost,
     PageIdPostCommentForm
   },
@@ -134,6 +138,7 @@ export default {
       user: {},
       comments: [],
       likePosts: [],
+      commentsCount: 0,
       likeCount: 0,
       time: '',
       src: 'https://picsum.photos/200/200',
@@ -155,11 +160,11 @@ export default {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.post = res.data
+          this.post = res.data.post
           this.user = res.data.user
-          this.comments = res.data.comments
-          this.likePosts = res.data.like_posts
-          this.likeCount = this.likePosts.length
+          this.comments = res.data.post.comments
+          this.likePosts = res.data.post.like_posts
+          this.likeCount = res.data.post.like_posts.length
           this.time = this.$my.format(this.post.created_at)
         })
     },
