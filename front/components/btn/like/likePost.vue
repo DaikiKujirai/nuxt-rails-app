@@ -20,8 +20,8 @@
         <v-icon v-text="'mdi-heart'" />
       </v-btn>
     </template>
-    <template v-if="likePostCount && $route.name !== 'posts-id'">
-      {{ likePostCount }}
+    <template v-if="likeCount && $route.name !== 'posts-id'">
+      {{ likeCount }}
     </template>
   </div>
 </template>
@@ -44,7 +44,6 @@ export default {
     return {
       likePostUserIds: [],
       newLike: {},
-      likePostCount: 0,
       isLike: false
     }
   },
@@ -52,12 +51,14 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       btnColor: 'btn/color'
-    })
+    }),
+    likeCount () {
+      return this.likePostUserIds.length
+    }
   },
-  mounted () {
+  created () {
     setTimeout(() => {
       this.setLikePostUserIds()
-      this.likePostCount = this.likePosts.length
     }, 500)
   },
   methods: {
@@ -70,7 +71,6 @@ export default {
       const url = '/api/v1/like_posts'
       await this.$axios.post(url, this.newLike)
         .then(() => {
-          this.likePostCount++
           this.likeCountIncrement()
           this.likePostUserIds.push(this.currentUser.id)
           this.isLike = true
@@ -90,7 +90,6 @@ export default {
         }
       })
         .then(() => {
-          this.likePostCount--
           this.likeCountDecrement()
           this.isLike = false
           const th = this.likePostUserIds.indexOf(this.currentUser.id)

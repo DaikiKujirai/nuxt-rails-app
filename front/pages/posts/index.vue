@@ -12,7 +12,7 @@
     >
       <v-col>
         <v-card
-          @click="toShow(post.id)"
+          @click="toShowPost(post.id)"
         >
           <v-row>
             <v-col
@@ -25,10 +25,13 @@
                 contain
                 style="border-radius: 50%;"
                 class="ml-3"
+                @click.prevent.stop="toShowUser(post.user_id)"
               />
-              <v-card-text>
-                {{ post.user.name }}
-              </v-card-text>
+              <v-col cols="7">
+                <v-card-title>
+                  {{ post.user.name }}
+                </v-card-title>
+              </v-col>
               <v-card-text
                 class="text-right"
               >
@@ -70,6 +73,7 @@
                   <like-post
                     :post="post"
                     :like-posts="post.like_posts"
+                    :like-post-count="post.like_posts.length"
                   />
                   <template v-if="post.user_id === currentUser.id">
                     <btn-edit-post
@@ -143,8 +147,11 @@ export default {
           console.error(err)
         })
     },
-    toShow (id) {
-      this.$router.push(`posts/${id}`)
+    toShowPost (id) {
+      this.$router.push(`/posts/${id}`)
+    },
+    toShowUser (id) {
+      this.$router.push(`/users/${id}`)
     }
   }
 }

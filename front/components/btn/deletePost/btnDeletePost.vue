@@ -74,7 +74,9 @@ export default {
     async clickOK () {
       await this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
-          if (this.isIndex) {
+          if (this.$route.name === 'users-id') {
+            this.fetchUser()
+          } else if (this.isIndex) {
             this.fetchPosts()
           } else {
             this.$router.replace('/posts')
@@ -89,6 +91,9 @@ export default {
     },
     fetchPosts () {
       this.$emit('fetchPosts')
+    },
+    fetchUser () {
+      this.$emit('fetchUser')
     }
   }
 }

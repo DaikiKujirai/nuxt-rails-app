@@ -6,11 +6,15 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     user = User.find(params[:id])
-    unless User.nil?
-      render json: user
-    else
-      render json: { error_message: 'Not Found' }
-    end
+    render json: user, include: [
+                              :posts                          ,
+                              :like_posts                     ,
+                              :comments                       ,
+                              :like_comments                  ,
+                              { posts:         [:like_posts] },
+                              { posts:         [:comments]   },
+                              { comments:      [:user]       },
+                            ]
   end
 
   def create
@@ -26,6 +30,23 @@ class Api::V1::UsersController < ApplicationController
   def find_login_user
     user = User.find_by(uid: params[:uid])
     render json: user
+  end
+
+  def search_likes
+    like_posts = []
+    like_comments = []
+
+    params[:like_post_ids].each do |post_id|
+      like_posts.push(Post.find(post_id))
+    end
+
+    params[:like_comment_ids].each do |comment_id|
+      like_comments.push(Comment.find(comment_id))
+    end
+
+    likes = like_posts.concat(like_comments)
+
+    render json: likes, include: :user
   end
 
   private

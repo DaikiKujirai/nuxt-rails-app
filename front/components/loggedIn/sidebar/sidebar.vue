@@ -23,14 +23,29 @@
           {{ $t(`menus.${menu.title}`) }}
         </v-list-item>
       </v-list>
+      <template v-if="isAuthenticated">
+        <v-list>
+          <v-list-item
+            class="justify-center"
+          >
+            <btn-new-post
+              @fetchPosts="fetchPosts"
+            />
+          </v-list-item>
+        </v-list>
+      </template>
     </v-col>
   </v-app>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
+import BtnNewPost from '~/components/btn/newPost/btnNewPost.vue'
 
 export default {
+  components: {
+    BtnNewPost
+  },
   data () {
     return {
       menus: [
@@ -50,11 +65,11 @@ export default {
     })
   },
   methods: {
-    ...mapActions({
-      setPosts: 'post/setPosts'
-    }),
     goHome () {
       this.$router.push('/posts')
+    },
+    fetchPosts () {
+      this.$emit('fetchPosts')
     }
   }
 }

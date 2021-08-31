@@ -12,10 +12,14 @@
                 max-height="70"
                 max-width="70"
                 contain
-                style="border-radius: 50%;"
+                style="border-radius: 50%; cursor: pointer;"
                 class="ml-3"
+                @click="toShowUser(user.id)"
               />
-              <v-card-text>
+              <v-card-text
+                style="cursor: pointer;"
+                @click.prevent.stop="toShowUser(user.id)"
+              >
                 {{ user.name }}
               </v-card-text>
             </v-col>
@@ -187,6 +191,9 @@ export default {
     },
     likeCountDecrement () {
       this.likeCommentsCount--
+    },
+    toShowUser (id) {
+      this.$router.push(`/users/${id}`)
     }
   }
 }

@@ -83,7 +83,9 @@ export default {
       this.loading = true
       await this.$axios.$patch(`/api/v1/comments/${this.comment.id}`, this.newComment)
         .then(() => {
-          if (this.$route.name === 'posts-id') {
+          if (this.$route.name === 'users-id') {
+            this.fetchUser()
+          } else if (this.$route.name === 'posts-id') {
             this.fetchPost()
           } else {
             this.fetchComment()
@@ -104,6 +106,9 @@ export default {
     },
     fetchComment () {
       this.$emit('fetchComment')
+    },
+    fetchUser () {
+      this.$emit('fetchUser')
     }
   }
 }

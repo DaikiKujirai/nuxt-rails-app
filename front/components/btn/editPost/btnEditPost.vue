@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-btn
-      :color="color"
+      :color="btnColor"
       text
       rounded
       @click.prevent.stop="dialog = true"
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import editPostFormContent from '../../post/editPostFormContent.vue'
 
 export default {
@@ -73,9 +73,13 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
-      editPost: { content: '' },
-      color: 'deep-purple lighten-2'
+      editPost: { content: '' }
     }
+  },
+  computed: {
+    ...mapGetters({
+      btnColor: 'btn/color'
+    })
   },
   mounted () {
     this.editPost.content = this.post.content
@@ -88,7 +92,9 @@ export default {
       this.loading = true
       await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
         .then(() => {
-          if (this.isIndex) {
+          if (this.$route.name === 'users-id') {
+            this.fetchUser()
+          } else if (this.isIndex) {
             this.fetchPosts()
           } else {
             this.fetchPost()
@@ -109,6 +115,9 @@ export default {
     },
     fetchPost () {
       this.$emit('fetchPost')
+    },
+    fetchUser () {
+      this.$emit('fetchUser')
     }
   }
 }

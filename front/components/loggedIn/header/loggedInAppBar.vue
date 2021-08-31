@@ -12,11 +12,7 @@
     <app-title
       class="hidden-mobile-and-down"
     />
-    <breadcrumbs
-      v-if="notTopPage"
-    />
     <v-spacer />
-    <btn-new-post />
     <v-btn
       @click="signout"
     >
@@ -30,17 +26,13 @@
 import { mapActions } from 'vuex'
 import AppLogo from '../../ui/appLogo.vue'
 import AppTitle from '../../ui/appTitle.vue'
-import Breadcrumbs from '../ui/breadcrumbs.vue'
 import AccountLink from './accountLink.vue'
-import BtnNewPost from '~/components/btn/newPost/btnNewPost.vue'
 
 export default {
   components: {
     AppLogo,
     AppTitle,
-    AccountLink,
-    Breadcrumbs,
-    BtnNewPost
+    AccountLink
   },
   computed: {
     notTopPage () {

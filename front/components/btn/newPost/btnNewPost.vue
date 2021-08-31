@@ -1,12 +1,13 @@
 <template>
   <div>
     <v-btn
+      large
       rounded
       color="info"
-      class="open-modal-btn mr-2"
+      class="mb-5"
       @click="dialog = true"
     >
-      新規投稿
+      投稿する
     </v-btn>
     <v-dialog
       v-model="dialog"
@@ -78,7 +79,6 @@ export default {
     async fetchContents () {
       await this.$axios.get('/api/v1/posts')
         .then((res) => {
-          this.setPosts(res.data)
         })
     },
     async submitPost () {
@@ -87,15 +87,18 @@ export default {
       await this.$axios.$post('/api/v1/posts', this.post)
         .then(() => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
-          this.fetchContents()
+          this.fetchPosts()
           this.loading = false
           this.dialog = false
           this.$refs.form.reset()
         })
-        .catch((err) => {
-          this.flashMessage({ message: err.response.data.message.join('\n'), type: 'error', status: true })
+        .catch(() => {
+          this.flashMessage({ message: '失敗しました', type: 'error', status: true })
           this.loading = false
         })
+    },
+    fetchPosts () {
+      this.$emit('fetchPosts')
     }
   }
 }

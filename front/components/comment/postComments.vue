@@ -7,7 +7,7 @@
     >
       <v-col>
         <v-card
-          @click="toShow(comment)"
+          @click="toShowComment(comment.id)"
         >
           <v-row>
             <v-col
@@ -20,6 +20,7 @@
                 contain
                 style="border-radius: 50%;"
                 class="ml-3"
+                @click.prevent.stop="toShowUser(post.user_id)"
               />
               <v-card-text>
                 {{ comment.user.name }}
@@ -125,8 +126,11 @@ export default {
     })
   },
   methods: {
-    toShow (comment) {
-      this.$router.push(`/comments/${comment.id}`)
+    toShowComment (id) {
+      this.$router.push(`/comments/${id}`)
+    },
+    toShowUser (id) {
+      this.$router.push(`/users/${id}`)
     },
     fetchPost () {
       this.$emit('fetchPost')

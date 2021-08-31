@@ -12,12 +12,16 @@
                 max-height="70"
                 max-width="70"
                 contain
-                style="border-radius: 50%;"
+                style="border-radius: 50%; cursor: pointer;"
                 class="ml-3"
+                @click.prevent.stop="toShowUser(post.user_id)"
               />
-              <v-card-text>
+              <v-card-title
+                style="cursor: pointer;"
+                @click.prevent.stop="toShowUser(post.user_id)"
+              >
                 {{ user.name }}
-              </v-card-text>
+              </v-card-title>
             </v-col>
           </v-row>
           <v-row>
@@ -77,6 +81,7 @@
                   <like-post
                     :post="post"
                     :like-posts="likePosts"
+                    :like-post-count="likeCount"
                     @likeCountIncrement="likeCountIncrement"
                     @likeCountDecrement="likeCountDecrement"
                   />
@@ -104,11 +109,11 @@
         </v-card>
       </v-col>
     </v-row>
-    <!-- <post-comment
+    <post-comment
       :post="post"
       :user="user"
       @fetchPost="fetchPost"
-    /> -->
+    />
   </layout-main>
 </template>
 
@@ -119,7 +124,7 @@ import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
 import LikePost from '../../components/btn/like/likePost.vue'
 import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
 import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
-// import PostComment from '../../components/comment/postComments.vue'
+import PostComment from '../../components/comment/postComments.vue'
 import PageIdPostCommentForm from '../../components/comment/pageIdPostComment.vue'
 
 export default {
@@ -128,7 +133,7 @@ export default {
     BtnNewComment,
     LikePost,
     BtnEditPost,
-    // PostComment,
+    PostComment,
     BtnDeletePost,
     PageIdPostCommentForm
   },
@@ -160,11 +165,12 @@ export default {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.post = res.data.post
+          this.post = res.data
           this.user = res.data.user
-          this.comments = res.data.post.comments
-          this.likePosts = res.data.post.like_posts
-          this.likeCount = res.data.post.like_posts.length
+          this.comments = res.data.comments
+          this.commentsCount = res.data.comments.length
+          this.likePosts = res.data.like_posts
+          this.likeCount = res.data.like_posts.length
           this.time = this.$my.format(this.post.created_at)
         })
     },
@@ -173,6 +179,9 @@ export default {
     },
     likeCountDecrement () {
       this.likeCount--
+    },
+    toShowUser (id) {
+      this.$router.push(`/users/${id}`)
     }
   }
 }

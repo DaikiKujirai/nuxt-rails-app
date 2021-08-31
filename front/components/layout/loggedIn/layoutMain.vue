@@ -3,7 +3,9 @@
     fluid
   >
     <v-row>
-      <sidebar />
+      <sidebar
+        @fetchPosts="fetchPosts"
+      />
       <v-col
         cols="6"
         offset="3"
@@ -30,7 +32,10 @@
         </v-row>
         <v-main>
           <div class="mt-5">
-            <slot name="layout-main" />
+            <slot
+              ref="fetchPosts"
+              name="layout-main"
+            />
           </div>
         </v-main>
       </v-col>
@@ -55,6 +60,9 @@ export default {
   methods: {
     pageBack () {
       this.$router.go(-1)
+    },
+    fetchPosts () {
+      console.log(this)
     }
   }
 }
