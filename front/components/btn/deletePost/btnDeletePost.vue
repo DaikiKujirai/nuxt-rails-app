@@ -76,10 +76,13 @@ export default {
         .then(() => {
           if (this.$route.name === 'users-id') {
             this.fetchUser()
-          } else if (this.isIndex) {
-            this.fetchPosts()
-          } else {
+          } else if (this.$route.name === 'posts-id' && this.isIndex) {
+            this.fetchPost()
+            this.commentsCountDecrement()
+          } else if (this.$route.name === 'posts-id' && !this.isIndex) {
             this.$router.replace('/posts')
+          } else {
+            this.fetchPosts()
           }
           this.dialog = false
           this.flashMessage({ message: '削除しました', type: 'primary', status: true })
@@ -92,8 +95,14 @@ export default {
     fetchPosts () {
       this.$emit('fetchPosts')
     },
+    fetchPost () {
+      this.$emit('fetchPost')
+    },
     fetchUser () {
       this.$emit('fetchUser')
+    },
+    commentsCountDecrement () {
+      this.$emit('commentsCountDecrement')
     }
   }
 }

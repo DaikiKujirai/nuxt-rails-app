@@ -100,11 +100,6 @@ export default {
       posts: [],
       comments: [],
       likes: [],
-      params: {
-        user_id: 0,
-        like_post_ids: [],
-        like_comment_ids: []
-      },
       src: 'https://picsum.photos/500/500'
     }
   },
@@ -123,38 +118,21 @@ export default {
       this.$axios.get(url)
         .then((res) => {
           this.user = res.data
-          this.posts = res.data.posts
-          this.comments = res.data.comments
-          this.params.user_id = res.data.id
-          this.setLikePostIds(res.data.like_posts)
-          this.setLikeCommentIds(res.data.like_comments)
-          this.fetchLikes()
+          this.likes = res.data.likes
+          this.dividePostsAndComments(res.data.posts)
         })
         .catch((err) => {
           console.error(err) // eslint-disable-line
         })
     },
-    setLikePostIds (likePosts) {
-      for (let i = 0; i < likePosts.length; i++) {
-        this.params.like_post_ids.push(likePosts[i].post_id)
+    dividePostsAndComments (posts) {
+      for (let i = 0; i < posts.length; i++) {
+        if (posts[i].post_id === 0) {
+          this.posts.push(posts[i])
+        } else {
+          this.comments.push(posts[i])
+        }
       }
-    },
-    setLikeCommentIds (likeComments) {
-      for (let i = 0; i < likeComments.length; i++) {
-        this.params.like_comment_ids.push(likeComments[i].comment_id)
-      }
-    },
-    async fetchLikes () {
-      const likes = this.params
-      const url = '/api/v1/search_likes'
-      await this.$axios.get(url, { params: likes })
-        .then((res) => {
-          this.likes = res.data
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
     },
     toFollow () {
       // eslint-disable-next-line no-console

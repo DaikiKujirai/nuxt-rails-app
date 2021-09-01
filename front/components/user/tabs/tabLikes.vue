@@ -1,10 +1,10 @@
 <template>
   <v-tab-item class="mb-2">
     <v-row
-      v-for="postOrComment in userLikes"
-      :key="postOrComment.id"
+      v-for="like in userLikes"
+      :key="like.id"
       style="cursor: pointer;"
-      @click="toShow(postOrComment.id)"
+      @click="toShowPost(like.post_id)"
     >
       <v-col>
         <v-divider />
@@ -22,7 +22,7 @@
             />
             <v-col cols="7">
               <v-card-title>
-                {{ postOrComment.user.name }}
+                {{ like.post.post_user_name }}
               </v-card-title>
             </v-col>
             <v-card-text
@@ -32,7 +32,7 @@
                 size="16"
                 v-text="'mdi-update'"
               />
-              {{ $my.format(postOrComment.created_at) }}
+              {{ $my.format(like.post.created_at) }}
             </v-card-text>
           </v-col>
         </v-row>
@@ -41,7 +41,7 @@
             <v-card-title
               class="card-content"
             >
-              {{ postOrComment.content }}
+              {{ like.post.content }}
             </v-card-title>
           </v-col>
         </v-row>
@@ -64,7 +64,7 @@
                     :is-index="isIndex"
                   />
                 </template> -->
-                <template v-if="postOrComment.user_id !== currentUser.id">
+                <template v-if="like.post.user_id !== currentUser.id">
                   <v-btn
                     :color="btnColor"
                     text
@@ -76,7 +76,7 @@
                   :post="post"
                   :like-posts="post.like_posts"
                 /> -->
-                <template v-if="postOrComment.user_id === currentUser.id">
+                <template v-if="like.post.user_id === currentUser.id">
                   <!-- <btn-edit-post
                     :post="post"
                     :is-index="isIndex"
@@ -115,7 +115,6 @@ export default {
   },
   data () {
     return {
-      comments: [],
       isIndex: true,
       src: 'https://picsum.photos/500/500'
     }
@@ -132,6 +131,11 @@ export default {
         if (a.created_at < b.created_at) { return 1 }
         return 0
       })
+    }
+  },
+  methods: {
+    toShowPost (id) {
+      this.$router.push(`/posts/${id}`)
     }
   }
 }

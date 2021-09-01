@@ -1,7 +1,7 @@
 <template>
   <div class="mt-3">
     <v-row
-      v-for="comment in post.comments"
+      v-for="comment in comments"
       :key="comment.id"
       class="mb-1"
     >
@@ -49,8 +49,8 @@
             <v-row>
               <v-col>
                 <v-card-actions class="justify-space-around">
-                  <btn-new-comment-comment
-                    :comment="comment"
+                  <btn-new-comment
+                    :post="comment"
                     :user="user"
                     :is-index="isIndex"
                   />
@@ -62,20 +62,21 @@
                       <v-icon v-text="'mdi-twitter-retweet'" />
                     </v-btn>
                   </template>
-                  <like-comment
-                    :comment="comment"
+                  <like
+                    :post="comment"
+                    :likes="comment.likes"
                     :is-index="isIndex"
-                    :like-comments="comment.like_comments"
                   />
                   <template v-if="comment.user_id === currentUser.id">
-                    <btn-edit-comment
-                      :comment="comment"
+                    <btn-edit-post
+                      :post="comment"
                       @fetchPost="fetchPost"
                     />
-                    <btn-delete-comment
-                      :comment="comment"
+                    <btn-delete-post
+                      :post="comment"
                       :is-index="isIndex"
                       @fetchPost="fetchPost"
+                      @commentsCountDecrement="commentsCountDecrement"
                     />
                   </template>
                 </v-card-actions>
@@ -90,17 +91,17 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import BtnNewCommentComment from '../btn/commentComment/btnNewCommentComment.vue'
-import LikeComment from '../btn/like/likeComment.vue'
-import BtnEditComment from '../btn/editComment/btnEditComment.vue'
-import BtnDeleteComment from '../btn/deleteComment/btnDeleteComment.vue'
+import BtnNewComment from '../btn/comment/btnNewComment.vue'
+import Like from '../btn/like/like.vue'
+import BtnEditPost from '../btn/editPost/btnEditPost.vue'
+import BtnDeletePost from '../btn/deletePost/btnDeletePost.vue'
 
 export default {
   components: {
-    BtnNewCommentComment,
-    LikeComment,
-    BtnEditComment,
-    BtnDeleteComment
+    BtnNewComment,
+    Like,
+    BtnEditPost,
+    BtnDeletePost
   },
   props: {
     post: {
@@ -109,6 +110,10 @@ export default {
     },
     user: {
       type: Object,
+      required: true
+    },
+    comments: {
+      type: Array,
       required: true
     }
   },
@@ -127,13 +132,16 @@ export default {
   },
   methods: {
     toShowComment (id) {
-      this.$router.push(`/comments/${id}`)
+      this.$router.push(`/posts/${id}`)
     },
     toShowUser (id) {
       this.$router.push(`/users/${id}`)
     },
     fetchPost () {
       this.$emit('fetchPost')
+    },
+    commentsCountDecrement () {
+      this.$emit('commentsCountDecrement')
     }
   }
 }

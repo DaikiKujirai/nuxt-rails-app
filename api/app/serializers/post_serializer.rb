@@ -1,11 +1,10 @@
 class PostSerializer < ActiveModel::Serializer
-  attributes %i[id user_id content created_at]
+  attributes %i[id user_id post_id content created_at post_user_name]
 
   belongs_to :user
-  has_many :comments
-  has_many :like_posts
+  has_many :likes
 
-  def comments
-    object.comments.where(comment_id: 0).order(created_at: :desc)
+  def post_user_name
+    User.find(object.user_id).name
   end
 end

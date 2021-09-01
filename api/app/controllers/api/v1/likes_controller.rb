@@ -1,12 +1,12 @@
-class Api::V1::LikePostsController < ApplicationController
+class Api::V1::LikesController < ApplicationController
 
   def show
-    likes = LikePost.where(post_id: params[:id])
+    likes = Like.where(post_id: params[:id])
     render json: likes
   end
 
   def create
-    like = LikePost.new(like_post_params)
+    like = Like.new(like_params)
     if like.save
       render json: like
     else
@@ -15,7 +15,7 @@ class Api::V1::LikePostsController < ApplicationController
   end
 
   def destroy
-    like = LikePost.find_by(user_id: params[:user_id], post_id: params[:post_id])
+    like = Like.find_by(user_id: params[:user_id], post_id: params[:post_id])
     if like.destroy
       render json: like
     else
@@ -25,7 +25,7 @@ class Api::V1::LikePostsController < ApplicationController
 
   private
 
-  def like_post_params
-    params.require(:like_post).permit(:user_id, :post_id)
+  def like_params
+    params.require(:like).permit(:user_id, :post_id)
   end
 end

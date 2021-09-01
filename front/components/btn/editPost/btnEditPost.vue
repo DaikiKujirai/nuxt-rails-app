@@ -62,10 +62,6 @@ export default {
     post: {
       type: Object,
       required: true
-    },
-    isIndex: {
-      type: Boolean,
-      required: true
     }
   },
   data () {
@@ -94,7 +90,7 @@ export default {
         .then(() => {
           if (this.$route.name === 'users-id') {
             this.fetchUser()
-          } else if (this.isIndex) {
+          } else if (this.$route.name === 'posts') {
             this.fetchPosts()
           } else {
             this.fetchPost()

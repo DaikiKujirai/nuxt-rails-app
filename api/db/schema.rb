@@ -10,45 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_08_25_211414) do
+ActiveRecord::Schema.define(version: 2021_08_31_145623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "comments", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "post_id"
-    t.integer "comment_id", default: 0
-    t.string "content", null: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["post_id"], name: "index_comments_on_post_id"
-    t.index ["user_id"], name: "index_comments_on_user_id"
-  end
-
-  create_table "like_comments", force: :cascade do |t|
-    t.bigint "user_id"
-    t.bigint "comment_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
-    t.index ["comment_id"], name: "index_like_comments_on_comment_id"
-    t.index ["user_id"], name: "index_like_comments_on_user_id"
-  end
-
-  create_table "like_posts", force: :cascade do |t|
+  create_table "likes", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "post_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["post_id"], name: "index_like_posts_on_post_id"
-    t.index ["user_id"], name: "index_like_posts_on_user_id"
+    t.index ["post_id"], name: "index_likes_on_post_id"
+    t.index ["user_id"], name: "index_likes_on_user_id"
   end
 
   create_table "notifications", force: :cascade do |t|
     t.integer "visitor_id", null: false
     t.integer "visited_id", null: false
     t.integer "post_id"
-    t.integer "comment_id"
     t.string "action", null: false
     t.boolean "checked", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
@@ -57,6 +36,7 @@ ActiveRecord::Schema.define(version: 2021_08_25_211414) do
 
   create_table "posts", force: :cascade do |t|
     t.bigint "user_id"
+    t.integer "post_id", default: 0, null: false
     t.string "content", null: false
     t.string "image"
     t.datetime "created_at", precision: 6, null: false
@@ -86,12 +66,8 @@ ActiveRecord::Schema.define(version: 2021_08_25_211414) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "comments", "posts"
-  add_foreign_key "comments", "users"
-  add_foreign_key "like_comments", "comments"
-  add_foreign_key "like_comments", "users"
-  add_foreign_key "like_posts", "posts"
-  add_foreign_key "like_posts", "users"
+  add_foreign_key "likes", "posts"
+  add_foreign_key "likes", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "relationships", "users"
   add_foreign_key "relationships", "users", column: "follow_id"

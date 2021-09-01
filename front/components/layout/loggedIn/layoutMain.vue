@@ -33,7 +33,6 @@
         <v-main>
           <div class="mt-5">
             <slot
-              ref="fetchPosts"
               name="layout-main"
             />
           </div>
@@ -62,7 +61,6 @@ export default {
       this.$router.go(-1)
     },
     fetchPosts () {
-      console.log(this)
     }
   }
 }

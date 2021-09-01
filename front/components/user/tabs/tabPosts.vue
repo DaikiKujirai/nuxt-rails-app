@@ -52,7 +52,6 @@
                 <btn-new-comment
                   :post="post"
                   :user="user"
-                  :comments="post.comments"
                   :is-index="isIndex"
                 />
                 <template v-if="post.user_id !== currentUser.id">
@@ -63,9 +62,10 @@
                     <v-icon v-text="'mdi-twitter-retweet'" />
                   </v-btn>
                 </template>
-                <like-post
+                <like
                   :post="post"
-                  :like-posts="post.like_posts"
+                  :likes="post.likes"
+                  :is-index="isIndex"
                 />
                 <template v-if="user.id === currentUser.id">
                   <btn-edit-post
@@ -91,16 +91,16 @@
 <script>
 import { mapGetters } from 'vuex'
 import BtnNewComment from '../../btn/comment/btnNewComment.vue'
-import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
-import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
-import LikePost from '../../btn/like/likePost.vue'
+import Like from '../../btn/like/like.vue'
+// import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
+// import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
 
 export default {
   components: {
     BtnNewComment,
-    LikePost,
-    BtnEditPost,
-    BtnDeletePost
+    Like
+    // BtnEditPost,
+    // BtnDeletePost
   },
   props: {
     user: {
@@ -110,10 +110,15 @@ export default {
     posts: {
       type: Array,
       required: true
+    },
+    likes: {
+      type: Array,
+      required: true
     }
   },
   data () {
     return {
+      userPostLikes: [],
       src: 'https://picsum.photos/200/200',
       isIndex: true
     }
@@ -132,8 +137,6 @@ export default {
         return 0
       })
     }
-  },
-  mounted () {
   },
   methods: {
     toShowPost (id) {

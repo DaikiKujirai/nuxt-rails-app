@@ -3,9 +3,7 @@ require "validator/email_validator"
 class User < ApplicationRecord
 
   has_many :posts         , dependent: :destroy
-  has_many :comments      , dependent: :destroy
-  has_many :like_posts    , dependent: :destroy
-  has_many :like_comments , dependent: :destroy
+  has_many :likes         , dependent: :destroy
   has_many :relationships
   has_many :reverse_of_relationships, class_name: 'Relationship', foreign_key: 'follow_id'
 

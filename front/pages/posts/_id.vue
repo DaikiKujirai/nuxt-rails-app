@@ -54,7 +54,7 @@
                 {{ commentsCount }} 件のコメント
               </v-card-text>
               <v-card-text>
-                {{ likeCount }} 件のいいね
+                {{ likesCount }} 件のいいね
               </v-card-text>
             </v-col>
           </v-row>
@@ -66,9 +66,11 @@
                   <btn-new-comment
                     :post="post"
                     :user="user"
-                    :comments="comments"
                     :is-index="isIndex"
                     @fetchPost="fetchPost"
+                    @fetchCommentsCount="commentsCount = $event"
+                    @commentsCountIncrement="commentsCountIncrement"
+                    @commentsCountDecrement="commentsCountDecrement"
                   />
                   <template v-if="post.user_id !== currentUser.id">
                     <v-btn
@@ -78,12 +80,12 @@
                       <v-icon v-text="'mdi-twitter-retweet'" />
                     </v-btn>
                   </template>
-                  <like-post
+                  <like
                     :post="post"
-                    :like-posts="likePosts"
-                    :like-post-count="likeCount"
-                    @likeCountIncrement="likeCountIncrement"
-                    @likeCountDecrement="likeCountDecrement"
+                    :likes="likes"
+                    :is-index="isIndex"
+                    @likesCountIncrement="likesCountIncrement"
+                    @likesCountDecrement="likesCountDecrement"
                   />
                   <template v-if="post.user_id === currentUser.id">
                     <btn-edit-post
@@ -101,18 +103,21 @@
                 <v-divider class="mx-3" />
               </v-col>
             </v-row>
-            <page-id-post-comment-form
+            <page-id-comment-form
               :post="post"
               @fetchPost="fetchPost"
+              @commentsCountIncrement="commentsCountIncrement"
             />
           </template>
         </v-card>
       </v-col>
     </v-row>
-    <post-comment
+    <comments
       :post="post"
       :user="user"
+      :comments="sortComments"
       @fetchPost="fetchPost"
+      @commentsCountDecrement="commentsCountDecrement"
     />
   </layout-main>
 </template>
@@ -121,30 +126,30 @@
 import { mapGetters } from 'vuex'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
-import LikePost from '../../components/btn/like/likePost.vue'
+import Like from '../../components/btn/like/like.vue'
 import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
 import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
-import PostComment from '../../components/comment/postComments.vue'
-import PageIdPostCommentForm from '../../components/comment/pageIdPostComment.vue'
+import PageIdCommentForm from '../../components/comment/pageIdCommentForm.vue'
+import Comments from '../../components/comment/comments.vue'
 
 export default {
   components: {
     LayoutMain,
     BtnNewComment,
-    LikePost,
+    Like,
     BtnEditPost,
-    PostComment,
     BtnDeletePost,
-    PageIdPostCommentForm
+    PageIdCommentForm,
+    Comments
   },
   data () {
     return {
       post: {},
       user: {},
+      likes: [],
       comments: [],
-      likePosts: [],
       commentsCount: 0,
-      likeCount: 0,
+      likesCount: 0,
       time: '',
       src: 'https://picsum.photos/200/200',
       isIndex: false
@@ -155,7 +160,15 @@ export default {
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color'
-    })
+    }),
+    sortComments () {
+      const userComments = this.comments
+      return userComments.sort((a, b) => {
+        if (a.created_at > b.created_at) { return -1 }
+        if (a.created_at < b.created_at) { return 1 }
+        return 0
+      })
+    }
   },
   created () {
     this.fetchPost()
@@ -167,18 +180,30 @@ export default {
         .then((res) => {
           this.post = res.data
           this.user = res.data.user
-          this.comments = res.data.comments
-          this.commentsCount = res.data.comments.length
-          this.likePosts = res.data.like_posts
-          this.likeCount = res.data.like_posts.length
+          this.likes = res.data.likes
+          this.likesCount = res.data.likes.length
           this.time = this.$my.format(this.post.created_at)
+          this.fetchComments()
         })
     },
-    likeCountIncrement () {
-      this.likeCount++
+    async fetchComments () {
+      const url = `/api/v1/find_comments/${this.$route.params.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.comments = res.data
+        })
     },
-    likeCountDecrement () {
-      this.likeCount--
+    likesCountIncrement () {
+      this.likesCount++
+    },
+    likesCountDecrement () {
+      this.likesCount--
+    },
+    commentsCountIncrement () {
+      this.commentsCount++
+    },
+    commentsCountDecrement () {
+      this.commentsCount--
     },
     toShowUser (id) {
       this.$router.push(`/users/${id}`)

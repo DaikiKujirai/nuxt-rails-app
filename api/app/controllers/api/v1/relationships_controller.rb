@@ -1,4 +1,4 @@
-class RelationshipsController < ApplicationController
+class Api::V1::RelationshipsController < ApplicationController
   def create
     user = User.find(params[:user_id])
   end

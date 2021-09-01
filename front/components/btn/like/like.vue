@@ -5,7 +5,7 @@
         :color="btnColor"
         text
         rounded
-        @click.prevent.stop="likePost"
+        @click.prevent.stop="like"
       >
         <v-icon v-text="'mdi-heart-outline'" />
       </v-btn>
@@ -15,13 +15,13 @@
         :color="btnColor"
         text
         rounded
-        @click.prevent.stop="disLikePost"
+        @click.prevent.stop="disLike"
       >
         <v-icon v-text="'mdi-heart'" />
       </v-btn>
     </template>
-    <template v-if="likeCount && $route.name !== 'posts-id'">
-      {{ likeCount }}
+    <template v-if="likesCount && isIndex">
+      {{ likesCount }}
     </template>
   </div>
 </template>
@@ -35,14 +35,18 @@ export default {
       type: Object,
       required: true
     },
-    likePosts: {
+    likes: {
       type: Array,
+      required: true
+    },
+    isIndex: {
+      type: Boolean,
       required: true
     }
   },
   data () {
     return {
-      likePostUserIds: [],
+      likeUserIds: [],
       newLike: {},
       isLike: false
     }
@@ -52,27 +56,27 @@ export default {
       currentUser: 'auth/data',
       btnColor: 'btn/color'
     }),
-    likeCount () {
-      return this.likePostUserIds.length
+    likesCount () {
+      return this.likeUserIds.length
     }
   },
-  created () {
+  mounted () {
     setTimeout(() => {
-      this.setLikePostUserIds()
-    }, 500)
+      this.setLikeUserIds()
+    }, 400)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
     }),
-    async likePost () {
+    async like () {
       this.newLike.user_id = this.currentUser.id
       this.newLike.post_id = this.post.id
-      const url = '/api/v1/like_posts'
+      const url = '/api/v1/likes'
       await this.$axios.post(url, this.newLike)
         .then(() => {
-          this.likeCountIncrement()
-          this.likePostUserIds.push(this.currentUser.id)
+          this.likesCountIncrement()
+          this.likeUserIds.push(this.currentUser.id)
           this.isLike = true
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
@@ -81,8 +85,8 @@ export default {
           console.error(err)
         })
     },
-    disLikePost () {
-      const url = '/api/v1/like_posts/delete'
+    disLike () {
+      const url = '/api/v1/likes/delete'
       this.$axios.$delete(url, {
         data: {
           user_id: this.currentUser.id,
@@ -90,10 +94,10 @@ export default {
         }
       })
         .then(() => {
-          this.likeCountDecrement()
+          this.likesCountDecrement()
           this.isLike = false
-          const th = this.likePostUserIds.indexOf(this.currentUser.id)
-          this.likePostUserIds.splice(th, 1)
+          const th = this.likeUserIds.indexOf(this.currentUser.id)
+          this.likeUserIds.splice(th, 1)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
         .catch((err) => {
@@ -101,22 +105,22 @@ export default {
           console.error(err)
         })
     },
-    setLikePostUserIds () {
-      for (let i = 0; i < this.likePosts.length; i++) {
-        this.likePostUserIds.push(this.likePosts[i].user_id)
+    setLikeUserIds () {
+      for (let i = 0; i < this.likes.length; i++) {
+        this.likeUserIds.push(this.likes[i].user_id)
       }
       this.searchMyLike()
     },
     searchMyLike () {
-      if (this.likePostUserIds.includes(this.currentUser.id)) {
+      if (this.likeUserIds.includes(this.currentUser.id)) {
         this.isLike = true
       }
     },
-    likeCountIncrement () {
-      this.$emit('likeCountIncrement')
+    likesCountIncrement () {
+      this.$emit('likesCountIncrement')
     },
-    likeCountDecrement () {
-      this.$emit('likeCountDecrement')
+    likesCountDecrement () {
+      this.$emit('likesCountDecrement')
     }
   }
 }

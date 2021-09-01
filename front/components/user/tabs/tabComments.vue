@@ -21,7 +21,7 @@
             />
             <v-col cols="7">
               <v-card-title>
-                {{ user.name }}
+                {{ comment.user.name }}
               </v-card-title>
             </v-col>
             <v-card-text
@@ -51,8 +51,8 @@
           <v-row>
             <v-col>
               <v-card-actions class="justify-space-around ma-0 pa-0">
-                <btn-new-comment-comment
-                  :comment="comment"
+                <btn-new-comment
+                  :post="comment"
                   :user="user"
                   :is-index="isIndex"
                 />
@@ -64,19 +64,19 @@
                     <v-icon v-text="'mdi-twitter-retweet'" />
                   </v-btn>
                 </template>
-                <like-comment
-                  :comment="comment"
-                  :like-comments="comment.like_comments"
+                <like
+                  :post="comment"
+                  :likes="comment.likes"
                   :is-index="isIndex"
                 />
                 <template v-if="user.id === currentUser.id">
-                  <btn-edit-comment
-                    :comment="comment"
+                  <btn-edit-post
+                    :post="comment"
                     :is-index="isIndex"
                     @fetchUser="fetchUser"
                   />
-                  <btn-delete-comment
-                    :comment="comment"
+                  <btn-delete-post
+                    :post="comment"
                     :is-index="isIndex"
                     @fetchUser="fetchUser"
                   />
@@ -92,17 +92,17 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import BtnNewCommentComment from '../../btn/commentComment/btnNewCommentComment.vue'
-import LikeComment from '../../btn/like/likeComment.vue'
-import BtnEditComment from '../../btn/editComment/btnEditComment.vue'
-import BtnDeleteComment from '../../btn/deleteComment/btnDeleteComment.vue'
+import BtnNewComment from '../../btn/comment/btnNewComment.vue'
+import Like from '../../btn/like/like.vue'
+import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
+import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
 
 export default {
   components: {
-    BtnNewCommentComment,
-    LikeComment,
-    BtnEditComment,
-    BtnDeleteComment
+    BtnNewComment,
+    Like,
+    BtnDeletePost,
+    BtnEditPost
   },
   props: {
     user: {

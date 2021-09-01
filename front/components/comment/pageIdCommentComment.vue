@@ -36,7 +36,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import pageIdCommentForm from './pageIdCommentForm.vue'
+import pageIdCommentForm from './pageIdCommentFormContent.vue'
 
 export default {
   components: {

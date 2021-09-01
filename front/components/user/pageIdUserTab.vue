@@ -25,6 +25,7 @@
         <tab-posts
           :user="user"
           :posts="posts"
+          :likes="likes"
           @fetchUser="fetchUser"
         />
         <tab-comments
@@ -77,7 +78,12 @@ export default {
       tab: null
     }
   },
+  mounted () {
+    this.fetchLikes()
+  },
   methods: {
+    fetchLikes () {
+    },
     fetchUser () {
       this.$emit('fetchUser')
     }

@@ -33,7 +33,7 @@
             class="ml-2"
           />
           <v-card-title>
-            {{ user.name }}
+            {{ post.user_name }}
           </v-card-title>
         </div>
         <div class="d-flex">
@@ -48,7 +48,7 @@
             </v-card-subtitle>
             <v-spacer />
             <v-card-text>
-              返信先：{{ user.name }} さん
+              返信先：{{ post.user_name }} さん
             </v-card-text>
           </div>
         </div>
@@ -73,8 +73,8 @@
         </v-container>
       </v-card>
     </v-dialog>
-    <template v-if="isIndex && commentCount">
-      {{ commentCount }}
+    <template v-if="isIndex && commentsCount">
+      {{ commentsCount }}
     </template>
   </div>
 </template>
@@ -92,14 +92,6 @@ export default {
       type: Object,
       required: true
     },
-    user: {
-      type: Object,
-      required: true
-    },
-    comments: {
-      type: Array,
-      required: true
-    },
     isIndex: {
       type: Boolean,
       required: true
@@ -110,7 +102,7 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
-      commentCount: 0,
+      comments: [],
       newComment: { content: '' },
       src: 'https://picsum.photos/200/200'
     }
@@ -119,20 +111,39 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       btnColor: 'btn/color'
-    })
+    }),
+    commentsCount () {
+      return this.comments.length
+    }
   },
   mounted () {
-    this.commentCount = this.comments.length
+    setTimeout(() => {
+      this.fetchComments()
+    }, 400)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
     }),
+    async fetchComments () {
+      const url = `/api/v1/find_comments/${this.post.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.comments = res.data
+          if (this.$route.name === 'posts-id') {
+            this.fetchCommentsCount()
+          }
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(err)
+        })
+    },
     async submitComment () {
       this.loading = true
       this.newComment.user_id = this.currentUser.id
       this.newComment.post_id = this.post.id
-      await this.$axios.$post('/api/v1/comments', this.newComment)
+      await this.$axios.$post('/api/v1/posts', this.newComment)
         .then(() => {
           this.loading = false
           this.dialog = false
@@ -141,6 +152,7 @@ export default {
           if (this.isIndex) {
             this.$router.push(`/posts/${this.post.id}`)
           } else {
+            this.commentsCountIncrement()
             this.fetchPost()
           }
         })
@@ -150,6 +162,15 @@ export default {
     },
     fetchPost () {
       this.$emit('fetchPost')
+    },
+    fetchCommentsCount () {
+      this.$emit('fetchCommentsCount', this.commentsCount)
+    },
+    commentsCountIncrement () {
+      this.$emit('commentsCountIncrement')
+    },
+    commentsCountDecrement () {
+      this.$emit('commentsCountDecrement')
     }
   }
 }
