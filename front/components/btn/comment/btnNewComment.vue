@@ -81,7 +81,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import newCommentForm from '../../comment/newCommentForm.vue'
+import newCommentForm from '../../btn/comment/newCommentForm.vue'
 
 export default {
   components: {
@@ -103,6 +103,7 @@ export default {
       isValid: false,
       loading: false,
       comments: [],
+      commentsCount: 0,
       newComment: { content: '' },
       src: 'https://picsum.photos/200/200'
     }
@@ -111,15 +112,12 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       btnColor: 'btn/color'
-    }),
-    commentsCount () {
-      return this.comments.length
-    }
+    })
   },
   mounted () {
     setTimeout(() => {
       this.fetchComments()
-    }, 400)
+    }, 500)
   },
   methods: {
     ...mapActions({
@@ -129,7 +127,8 @@ export default {
       const url = `/api/v1/find_comments/${this.post.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.comments = res.data
+          this.comments = res.data.comments
+          this.commentsCount = res.data.kaminari.pagenation.count
           if (this.$route.name === 'posts-id') {
             this.fetchCommentsCount()
           }
@@ -144,7 +143,7 @@ export default {
       this.newComment.user_id = this.currentUser.id
       this.newComment.post_id = this.post.id
       await this.$axios.$post('/api/v1/posts', this.newComment)
-        .then(() => {
+        .then((res) => {
           this.loading = false
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
@@ -153,15 +152,15 @@ export default {
             this.$router.push(`/posts/${this.post.id}`)
           } else {
             this.commentsCountIncrement()
-            this.fetchPost()
+            this.fetchContents()
           }
         })
         .catch(() => {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    fetchPost () {
-      this.$emit('fetchPost')
+    fetchContents () {
+      this.$emit('fetchContents')
     },
     fetchCommentsCount () {
       this.$emit('fetchCommentsCount', this.commentsCount)

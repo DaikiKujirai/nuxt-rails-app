@@ -72,8 +72,8 @@ export default {
       await this.$axios.$post('/api/v1/posts', this.newComment)
         .then(() => {
           this.commentsCountIncrement()
+          this.fetchContents()
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
-          this.fetchPost()
           this.loading = false
           this.$refs.form.reset()
         })
@@ -81,8 +81,8 @@ export default {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },
-    fetchPost () {
-      this.$emit('fetchPost')
+    fetchContents () {
+      this.$emit('fetchContents')
     },
     commentsCountIncrement () {
       this.$emit('commentsCountIncrement')

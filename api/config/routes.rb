@@ -8,9 +8,12 @@ Rails.application.routes.draw do
       resources :posts, only: %i[index show create update destroy]
       resources :likes, only: %i[create destroy]
       # user
-      get 'find_login_user/:uid' => 'users#find_login_user'
+      get 'find_login_user/:uid'     => 'users#find_login_user'
+      get 'show_user_posts/:id'      => 'users#show_user_posts'
+      get 'show_user_like_posts/:id' => 'users#show_user_like_posts'
+      get 'show_user_comments/:id'   => 'users#show_user_comments'
       # post
-      get 'find_comments/:id'    => 'posts#find_comments'
+      get 'find_comments/:id'        => 'posts#find_comments'
     end
   end
 end

@@ -74,15 +74,13 @@ export default {
     async clickOK () {
       await this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
-          if (this.$route.name === 'users-id') {
-            this.fetchUser()
-          } else if (this.$route.name === 'posts-id' && this.isIndex) {
-            this.fetchPost()
+          if (this.$route.name === 'posts-id' && this.isIndex) {
+            this.fetchContents()
             this.commentsCountDecrement()
           } else if (this.$route.name === 'posts-id' && !this.isIndex) {
             this.$router.replace('/posts')
           } else {
-            this.fetchPosts()
+            this.fetchContents()
           }
           this.dialog = false
           this.flashMessage({ message: '削除しました', type: 'primary', status: true })
@@ -92,14 +90,8 @@ export default {
           console.log('投稿の削除に失敗', err)
         })
     },
-    fetchPosts () {
-      this.$emit('fetchPosts')
-    },
-    fetchPost () {
-      this.$emit('fetchPost')
-    },
-    fetchUser () {
-      this.$emit('fetchUser')
+    fetchContents () {
+      this.$emit('fetchContents')
     },
     commentsCountDecrement () {
       this.$emit('commentsCountDecrement')

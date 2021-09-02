@@ -2,7 +2,8 @@
   <layout-main #layout-main> <!--eslint-disable-line-->
     <template v-if="isAuthenticated">
       <home-new-post
-        @fetchPosts="fetchPosts"
+        @rollBackPage="rollBackPage"
+        @fetchContents="fetchContents"
       />
     </template>
     <template v-if="posts">
@@ -13,7 +14,7 @@
       >
         <v-col>
           <v-card
-            @click="toShowPost(post.id)"
+            @click="toShow('posts', post.id)"
           >
             <v-row>
               <v-col
@@ -26,7 +27,7 @@
                   contain
                   style="border-radius: 50%;"
                   class="ml-3"
-                  @click.prevent.stop="toShowUser(post.user_id)"
+                  @click.prevent.stop="toShow('users', post.user_id)"
                 />
                 <v-col cols="7">
                   <v-card-title>
@@ -40,7 +41,7 @@
                     size="16"
                     v-text="'mdi-update'"
                   />
-                  <!-- {{ $my.format(post.created_at) }} -->
+                  {{ $my.format(post.created_at) }}
                 </v-card-text>
               </v-col>
             </v-row>
@@ -57,10 +58,10 @@
               <v-row>
                 <v-col>
                   <v-card-actions class="justify-space-around">
-                    <!-- <btn-new-comment
+                    <btn-new-comment
                       :post="post"
                       :is-index="isIndex"
-                    /> -->
+                    />
                     <template v-if="post.user_id !== currentUser.id">
                       <v-btn
                         :color="btnColor"
@@ -69,21 +70,20 @@
                         <v-icon v-text="'mdi-twitter-retweet'" />
                       </v-btn>
                     </template>
-                    <!-- <like
+                    <like
                       :post="post"
-                      :likes="post.likes"
                       :is-index="isIndex"
-                    /> -->
+                    />
                     <template v-if="post.user_id === currentUser.id">
-                      <!-- <btn-edit-post
+                      <btn-edit-post
                         :post="post"
-                        @fetchPosts="fetchPosts"
-                      /> -->
-                      <!-- <btn-delete-post
+                        @fetchContents="fetchContents"
+                      />
+                      <btn-delete-post
                         :post="post"
                         :is-index="isIndex"
-                        @fetchPosts="fetchPosts"
-                      /> -->
+                        @fetchContents="fetchContents"
+                      />
                     </template>
                   </v-card-actions>
                 </v-col>
@@ -97,12 +97,12 @@
         spinner="bubbles"
         @infinite="infiniteHandler"
       >
-        <!-- <div
+        <div
           slot="no-results"
           class="mt-3"
         >
           データはありません
-        </div> -->
+        </div>
       </infinite-loading>
     </template>
   </layout-main>
@@ -110,20 +110,20 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-// import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-// import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
-// import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
-// import Like from '../../components/btn/like/like.vue'
+import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
+import Like from '../../components/btn/like/like.vue'
+import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
+import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
 import HomeNewPost from '../../components/post/homeNewPost.vue'
 
 export default {
   components: {
     LayoutMain,
-    // BtnNewComment,
-    // BtnEditPost,
-    // BtnDeletePost,
-    // Like,
+    BtnNewComment,
+    Like,
+    BtnEditPost,
+    BtnDeletePost,
     HomeNewPost
   },
   data () {
@@ -144,13 +144,13 @@ export default {
     })
   },
   created () {
-    this.fetchPosts()
+    this.fetchContents()
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
     }),
-    async fetchPosts () {
+    async fetchContents () {
       const url = '/api/v1/posts'
       await this.$axios.get(url)
         .then((res) => {
@@ -162,11 +162,8 @@ export default {
           console.error(err)
         })
     },
-    toShowPost (id) {
-      this.$router.push(`/posts/${id}`)
-    },
-    toShowUser (id) {
-      this.$router.push(`/users/${id}`)
+    toShow (page, id) {
+      this.$router.push(`/${page}/${id}`)
     },
     infiniteHandler () {
       const url = 'api/v1/posts'
@@ -174,7 +171,7 @@ export default {
       this.$axios.get(url, { params: { page: this.page } })
         .then((res) => {
           setTimeout(() => {
-            if (this.page < res.data.kaminari.pagenation.pages) {
+            if (this.page <= res.data.kaminari.pagenation.pages) {
               this.posts.push(...res.data.posts)
               this.$refs.infiniteLoading.stateChanger.loaded()
             } else {
@@ -185,6 +182,9 @@ export default {
         .catch(() => {
           this.$refs.infiniteLoading.stateChanger.complete()
         })
+    },
+    rollBackPage () {
+      this.page = 1
     }
   }
 }

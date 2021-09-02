@@ -68,7 +68,8 @@ export default {
       await this.$axios.post('/api/v1/posts', this.post)
         .then(() => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
-          this.fetchPosts()
+          this.rollBackPage()
+          this.fetchContents()
           this.loading = false
           this.dialog = false
           this.$refs.form.reset()
@@ -78,8 +79,11 @@ export default {
           this.loading = false
         })
     },
-    fetchPosts () {
-      this.$emit('fetchPosts')
+    rollBackPage () {
+      this.$emit('rollBackPage')
+    },
+    fetchContents () {
+      this.$emit('fetchContents')
     }
   }
 }

@@ -14,11 +14,11 @@
                 contain
                 style="border-radius: 50%; cursor: pointer;"
                 class="ml-3"
-                @click.prevent.stop="toShowUser(post.user_id)"
+                @click.prevent.stop="toShow('users', post.user_id)"
               />
               <v-card-title
                 style="cursor: pointer;"
-                @click.prevent.stop="toShowUser(post.user_id)"
+                @click.prevent.stop="toShow('users', post.user_id)"
               >
                 {{ user.name }}
               </v-card-title>
@@ -65,9 +65,8 @@
                 <v-card-actions class="justify-space-around">
                   <btn-new-comment
                     :post="post"
-                    :user="user"
                     :is-index="isIndex"
-                    @fetchPost="fetchPost"
+                    @fetchContents="fetchContents"
                     @fetchCommentsCount="commentsCount = $event"
                     @commentsCountIncrement="commentsCountIncrement"
                     @commentsCountDecrement="commentsCountDecrement"
@@ -82,7 +81,6 @@
                   </template>
                   <like
                     :post="post"
-                    :likes="likes"
                     :is-index="isIndex"
                     @likesCountIncrement="likesCountIncrement"
                     @likesCountDecrement="likesCountDecrement"
@@ -91,12 +89,12 @@
                     <btn-edit-post
                       :post="post"
                       :is-index="isIndex"
-                      @fetchPost="fetchPost"
+                      @fetchContents="fetchContents"
                     />
                     <btn-delete-post
                       :post="post"
                       :is-index="isIndex"
-                      @fetchPost="fetchPost"
+                      @fetchContents="fetchContents"
                     />
                   </template>
                 </v-card-actions>
@@ -105,7 +103,7 @@
             </v-row>
             <page-id-comment-form
               :post="post"
-              @fetchPost="fetchPost"
+              @fetchContents="fetchContents"
               @commentsCountIncrement="commentsCountIncrement"
             />
           </template>
@@ -113,10 +111,10 @@
       </v-col>
     </v-row>
     <comments
+      ref="child"
       :post="post"
       :user="user"
-      :comments="sortComments"
-      @fetchPost="fetchPost"
+      @fetchContents="fetchContents"
       @commentsCountDecrement="commentsCountDecrement"
     />
   </layout-main>
@@ -160,38 +158,26 @@ export default {
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color'
-    }),
-    sortComments () {
-      const userComments = this.comments
-      return userComments.sort((a, b) => {
-        if (a.created_at > b.created_at) { return -1 }
-        if (a.created_at < b.created_at) { return 1 }
-        return 0
-      })
-    }
+    })
   },
   created () {
-    this.fetchPost()
+    this.fetchContents()
   },
   methods: {
-    async fetchPost () {
+    async fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.post = res.data
+          this.post = res.data.post
           this.user = res.data.user
-          this.likes = res.data.likes
+          this.post.user_name = res.data.user.name
           this.likesCount = res.data.likes.length
           this.time = this.$my.format(this.post.created_at)
           this.fetchComments()
         })
     },
-    async fetchComments () {
-      const url = `/api/v1/find_comments/${this.$route.params.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.comments = res.data
-        })
+    fetchComments () {
+      this.$refs.child.fetchComments()
     },
     likesCountIncrement () {
       this.likesCount++
@@ -205,8 +191,8 @@ export default {
     commentsCountDecrement () {
       this.commentsCount--
     },
-    toShowUser (id) {
-      this.$router.push(`/users/${id}`)
+    toShow (page, id) {
+      this.$router.push(`/${page}/${id}`)
     }
   }
 }

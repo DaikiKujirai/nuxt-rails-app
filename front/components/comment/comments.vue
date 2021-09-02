@@ -7,7 +7,7 @@
     >
       <v-col>
         <v-card
-          @click="toShowComment(comment.id)"
+          @click="toShow('posts', comment.id)"
         >
           <v-row>
             <v-col
@@ -20,10 +20,10 @@
                 contain
                 style="border-radius: 50%;"
                 class="ml-3"
-                @click.prevent.stop="toShowUser(post.user_id)"
+                @click.prevent.stop="toShow('users', post.user_id)"
               />
               <v-card-text>
-                {{ comment.user.name }}
+                {{ comment.user_name }}
               </v-card-text>
               <v-card-text
                 class="text-right"
@@ -36,6 +36,9 @@
               </v-card-text>
             </v-col>
           </v-row>
+          <v-card-text>
+            返信先： {{ user.name }} さん
+          </v-card-text>
           <v-row>
             <v-col>
               <v-card-title
@@ -51,7 +54,6 @@
                 <v-card-actions class="justify-space-around">
                   <btn-new-comment
                     :post="comment"
-                    :user="user"
                     :is-index="isIndex"
                   />
                   <template v-if="comment.user_id !== currentUser.id">
@@ -64,18 +66,17 @@
                   </template>
                   <like
                     :post="comment"
-                    :likes="comment.likes"
                     :is-index="isIndex"
                   />
                   <template v-if="comment.user_id === currentUser.id">
                     <btn-edit-post
                       :post="comment"
-                      @fetchPost="fetchPost"
+                      @fetchContents="fetchContents"
                     />
                     <btn-delete-post
                       :post="comment"
                       :is-index="isIndex"
-                      @fetchPost="fetchPost"
+                      @fetchContents="fetchContents"
                       @commentsCountDecrement="commentsCountDecrement"
                     />
                   </template>
@@ -86,6 +87,18 @@
         </v-card>
       </v-col>
     </v-row>
+    <infinite-loading
+      ref="infiniteLoading"
+      spinner="bubbles"
+      @infinite="infiniteHandler"
+    >
+      <div
+        slot="no-results"
+        class="mt-3"
+      >
+        データはありません
+      </div>
+    </infinite-loading>
   </div>
 </template>
 
@@ -111,15 +124,13 @@ export default {
     user: {
       type: Object,
       required: true
-    },
-    comments: {
-      type: Array,
-      required: true
     }
   },
   data () {
     return {
+      comments: [],
       isIndex: true,
+      page: 1,
       src: 'https://picsum.photos/500/500'
     }
   },
@@ -129,16 +140,47 @@ export default {
       isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color'
     })
+    // sortComments () {
+    //   const userComments = this.comments
+    //   return userComments.sort((a, b) => {
+    //     if (a.created_at > b.created_at) { return -1 }
+    //     if (a.created_at < b.created_at) { return 1 }
+    //     return 0
+    //   })
+    // }
   },
   methods: {
-    toShowComment (id) {
-      this.$router.push(`/posts/${id}`)
+    async fetchComments () {
+      const url = `/api/v1/find_comments/${this.$route.params.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.comments = res.data.comments
+          this.page = 1
+        })
     },
-    toShowUser (id) {
-      this.$router.push(`/users/${id}`)
+    async infiniteHandler () {
+      const url = `api/v1/find_comments/${this.$route.params.id}`
+      this.page++
+      await this.$axios.get(url, { params: { page: this.page } })
+        .then((res) => {
+          setTimeout(() => {
+            if (this.page <= res.data.kaminari.pagenation.pages) {
+              this.comments.push(...res.data.comments)
+              this.$refs.infiniteLoading.stateChanger.loaded()
+            } else {
+              this.$refs.infiniteLoading.stateChanger.complete()
+            }
+          }, 800)
+        })
+        .catch(() => {
+          this.$refs.infiniteLoading.stateChanger.complete()
+        })
     },
-    fetchPost () {
-      this.$emit('fetchPost')
+    toShow (page, id) {
+      this.$router.push(`/${page}/${id}`)
+    },
+    fetchContents () {
+      this.$emit('fetchContents')
     },
     commentsCountDecrement () {
       this.$emit('commentsCountDecrement')

@@ -1,11 +1,11 @@
 class Api::V1::PostsController < ApplicationController
   include Pagination
   def index
-    puts params
     posts = Post.joins(:user).select("
-      posts.id,
-      posts.post_id,
-      posts.content,
+      posts.id        ,
+      posts.post_id   ,
+      posts.user_id   ,
+      posts.content   ,
       posts.created_at,
       users.name AS user_name
     ").where(post_id: 0).order(created_at: :desc).page(params[:page]).per(5)
@@ -15,14 +15,17 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    post = Post.includes(:user, :likes).find(params[:id])
-    render json: post, include: [:user, :likes]
+    post = {}
+    post[:post]  = Post.find(params[:id])
+    post[:user]  = User.find(post[:post].user_id)
+    post[:likes] = Like.where(post_id: post[:post].id)
+    render json: post
   end
 
   def create
     post = Post.new(post_params)
     if post.save
-      render json: { success_message: '保存しました' }
+      render json: post
     else
       render json: post.errors.messages
     end
@@ -49,8 +52,17 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def find_comments
-    comments = Post.where(post_id: params[:id])
-    render json: comments, include: [:user, :likes]
+    comments = Post.joins(:user).select("
+      posts.id        ,
+      posts.post_id   ,
+      posts.user_id   ,
+      posts.content   ,
+      posts.created_at,
+      users.name AS user_name
+    ").where(post_id: params[:id]).order(created_at: :desc).page(params[:page]).per(5)
+    pagination = resources_with_pagination(comments)
+    object = { comments: comments, kaminari: pagination }
+    render json: object
   end
 
   private

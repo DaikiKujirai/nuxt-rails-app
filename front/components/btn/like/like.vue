@@ -35,10 +35,6 @@ export default {
       type: Object,
       required: true
     },
-    likes: {
-      type: Array,
-      required: true
-    },
     isIndex: {
       type: Boolean,
       required: true
@@ -46,6 +42,7 @@ export default {
   },
   data () {
     return {
+      likes: [],
       likeUserIds: [],
       newLike: {},
       isLike: false
@@ -61,6 +58,11 @@ export default {
     }
   },
   mounted () {
+    if (this.$route.name === 'posts-id' && !this.isIndex) {
+      this.fetchLikes(this.$route.params.id)
+    } else {
+      this.fetchLikes(this.post.id)
+    }
     setTimeout(() => {
       this.setLikeUserIds()
     }, 400)
@@ -103,6 +105,13 @@ export default {
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err)
+        })
+    },
+    async fetchLikes (id) {
+      const url = `/api/v1/posts/${id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.likes = res.data.likes
         })
     },
     setLikeUserIds () {

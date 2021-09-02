@@ -88,13 +88,7 @@ export default {
       this.loading = true
       await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
         .then(() => {
-          if (this.$route.name === 'users-id') {
-            this.fetchUser()
-          } else if (this.$route.name === 'posts') {
-            this.fetchPosts()
-          } else {
-            this.fetchPost()
-          }
+          this.fetchContents()
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
@@ -106,14 +100,8 @@ export default {
           this.loading = false
         })
     },
-    fetchPosts () {
-      this.$emit('fetchPosts')
-    },
-    fetchPost () {
-      this.$emit('fetchPost')
-    },
-    fetchUser () {
-      this.$emit('fetchUser')
+    fetchContents () {
+      this.$emit('fetchContents')
     }
   }
 }
