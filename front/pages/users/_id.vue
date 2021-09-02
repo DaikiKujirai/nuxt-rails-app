@@ -74,12 +74,9 @@
           </template>
         </v-card>
         <page-id-user-tab
+          ref="child"
           class="mt-1"
           :user="user"
-          :posts="posts"
-          :comments="comments"
-          :likes="likes"
-          @fetchUser="fetchUser"
         />
       </v-col>
     </v-row>
@@ -97,9 +94,6 @@ export default {
   data: () => {
     return {
       user: {},
-      posts: [],
-      comments: [],
-      likes: [],
       src: 'https://picsum.photos/500/500'
     }
   },
@@ -110,29 +104,21 @@ export default {
     })
   },
   created () {
-    this.fetchUser()
+    this.fetchContents()
   },
   methods: {
-    fetchUser () {
+    async fetchContents () {
       const url = `/api/v1/users/${this.$route.params.id}`
-      this.$axios.get(url)
+      await this.$axios.get(url)
         .then((res) => {
           this.user = res.data
-          this.likes = res.data.likes
-          this.dividePostsAndComments(res.data.posts)
+          setTimeout(() => {
+            this.fetchShowUser()
+          }, 500)
         })
         .catch((err) => {
           console.error(err) // eslint-disable-line
         })
-    },
-    dividePostsAndComments (posts) {
-      for (let i = 0; i < posts.length; i++) {
-        if (posts[i].post_id === 0) {
-          this.posts.push(posts[i])
-        } else {
-          this.comments.push(posts[i])
-        }
-      }
     },
     toFollow () {
       // eslint-disable-next-line no-console
@@ -141,6 +127,9 @@ export default {
     toFollower () {
       // eslint-disable-next-line no-console
       console.log('toFolower')
+    },
+    fetchShowUser () {
+      this.$refs.child.fetchContents()
     }
   }
 }

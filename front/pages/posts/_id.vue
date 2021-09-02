@@ -66,6 +66,7 @@
                   <btn-new-comment
                     :post="post"
                     :is-index="isIndex"
+                    @rollBackPage="rollBackPage"
                     @fetchContents="fetchContents"
                     @fetchCommentsCount="commentsCount = $event"
                     @commentsCountIncrement="commentsCountIncrement"
@@ -178,6 +179,9 @@ export default {
     },
     fetchComments () {
       this.$refs.child.fetchComments()
+    },
+    rollBackPage () {
+      this.$refs.child.rollBackPage()
     },
     likesCountIncrement () {
       this.likesCount++

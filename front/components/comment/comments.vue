@@ -71,11 +71,13 @@
                   <template v-if="comment.user_id === currentUser.id">
                     <btn-edit-post
                       :post="comment"
+                      @rollBackPage="rollBackPage"
                       @fetchContents="fetchContents"
                     />
                     <btn-delete-post
                       :post="comment"
                       :is-index="isIndex"
+                      @rollBackPage="rollBackPage"
                       @fetchContents="fetchContents"
                       @commentsCountDecrement="commentsCountDecrement"
                     />
@@ -140,14 +142,6 @@ export default {
       isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color'
     })
-    // sortComments () {
-    //   const userComments = this.comments
-    //   return userComments.sort((a, b) => {
-    //     if (a.created_at > b.created_at) { return -1 }
-    //     if (a.created_at < b.created_at) { return 1 }
-    //     return 0
-    //   })
-    // }
   },
   methods: {
     async fetchComments () {
@@ -155,7 +149,6 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.comments = res.data.comments
-          this.page = 1
         })
     },
     async infiniteHandler () {
@@ -164,7 +157,7 @@ export default {
       await this.$axios.get(url, { params: { page: this.page } })
         .then((res) => {
           setTimeout(() => {
-            if (this.page <= res.data.kaminari.pagenation.pages) {
+            if (this.page <= res.data.kaminari.pagination.pages) {
               this.comments.push(...res.data.comments)
               this.$refs.infiniteLoading.stateChanger.loaded()
             } else {
@@ -184,6 +177,9 @@ export default {
     },
     commentsCountDecrement () {
       this.$emit('commentsCountDecrement')
+    },
+    rollBackPage () {
+      this.page = 1
     }
   }
 }

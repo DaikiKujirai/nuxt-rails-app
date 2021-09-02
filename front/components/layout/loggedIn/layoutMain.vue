@@ -44,6 +44,28 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col>
+        <v-btn
+          icon
+          elevation="20"
+          height="80px"
+          width="80px"
+          fixed
+          right
+          bottom
+          color="info"
+          class="mb-10"
+          @click="toTop"
+        >
+          <v-icon
+            size="50"
+            color="dark"
+            v-text="'mdi-chevron-up'"
+          />
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
@@ -60,7 +82,11 @@ export default {
     pageBack () {
       this.$router.go(-1)
     },
-    fetchPosts () {
+    toTop () {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
     }
   }
 }

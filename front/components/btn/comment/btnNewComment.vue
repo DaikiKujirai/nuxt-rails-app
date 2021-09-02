@@ -128,7 +128,7 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.comments = res.data.comments
-          this.commentsCount = res.data.kaminari.pagenation.count
+          this.commentsCount = res.data.kaminari.pagination.count
           if (this.$route.name === 'posts-id') {
             this.fetchCommentsCount()
           }
@@ -143,7 +143,8 @@ export default {
       this.newComment.user_id = this.currentUser.id
       this.newComment.post_id = this.post.id
       await this.$axios.$post('/api/v1/posts', this.newComment)
-        .then((res) => {
+        .then(() => {
+          this.rollBackPage()
           this.loading = false
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
@@ -170,6 +171,9 @@ export default {
     },
     commentsCountDecrement () {
       this.$emit('commentsCountDecrement')
+    },
+    rollBackPage () {
+      this.$emit('rollBackPage')
     }
   }
 }

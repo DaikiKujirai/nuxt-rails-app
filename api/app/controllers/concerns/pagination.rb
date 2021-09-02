@@ -2,7 +2,7 @@ module Pagination
   class Api::V1::PostsController < ApplicationController
     def resources_with_pagination(resources)
       {
-        pagenation: {
+        pagination: {
           current:     resources.current_page,
           previous:    resources.prev_page   ,
           next:        resources.next_page   ,
@@ -17,7 +17,7 @@ module Pagination
   class Api::V1::UsersController < ApplicationController
     def resources_with_pagination(resources)
       {
-        pagenation: {
+        pagination: {
           current:     resources.current_page,
           previous:    resources.prev_page   ,
           next:        resources.next_page   ,

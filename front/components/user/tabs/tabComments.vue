@@ -1,9 +1,9 @@
 <template>
   <v-tab-item>
-    <v-row
+    <!-- <v-row
       v-for="comment in userComments"
       :key="comment.id"
-      @click="toShowComment(comment.id)"
+      @click="toShow('page', comment.id)"
     >
       <v-col>
         <v-divider />
@@ -86,33 +86,33 @@
           </v-row>
         </template>
       </v-col>
-    </v-row>
+    </v-row> -->
   </v-tab-item>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import BtnNewComment from '../../btn/comment/btnNewComment.vue'
-import Like from '../../btn/like/like.vue'
-import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
-import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
+// import BtnNewComment from '../../btn/comment/btnNewComment.vue'
+// import Like from '../../btn/like/like.vue'
+// import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
+// import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
 
 export default {
   components: {
-    BtnNewComment,
-    Like,
-    BtnDeletePost,
-    BtnEditPost
+    // BtnNewComment,
+    // Like,
+    // BtnDeletePost,
+    // BtnEditPost
   },
   props: {
     user: {
       type: Object,
       required: true
-    },
-    comments: {
-      type: Array,
-      required: true
     }
+    // comments: {
+    //   type: Array,
+    //   required: true
+    // }
   },
   data () {
     return {
@@ -125,22 +125,19 @@ export default {
       isAuthenticated: 'auth/isAuthenticated',
       currentUser: 'auth/data',
       btnColor: 'btn/color'
-    }),
-    userComments () {
-      const userComments = this.comments
-      return userComments.sort((a, b) => {
-        if (a.created_at > b.created_at) { return -1 }
-        if (a.created_at < b.created_at) { return 1 }
-        return 0
-      })
-    }
+    })
+    // userComments () {
+    //   const userComments = this.comments
+    //   return userComments.sort((a, b) => {
+    //     if (a.created_at > b.created_at) { return -1 }
+    //     if (a.created_at < b.created_at) { return 1 }
+    //     return 0
+    //   })
+    // }
   },
   methods: {
-    toShowComment (id) {
-      this.$router.push(`/comments/${id}`)
-    },
-    fetchUser () {
-      this.$emit('fetchUser')
+    toShow (page, id) {
+      this.$router.push(`/${page}/${id}`)
     }
   }
 }

@@ -23,21 +23,19 @@
       </v-card>
       <v-tabs-items v-model="tab">
         <tab-posts
+          ref="child"
           :user="user"
-          :posts="posts"
-          :likes="likes"
-          @fetchUser="fetchUser"
         />
         <tab-comments
+          ref="child"
           :user="user"
-          :comments="comments"
-          @fetchUser="fetchUser"
         />
         <v-tab-item>
           メディア
         </v-tab-item>
         <tab-likes
-          :likes="likes"
+          ref="child"
+          :user="user"
         />
       </v-tabs-items>
     </v-col>
@@ -59,18 +57,6 @@ export default {
     user: {
       type: Object,
       required: true
-    },
-    posts: {
-      type: Array,
-      required: true
-    },
-    comments: {
-      type: Array,
-      required: true
-    },
-    likes: {
-      type: Array,
-      required: true
     }
   },
   data () {
@@ -78,14 +64,9 @@ export default {
       tab: null
     }
   },
-  mounted () {
-    this.fetchLikes()
-  },
   methods: {
-    fetchLikes () {
-    },
-    fetchUser () {
-      this.$emit('fetchUser')
+    fetchContents () {
+      this.$refs.child.fetchContents()
     }
   }
 }

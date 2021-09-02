@@ -88,7 +88,8 @@ export default {
       this.loading = true
       await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
         .then(() => {
-          this.fetchContents()
+          this.rollBackPage()
+          this.$router.push(`/posts/${this.post.id}`)
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
@@ -102,6 +103,9 @@ export default {
     },
     fetchContents () {
       this.$emit('fetchContents')
+    },
+    rollBackPage () {
+      this.$emit('rollBackPage')
     }
   }
 }

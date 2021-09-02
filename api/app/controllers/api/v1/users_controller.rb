@@ -51,13 +51,13 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-      :name,
-      :email,
-      :uid,
-      :introduction,
-      :is_active,
-      :admin
-    )
+                                :name,
+                                :email,
+                                :uid,
+                                :introduction,
+                                :is_active,
+                                :admin
+                              )
   end
 
 end

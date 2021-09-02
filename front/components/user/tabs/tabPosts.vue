@@ -1,10 +1,10 @@
 <template>
   <v-tab-item class="mb-2">
     <v-row
-      v-for="post in userPosts"
+      v-for="post in posts"
       :key="post.id"
       style="cursor: pointer;"
-      @click="toShowPost(post.id)"
+      @click="toShow('posts', post.id)"
     >
       <v-col>
         <v-divider />
@@ -64,20 +64,19 @@
                 </template>
                 <like
                   :post="post"
-                  :likes="post.likes"
                   :is-index="isIndex"
                 />
                 <template v-if="user.id === currentUser.id">
                   <btn-edit-post
                     :post="post"
                     :is-index="isIndex"
-                    @fetchUser="fetchUser"
+                    @fetchContents="fetchContents"
                   />
-                  <btn-delete-post
+                  <!-- <btn-delete-post
                     :post="post"
                     :is-index="isIndex"
-                    @fetchUser="fetchUser"
-                  />
+                    @fetchContents="fetchContents"
+                  /> -->
                 </template>
               </v-card-actions>
             </v-col>
@@ -85,6 +84,19 @@
         </template>
       </v-col>
     </v-row>
+    <infinite-loading
+      ref="infiniteLoading"
+      spinner="bubbles"
+      @infinite="infiniteHandler"
+    >
+      <div
+        slot="no-results"
+        class="mt-3"
+      >
+        <v-divider class="mb-3" />
+        データはありません
+      </div>
+    </infinite-loading>
   </v-tab-item>
 </template>
 
@@ -92,33 +104,27 @@
 import { mapGetters } from 'vuex'
 import BtnNewComment from '../../btn/comment/btnNewComment.vue'
 import Like from '../../btn/like/like.vue'
+import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
 // import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
-// import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
 
 export default {
   components: {
     BtnNewComment,
-    Like
-    // BtnEditPost,
+    Like,
+    BtnEditPost
     // BtnDeletePost
   },
   props: {
     user: {
       type: Object,
       required: true
-    },
-    posts: {
-      type: Array,
-      required: true
-    },
-    likes: {
-      type: Array,
-      required: true
     }
   },
   data () {
     return {
-      userPostLikes: [],
+      posts: [],
+      page: 1,
+      kaminari: {},
       src: 'https://picsum.photos/200/200',
       isIndex: true
     }
@@ -128,22 +134,38 @@ export default {
       isAuthenticated: 'auth/isAuthenticated',
       currentUser: 'auth/data',
       btnColor: 'btn/color'
-    }),
-    userPosts () {
-      const userPosts = this.posts
-      return userPosts.sort((a, b) => {
-        if (a.created_at > b.created_at) { return -1 }
-        if (a.created_at < b.created_at) { return 1 }
-        return 0
-      })
-    }
+    })
   },
   methods: {
-    toShowPost (id) {
-      this.$router.push(`/posts/${id}`)
+    async fetchContents () {
+      const url = `/api/v1/show_user_posts/${this.user.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.posts = res.data.user_posts
+          this.kaminari = res.data.kaminari
+        })
     },
-    fetchUser () {
-      this.$emit('fetchUser')
+    infiniteHandler () {
+      const url = `api/v1/show_user_posts/${this.user.id}`
+      this.page++
+      this.$axios.get(url, { params: { page: this.page } })
+        .then((res) => {
+          setTimeout(() => {
+            if (this.page <= res.data.kaminari.pagination.pages) {
+              this.posts.push(...res.data.user_posts)
+              this.$refs.infiniteLoading.stateChanger.loaded()
+            } else {
+              this.$refs.infiniteLoading.stateChanger.complete()
+            }
+          }, 800)
+        })
+        .catch(() => {
+          this.$refs.infiniteLoading.stateChanger.complete()
+        })
+    },
+
+    toShow (page, id) {
+      this.$router.push(`/${page}/${id}`)
     }
   }
 }

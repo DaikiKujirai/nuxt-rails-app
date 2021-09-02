@@ -1,10 +1,10 @@
 <template>
   <v-tab-item class="mb-2">
-    <v-row
+    <!-- <v-row
       v-for="like in userLikes"
       :key="like.id"
       style="cursor: pointer;"
-      @click="toShowPost(like.post_id)"
+      @click="toShow('posts', like.post_id)"
     >
       <v-col>
         <v-divider />
@@ -49,7 +49,7 @@
           <v-row>
             <v-col>
               <v-card-actions class="justify-space-around pa-0">
-                <!-- <template v-if="postOrComment.comment_id">
+                <template v-if="postOrComment.comment_id">
                   <btn-new-comment-comment
                     :comment="postOrComment"
                     :user="postOrComment.user"
@@ -63,7 +63,7 @@
                     :comments="postOrComment.comments"
                     :is-index="isIndex"
                   />
-                </template> -->
+                </template>
                 <template v-if="like.post.user_id !== currentUser.id">
                   <v-btn
                     :color="btnColor"
@@ -72,28 +72,28 @@
                     <v-icon v-text="'mdi-twitter-retweet'" />
                   </v-btn>
                 </template>
-                <!-- <like-post
+                <like-post
                   :post="post"
                   :like-posts="post.like_posts"
-                /> -->
+                />
                 <template v-if="like.post.user_id === currentUser.id">
-                  <!-- <btn-edit-post
+                  <btn-edit-post
                     :post="post"
                     :is-index="isIndex"
                     @fetchUser="fetchUser"
-                  /> -->
-                  <!-- <btn-delete-post
+                  />
+                  <btn-delete-post
                     :post="post"
                     :is-index="isIndex"
                     @fetchUser="fetchUser"
-                  /> -->
+                  />
                 </template>
               </v-card-actions>
             </v-col>
           </v-row>
         </template>
       </v-col>
-    </v-row>
+    </v-row> -->
   </v-tab-item>
 </template>
 
@@ -108,10 +108,6 @@ export default {
     // BtnNewComment
   },
   props: {
-    likes: {
-      type: Array,
-      required: true
-    }
   },
   data () {
     return {
@@ -123,19 +119,19 @@ export default {
     ...mapGetters({
       isAuthenticated: 'auth/isAuthenticated',
       currentUser: 'auth/data'
-    }),
-    userLikes () {
-      const userLikes = this.likes
-      return userLikes.sort((a, b) => {
-        if (a.created_at > b.created_at) { return -1 }
-        if (a.created_at < b.created_at) { return 1 }
-        return 0
-      })
-    }
+    })
+    // userLikes () {
+    //   const userLikes = this.likes
+    //   return userLikes.sort((a, b) => {
+    //     if (a.created_at > b.created_at) { return -1 }
+    //     if (a.created_at < b.created_at) { return 1 }
+    //     return 0
+    //   })
+    // }
   },
   methods: {
-    toShowPost (id) {
-      this.$router.push(`/posts/${id}`)
+    toShow (page, id) {
+      this.$router.push(`/${page}/${id}`)
     }
   }
 }

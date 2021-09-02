@@ -61,6 +61,7 @@
                     <btn-new-comment
                       :post="post"
                       :is-index="isIndex"
+                      @rollBackPage="rollBackPage"
                     />
                     <template v-if="post.user_id !== currentUser.id">
                       <v-btn
@@ -77,11 +78,13 @@
                     <template v-if="post.user_id === currentUser.id">
                       <btn-edit-post
                         :post="post"
+                        @rollBackPage="rollBackPage"
                         @fetchContents="fetchContents"
                       />
                       <btn-delete-post
                         :post="post"
                         :is-index="isIndex"
+                        @rollBackPage="rollBackPage"
                         @fetchContents="fetchContents"
                       />
                     </template>
@@ -171,7 +174,7 @@ export default {
       this.$axios.get(url, { params: { page: this.page } })
         .then((res) => {
           setTimeout(() => {
-            if (this.page <= res.data.kaminari.pagenation.pages) {
+            if (this.page <= res.data.kaminari.pagination.pages) {
               this.posts.push(...res.data.posts)
               this.$refs.infiniteLoading.stateChanger.loaded()
             } else {
@@ -190,8 +193,8 @@ export default {
 }
 </script>
 
-<style scoped>
-.infinite-scroll {
+<style>
+/* .infinite-scroll {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -204,5 +207,5 @@ export default {
   margin: 10px 0;
   border-bottom: 1px solid #eaeaea;
   padding-bottom: 10px;
-}
+} */
 </style>

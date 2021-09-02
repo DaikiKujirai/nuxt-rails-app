@@ -75,11 +75,14 @@ export default {
       await this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
           if (this.$route.name === 'posts-id' && this.isIndex) {
+            this.rollBackPage()
             this.fetchContents()
             this.commentsCountDecrement()
           } else if (this.$route.name === 'posts-id' && !this.isIndex) {
+            this.rollBackPage()
             this.$router.replace('/posts')
           } else {
+            this.rollBackPage()
             this.fetchContents()
           }
           this.dialog = false
@@ -95,6 +98,9 @@ export default {
     },
     commentsCountDecrement () {
       this.$emit('commentsCountDecrement')
+    },
+    rollBackPage () {
+      this.$emit('rollBackPage')
     }
   }
 }

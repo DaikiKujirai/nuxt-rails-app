@@ -1,14 +1,7 @@
 class Api::V1::PostsController < ApplicationController
   include Pagination
   def index
-    posts = Post.joins(:user).select("
-      posts.id        ,
-      posts.post_id   ,
-      posts.user_id   ,
-      posts.content   ,
-      posts.created_at,
-      users.name AS user_name
-    ").where(post_id: 0).order(created_at: :desc).page(params[:page]).per(5)
+    posts = Post.joins(:user).select("posts.*, users.name AS user_name").where(post_id: 0).order(created_at: :desc).page(params[:page]).per(5)
     pagination = resources_with_pagination(posts)
     object = { posts: posts, kaminari: pagination }
     render json: object
