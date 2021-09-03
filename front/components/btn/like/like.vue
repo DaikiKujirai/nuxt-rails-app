@@ -40,8 +40,7 @@ export default {
   },
   data () {
     return {
-      likes: [],
-      likeUserIds: [],
+      likesCount: 0,
       newLike: {},
       isLike: false
     }
@@ -50,24 +49,21 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       btnColor: 'btn/color'
-    }),
-    likesCount () {
-      return this.likeUserIds.length
-    }
+    })
   },
   mounted () {
     if (this.$route.name === 'posts-id' && !this.isIndex) {
-      this.fetchLikes(this.$route.params.id)
+      this.fetchContents(this.$route.params.id)
     } else {
-      this.fetchLikes(this.post.id)
+      this.fetchContents(this.post.id)
     }
-    setTimeout(() => {
-      this.setLikeUserIds()
-    }, 400)
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      setLikesCountPagePostId: 'like/setLikesCountPagePostId',
+      likesCountPagePostIdIncrement: 'like/likesCountPagePostIdIncrement',
+      likesCountPagePostIdDecrement: 'like/likesCountPagePostIdDecrement'
     }),
     async like () {
       this.newLike.user_id = this.currentUser.id
@@ -75,8 +71,11 @@ export default {
       const url = '/api/v1/likes'
       await this.$axios.post(url, this.newLike)
         .then(() => {
-          this.likesCountIncrement()
-          this.likeUserIds.push(this.currentUser.id)
+          if (this.$route.name === 'posts-id' && !this.isIndex) {
+            this.likesCountPagePostIdIncrement()
+          } else {
+            this.likesCountIncrement()
+          }
           this.isLike = true
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
@@ -94,10 +93,12 @@ export default {
         }
       })
         .then(() => {
-          this.likesCountDecrement()
+          if (this.$route.name === 'posts-id' && !this.isIndex) {
+            this.likesCountPagePostIdDecrement()
+          } else {
+            this.likesCountDecrement()
+          }
           this.isLike = false
-          const th = this.likeUserIds.indexOf(this.currentUser.id)
-          this.likeUserIds.splice(th, 1)
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
         .catch((err) => {
@@ -105,29 +106,30 @@ export default {
           console.error(err)
         })
     },
-    async fetchLikes (id) {
-      const url = `/api/v1/posts/${id}`
-      await this.$axios.get(url)
+    async fetchContents (id) {
+      const url = `/api/v1/render_is_like_and_likes_count/${id}`
+      await this.$axios.get(url, {
+        params: {
+          user_id: this.currentUser.id
+        }
+      })
         .then((res) => {
-          this.likes = res.data.likes
+          this.isLike = res.data.is_like
+          this.likesCount = res.data.kaminari.pagination.count
+          if (this.$route.name === 'posts-id' && !this.isIndex) {
+            this.setLikesCountPagePostId(res.data.kaminari.pagination.count)
+          }
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(err)
         })
     },
-    setLikeUserIds () {
-      for (let i = 0; i < this.likes.length; i++) {
-        this.likeUserIds.push(this.likes[i].user_id)
-      }
-      this.searchMyLike()
-    },
-    searchMyLike () {
-      if (this.likeUserIds.includes(this.currentUser.id)) {
-        this.isLike = true
-      }
-    },
     likesCountIncrement () {
-      this.$emit('likesCountIncrement')
+      this.likesCount++
     },
     likesCountDecrement () {
-      this.$emit('likesCountDecrement')
+      this.likesCount--
     }
   }
 }

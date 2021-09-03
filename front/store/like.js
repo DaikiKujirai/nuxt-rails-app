@@ -1,61 +1,33 @@
 export const state = () => ({
-  likePosts: [],
-  likeComments: [],
-  likePostIds: [],
-  likeCommentIds: []
+  likesCountPagePostId: 0
 })
 
 export const getters = {
-  likePosts (state) {
-    return state.likePosts
-  },
-  likeComments (state) {
-    return state.likeComments
-  },
-  likePostIds (state) {
-    return state.likePostIds
-  },
-  likeCommentIds (state) {
-    return state.likeCommentIds
+  likesCountPagePostId (state) {
+    return state.likesCountPagePostId
   }
 }
 
 export const mutations = {
-  setLikePosts (state, payload) {
-    state.likePosts = payload
+  setLikesCountPagePostId (state, payload) {
+    state.likesCountPagePostId = payload
   },
-  setLikeComments (state, payload) {
-    state.likeComments = payload
+  likesCountPagePostIdIncrement (state) {
+    state.likesCountPagePostId++
   },
-  setLikePostIds (state, payload) {
-    state.likePostIds = payload
-  },
-  setLikeCommentIds (state, payload) {
-    state.likeCommentIds = payload
+  likesCountPagePostIdDecrement (state) {
+    state.likesCountPagePostId--
   }
 }
 
 export const actions = {
-  setLikePosts ({ dispatch, commit }, likePosts) {
-    commit('setLikePosts', likePosts)
-    dispatch('setLikePostIds', likePosts)
+  setLikesCountPagePostId ({ commit }, likesCount) {
+    commit('setLikesCountPagePostId', likesCount)
   },
-  setLikeComments ({ dispatch, commit }, likeComments) {
-    commit('setLikeComments', likeComments)
-    dispatch('setLikeCommentIds', likeComments)
+  likesCountPagePostIdIncrement ({ commit }) {
+    commit('likesCountPagePostIdIncrement')
   },
-  setLikePostIds ({ commit }, likePosts) {
-    const ids = []
-    for (let i = 0; i < likePosts.length; i++) {
-      ids.push(likePosts[i].post_id)
-    }
-    commit('setLikePostIds', ids)
-  },
-  setLikeCommentIds ({ commit }, likeComments) {
-    const ids = []
-    for (let i = 0; i < likeComments.length; i++) {
-      ids.push(likeComments[i].comment_id)
-    }
-    commit('setLikeCommentIds', ids)
+  likesCountPagePostIdDecrement ({ commit }) {
+    commit('likesCountPagePostIdDecrement')
   }
 }

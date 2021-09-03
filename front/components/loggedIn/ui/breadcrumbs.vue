@@ -16,9 +16,9 @@
       </v-breadcrumbs-item>
     </template>
     <template #divider>
-      <v-icon>
-        mdi-chevron-right
-      </v-icon>
+      <v-icon
+        v-text="'mdi-chevron-right'"
+      />
     </template>
   </v-breadcrumbs>
 </template>

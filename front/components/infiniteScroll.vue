@@ -4,7 +4,6 @@
     spinner="bubbles"
     @infinite="infiniteHandler"
   >
-    {{ count }}
     <div
       slot="no-results"
       class="mt-3"
@@ -17,14 +16,17 @@
 <script>
 export default {
   props: {
-    posts: {
-      type: Array,
+    page: {
+      type: Number,
+      required: true
+    },
+    url: {
+      type: String,
       required: true
     }
   },
   data () {
     return {
-      page: 1
     }
   },
   computed: {
@@ -36,21 +38,29 @@ export default {
   },
   methods: {
     infiniteHandler () {
-      const url = 'api/v1/posts'
-      this.$axios.get(url, { params: { page: this.page } })
-        .then((res) => {
-          setTimeout(() => {
-            if (this.page <= res.data.kaminari.pagenation.pages) {
-              this.page++
-              this.$refs.infiniteLoading.stateChanger.loaded()
-            } else {
-              this.$refs.infiniteLoading.stateChanger.complete()
-            }
-          }, 1000)
-        })
+      this.pageIncrement()
+      setTimeout(() => {
+        this.$axios.get(this.url, { params: { page: this.page } })
+          .then((res) => {
+            setTimeout(() => {
+              if (this.page <= res.data.kaminari.pagination.pages) {
+                this.pushPosts(res)
+                this.$refs.infiniteLoading.stateChanger.loaded()
+              } else {
+                this.$refs.infiniteLoading.stateChanger.complete()
+              }
+            })
+          })
+          .catch(() => {
+            this.$refs.infiniteLoading.stateChanger.complete()
+          })
+      }, 1000)
     },
-    fetchPosts () {
-      this.$emit('fetchPosts')
+    pageIncrement () {
+      this.$emit('pageIncrement')
+    },
+    pushPosts (res) {
+      this.$emit('pushPosts', res)
     }
   }
 }

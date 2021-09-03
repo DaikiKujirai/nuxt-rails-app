@@ -26,17 +26,15 @@
               <v-card-title>
                 {{ user.name }}
               </v-card-title>
-              <v-col
-                class="text-right mr-2"
-              >
-                <v-btn
-                  color="success"
-                  outlined
-                  rounded
-                >
-                  プロフィール編集
-                </v-btn>
-              </v-col>
+              <template v-if="user.id === currentUser.id">
+                <btn-edit-profile />
+              </template>
+              <template v-else>
+                <btn-follow
+                  ref="dataFollow"
+                  :user="user"
+                />
+              </template>
             </v-col>
           </v-row>
           <v-row>
@@ -56,7 +54,6 @@
                     :color="btnColor"
                     text
                     rounded
-                    @click="toFollow"
                   >
                     フォロー
                   </v-btn>
@@ -64,7 +61,6 @@
                     :color="btnColor"
                     text
                     rounded
-                    @click="toFollower"
                   >
                     フォロワー
                   </v-btn>
@@ -74,7 +70,7 @@
           </template>
         </v-card>
         <page-id-user-tab
-          ref="child"
+          ref="dataShowUser"
           class="mt-1"
           :user="user"
         />
@@ -85,11 +81,15 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import BtnEditProfile from '../../components/btn/user/editProfile/btnEditProfile.vue'
+import BtnFollow from '../../components/btn/user/follow/btnFollow.vue'
 import pageIdUserTab from '../../components/user/pageIdUserTab.vue'
 
 export default {
   components: {
-    pageIdUserTab
+    pageIdUserTab,
+    BtnEditProfile,
+    BtnFollow
   },
   data: () => {
     return {
@@ -99,6 +99,7 @@ export default {
   },
   computed: {
     ...mapGetters({
+      currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color'
     })
@@ -124,16 +125,11 @@ export default {
           console.error(err) // eslint-disable-line
         })
     },
-    toFollow () {
-      // eslint-disable-next-line no-console
-      console.log('toFolow')
-    },
-    toFollower () {
-      // eslint-disable-next-line no-console
-      console.log('toFolower')
-    },
     fetchShowUser () {
-      this.$refs.child.fetchContents()
+      this.$refs.dataShowUser.fetchContents()
+      if (this.currentUser.id !== this.user.id) {
+        this.$refs.dataFollow.fetchContents()
+      }
     }
   }
 }

@@ -20,7 +20,7 @@
                 style="cursor: pointer;"
                 @click.prevent.stop="toShow('users', post.user_id)"
               >
-                {{ user.name }}
+                {{ post.user_name }}
               </v-card-title>
             </v-col>
           </v-row>
@@ -54,7 +54,7 @@
                 {{ commentsCountPagePostId }} 件のコメント
               </v-card-text>
               <v-card-text>
-                {{ likesCount }} 件のいいね
+                {{ likesCountPagePostId }} 件のいいね
               </v-card-text>
             </v-col>
           </v-row>
@@ -65,16 +65,12 @@
               :is-index="isIndex"
               @rollBackPage="rollBackPage"
               @fetchContents="fetchContents"
-              @fetchCommentsCount="commentsCount = $event"
-              @likesCountIncrement="likesCountIncrement"
-              @likesCountDecrement="likesCountDecrement"
             />
             <v-divider class="mx-3 mt-1" />
           </template>
           <page-id-comment-form
             :post="post"
             @fetchContents="fetchContents"
-            @commentsCountIncrement="commentsCountIncrement"
           />
         </v-card>
       </v-col>
@@ -84,7 +80,6 @@
       :post="post"
       :user="user"
       @fetchContents="fetchContents"
-      @commentsCountDecrement="commentsCountDecrement"
     />
   </layout-main>
 </template>
@@ -107,10 +102,6 @@ export default {
     return {
       post: {},
       user: {},
-      likes: [],
-      comments: [],
-      commentsCount: 0,
-      likesCount: 0,
       time: '',
       src: 'https://picsum.photos/200/200',
       isIndex: false
@@ -121,7 +112,8 @@ export default {
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       btnColor: 'btn/color',
-      commentsCountPagePostId: 'post/commentsCountPagePostId'
+      commentsCountPagePostId: 'post/commentsCountPagePostId',
+      likesCountPagePostId: 'like/likesCountPagePostId'
     })
   },
   created () {
@@ -135,7 +127,6 @@ export default {
           this.post = res.data.post
           this.user = res.data.user
           this.post.user_name = res.data.user.name
-          this.likesCount = res.data.likes.length
           this.time = this.$my.format(this.post.created_at)
           this.fetchComments()
         })
@@ -146,18 +137,18 @@ export default {
     rollBackPage () {
       this.$refs.child.rollBackPage()
     },
-    likesCountIncrement () {
-      this.likesCount++
-    },
-    likesCountDecrement () {
-      this.likesCount--
-    },
-    commentsCountIncrement () {
-      this.commentsCount++
-    },
-    commentsCountDecrement () {
-      this.commentsCount--
-    },
+    // likesCountIncrement () {
+    //   this.likesCount++
+    // },
+    // likesCountDecrement () {
+    //   this.likesCount--
+    // },
+    // commentsCountIncrement () {
+    //   this.commentsCount++
+    // },
+    // commentsCountDecrement () {
+    //   this.commentsCount--
+    // },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)
     }

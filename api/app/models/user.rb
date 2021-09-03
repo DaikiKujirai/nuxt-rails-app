@@ -35,12 +35,6 @@ class User < ApplicationRecord
     users.find_activated(email).present?
   end
 
-  def follow(other_user)
-    unless self == other_user
-      self.relationships.create(follow_id: other_user.id)
-    end
-  end
-
   def unfollow(other_user)
     relationship = self.relationships.find_by(follow_id: other_user.id)
     relationship.destroy

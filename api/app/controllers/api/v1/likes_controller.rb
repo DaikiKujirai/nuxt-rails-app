@@ -1,5 +1,5 @@
 class Api::V1::LikesController < ApplicationController
-
+  include Pagination
   def show
     likes = Like.where(post_id: params[:id])
     render json: likes
@@ -20,6 +20,19 @@ class Api::V1::LikesController < ApplicationController
       render json: like
     else
       render json: { errors_message: '失敗しました' }
+    end
+  end
+
+  def render_is_like_and_likes_count
+    post       = Post.find(params[:id])
+    post_likes = post.likes.page(params[:page]).per(5)
+    pagination = resources_with_pagination(post_likes)
+    if Like.find_by(user_id: params[:user_id], post_id: post.id)
+      object   = { is_like: true, kaminari: pagination }
+      render json: object
+    else
+      object   = { is_like: false, kaminari: pagination }
+      render json: object
     end
   end
 

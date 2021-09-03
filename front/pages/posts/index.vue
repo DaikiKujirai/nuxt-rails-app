@@ -16,44 +16,9 @@
           <v-card
             @click="toShow('posts', post.id)"
           >
-            <v-row>
-              <v-col
-                class="d-flex"
-              >
-                <v-img
-                  :src="src"
-                  max-height="70"
-                  max-width="70"
-                  contain
-                  style="border-radius: 50%;"
-                  class="ml-3"
-                  @click.prevent.stop="toShow('users', post.user_id)"
-                />
-                <v-col cols="7">
-                  <v-card-title>
-                    {{ post.user_name }}
-                  </v-card-title>
-                </v-col>
-                <v-card-text
-                  class="text-right"
-                >
-                  <v-icon
-                    size="16"
-                    v-text="'mdi-update'"
-                  />
-                  {{ $my.format(post.created_at) }}
-                </v-card-text>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col>
-                <v-card-title
-                  class="card-content"
-                >
-                  {{ post.content }}
-                </v-card-title>
-              </v-col>
-            </v-row>
+            <post-card
+              :post="post"
+            />
             <template v-if="isAuthenticated">
               <actions
                 :post="post"
@@ -65,18 +30,13 @@
           </v-card>
         </v-col>
       </v-row>
-      <infinite-loading
-        ref="infiniteLoading"
-        spinner="bubbles"
-        @infinite="infiniteHandler"
-      >
-        <div
-          slot="no-results"
-          class="mt-3"
-        >
-          データはありません
-        </div>
-      </infinite-loading>
+      <infinite-scroll
+        :posts="posts"
+        :page="page"
+        :url="url"
+        @pushPosts="pushPosts"
+        @pageIncrement="pageIncrement"
+      />
     </template>
   </layout-main>
 </template>
@@ -86,19 +46,20 @@ import { mapGetters, mapActions } from 'vuex'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import HomeNewPost from '../../components/post/homeNewPost.vue'
 import Actions from '../../components/loggedIn/mainCard/actions.vue'
+import PostCard from '../../components/post/postCard.vue'
 
 export default {
   components: {
     LayoutMain,
     HomeNewPost,
-    Actions
+    Actions,
+    PostCard
   },
   data () {
     return {
       posts: [],
-      user: {},
-      kaminari: {},
       page: 1,
+      url: '/api/v1/posts',
       src: 'https://picsum.photos/200/200',
       isIndex: true
     }
@@ -122,7 +83,6 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.posts = res.data.posts
-          this.kaminari = res.data.kaminari
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -132,44 +92,15 @@ export default {
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)
     },
-    infiniteHandler () {
-      const url = 'api/v1/posts'
-      this.page++
-      this.$axios.get(url, { params: { page: this.page } })
-        .then((res) => {
-          setTimeout(() => {
-            if (this.page <= res.data.kaminari.pagination.pages) {
-              this.posts.push(...res.data.posts)
-              this.$refs.infiniteLoading.stateChanger.loaded()
-            } else {
-              this.$refs.infiniteLoading.stateChanger.complete()
-            }
-          }, 800)
-        })
-        .catch(() => {
-          this.$refs.infiniteLoading.stateChanger.complete()
-        })
-    },
     rollBackPage () {
       this.page = 1
+    },
+    pageIncrement () {
+      this.page++
+    },
+    pushPosts (res) {
+      this.posts.push(...res.data.posts)
     }
   }
 }
 </script>
-
-<style>
-/* .infinite-scroll {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 680px;
-  margin: 100px 0;
-}
-
-.infinite-scroll-list-item {
-  height: 60px;
-  margin: 10px 0;
-  border-bottom: 1px solid #eaeaea;
-  padding-bottom: 10px;
-} */
-</style>

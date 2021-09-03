@@ -47,15 +47,35 @@ class Api::V1::UsersController < ApplicationController
     render json: object
   end
 
+  def is_following
+    if Relationship.find_by(user_id: params[:id], follow_id: params[:user_id])
+      render json: true
+    else
+      render json: false
+    end
+  end
+
+  def find_following_ids
+    user = User.find(params[:user_id])
+    following_ids = user.relationships.pluck(:follow_id)
+    render json: following_ids
+  end
+
+  def find_follower_ids
+    user = User.find(params[:user_id])
+    follower_ids = Relationship.where(follow_id: user.id).pluck(:user_id)
+    render json: follower_ids
+  end
+
   private
 
   def user_params
     params.require(:user).permit(
-                                :name,
-                                :email,
-                                :uid,
+                                :name        ,
+                                :email       ,
+                                :uid         ,
                                 :introduction,
-                                :is_active,
+                                :is_active   ,
                                 :admin
                               )
   end
