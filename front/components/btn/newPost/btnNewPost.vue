@@ -73,21 +73,15 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage',
-      setPosts: 'post/setPosts'
+      flashMessage: 'flash/flashMessage'
     }),
-    async fetchContents () {
-      await this.$axios.get('/api/v1/posts')
-        .then((res) => {
-        })
-    },
     async submitPost () {
       this.loading = true
       this.post.user_id = this.currentUser.id
       await this.$axios.$post('/api/v1/posts', this.post)
         .then(() => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
-          this.fetchPosts()
+          this.fetchContents()
           this.loading = false
           this.dialog = false
           this.$refs.form.reset()
@@ -97,8 +91,8 @@ export default {
           this.loading = false
         })
     },
-    fetchPosts () {
-      this.$emit('fetchPosts')
+    fetchContents () {
+      this.$emit('fetchContents')
     }
   }
 }

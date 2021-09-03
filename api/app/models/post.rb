@@ -19,7 +19,8 @@ class Post < ApplicationRecord
     end
 
     def find_user_comments(user_id)
-      where(user_id: user_id).where.not(post_id: 0).order(created_at: :desc)
+      joins(:user).select("posts.*,users.name AS user_name")
+                  .where(user_id: user_id).where.not(post_id: 0).order(created_at: :desc)
     end
   end
 

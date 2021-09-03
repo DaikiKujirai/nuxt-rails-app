@@ -29,7 +29,7 @@
             class="justify-center"
           >
             <btn-new-post
-              @fetchPosts="fetchPosts"
+              @fetchContents="fetchContents"
             />
           </v-list-item>
         </v-list>
@@ -68,8 +68,8 @@ export default {
     goHome () {
       this.$router.push('/posts')
     },
-    fetchPosts () {
-      this.$emit('fetchPosts')
+    fetchContents () {
+      this.$emit('fetchContents')
     }
   }
 }

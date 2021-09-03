@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import pageIdUserTab from '../../components/user/pageIdUserTab.vue'
 
 export default {
@@ -107,11 +107,15 @@ export default {
     this.fetchContents()
   },
   methods: {
+    ...mapActions({
+      setUser: 'user/setUser'
+    }),
     async fetchContents () {
       const url = `/api/v1/users/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
           this.user = res.data
+          this.setUser(res.data)
           setTimeout(() => {
             this.fetchShowUser()
           }, 500)

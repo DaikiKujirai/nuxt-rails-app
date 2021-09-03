@@ -63,7 +63,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      commentsCountPagePostIdIncrement: 'post/commentsCountPagePostIdIncrement'
     }),
     async submitComment () {
       this.loading = true
@@ -71,7 +72,7 @@ export default {
       this.newComment.post_id = this.post.id
       await this.$axios.$post('/api/v1/posts', this.newComment)
         .then(() => {
-          this.commentsCountIncrement()
+          this.commentsCountPagePostIdIncrement()
           this.fetchContents()
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
           this.loading = false

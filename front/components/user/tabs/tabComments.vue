@@ -1,7 +1,7 @@
 <template>
   <v-tab-item>
-    <!-- <v-row
-      v-for="comment in userComments"
+    <v-row
+      v-for="comment in comments"
       :key="comment.id"
       @click="toShow('page', comment.id)"
     >
@@ -21,7 +21,7 @@
             />
             <v-col cols="7">
               <v-card-title>
-                {{ comment.user.name }}
+                {{ comment.user_name }}
               </v-card-title>
             </v-col>
             <v-card-text
@@ -35,9 +35,9 @@
             </v-card-text>
           </v-col>
         </v-row>
-        <v-card-text>
-          返信先： {{ comment.user.name }} さん
-        </v-card-text>
+        <p class="ml-3">
+          返信先： {{ comment.user_name }} さん
+        </p>
         <v-row>
           <v-col>
             <v-card-title
@@ -48,74 +48,51 @@
           </v-col>
         </v-row>
         <template v-if="isAuthenticated">
-          <v-row>
-            <v-col>
-              <v-card-actions class="justify-space-around ma-0 pa-0">
-                <btn-new-comment
-                  :post="comment"
-                  :user="user"
-                  :is-index="isIndex"
-                />
-                <template v-if="comment.user_id !== currentUser.id">
-                  <v-btn
-                    :color="btnColor"
-                    text
-                  >
-                    <v-icon v-text="'mdi-twitter-retweet'" />
-                  </v-btn>
-                </template>
-                <like
-                  :post="comment"
-                  :likes="comment.likes"
-                  :is-index="isIndex"
-                />
-                <template v-if="user.id === currentUser.id">
-                  <btn-edit-post
-                    :post="comment"
-                    :is-index="isIndex"
-                    @fetchUser="fetchUser"
-                  />
-                  <btn-delete-post
-                    :post="comment"
-                    :is-index="isIndex"
-                    @fetchUser="fetchUser"
-                  />
-                </template>
-              </v-card-actions>
-            </v-col>
-          </v-row>
+          <actions
+            :post="comment"
+            :is-index="isIndex"
+            @rollBackPage="rollBackPage"
+            @fetchContents="fetchContents"
+          />
         </template>
       </v-col>
-    </v-row> -->
+    </v-row>
+    <infinite-loading
+      ref="infiniteLoading"
+      spinner="bubbles"
+      @infinite="infiniteHandler"
+    >
+      <div
+        slot="no-results"
+        class="mt-3"
+      >
+        <v-divider class="mb-3" />
+        データはありません
+      </div>
+    </infinite-loading>
   </v-tab-item>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-// import BtnNewComment from '../../btn/comment/btnNewComment.vue'
-// import Like from '../../btn/like/like.vue'
-// import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
-// import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
+import Actions from '../../loggedIn/mainCard/actions.vue'
 
 export default {
   components: {
-    // BtnNewComment,
-    // Like,
-    // BtnDeletePost,
-    // BtnEditPost
+    Actions
   },
   props: {
     user: {
       type: Object,
       required: true
     }
-    // comments: {
-    //   type: Array,
-    //   required: true
-    // }
   },
   data () {
     return {
+      comments: [],
+      page: 1,
+      kaminari: {},
+      userId: 0,
       isIndex: true,
       src: 'https://picsum.photos/500/500'
     }
@@ -126,18 +103,43 @@ export default {
       currentUser: 'auth/data',
       btnColor: 'btn/color'
     })
-    // userComments () {
-    //   const userComments = this.comments
-    //   return userComments.sort((a, b) => {
-    //     if (a.created_at > b.created_at) { return -1 }
-    //     if (a.created_at < b.created_at) { return 1 }
-    //     return 0
-    //   })
-    // }
   },
   methods: {
+    async fetchContents () {
+      const url = `/api/v1/show_user_comments/${this.user.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          console.log(res)
+          this.comments = res.data.user_comments
+          this.kaminari = res.data.kaminari
+          // this.userId = this.user.id
+        })
+    },
+    infiniteHandler () {
+      setTimeout(() => {
+        const url = `api/v1/show_user_comments/${this.user.id}`
+        this.page++
+        this.$axios.get(url, { params: { page: this.page } })
+          .then((res) => {
+            setTimeout(() => {
+              if (this.page <= res.data.kaminari.pagination.pages) {
+                this.comments.push(...res.data.user_comments)
+                this.$refs.infiniteLoading.stateChanger.loaded()
+              } else {
+                this.$refs.infiniteLoading.stateChanger.complete()
+              }
+            })
+          })
+          .catch(() => {
+            this.$refs.infiniteLoading.stateChanger.complete()
+          })
+      }, 1000)
+    },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)
+    },
+    rollBackPage () {
+      this.page = 1
     }
   }
 }

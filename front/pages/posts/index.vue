@@ -55,42 +55,12 @@
               </v-col>
             </v-row>
             <template v-if="isAuthenticated">
-              <v-row>
-                <v-col>
-                  <v-card-actions class="justify-space-around">
-                    <btn-new-comment
-                      :post="post"
-                      :is-index="isIndex"
-                      @rollBackPage="rollBackPage"
-                    />
-                    <template v-if="post.user_id !== currentUser.id">
-                      <v-btn
-                        :color="btnColor"
-                        text
-                      >
-                        <v-icon v-text="'mdi-twitter-retweet'" />
-                      </v-btn>
-                    </template>
-                    <like
-                      :post="post"
-                      :is-index="isIndex"
-                    />
-                    <template v-if="post.user_id === currentUser.id">
-                      <btn-edit-post
-                        :post="post"
-                        @rollBackPage="rollBackPage"
-                        @fetchContents="fetchContents"
-                      />
-                      <btn-delete-post
-                        :post="post"
-                        :is-index="isIndex"
-                        @rollBackPage="rollBackPage"
-                        @fetchContents="fetchContents"
-                      />
-                    </template>
-                  </v-card-actions>
-                </v-col>
-              </v-row>
+              <actions
+                :post="post"
+                :is-index="isIndex"
+                @fetchContents="fetchContents"
+                @rollBackPage="rollBackPage"
+              />
             </template>
           </v-card>
         </v-col>
@@ -114,20 +84,14 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
-import Like from '../../components/btn/like/like.vue'
-import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
-import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
 import HomeNewPost from '../../components/post/homeNewPost.vue'
+import Actions from '../../components/loggedIn/mainCard/actions.vue'
 
 export default {
   components: {
     LayoutMain,
-    BtnNewComment,
-    Like,
-    BtnEditPost,
-    BtnDeletePost,
-    HomeNewPost
+    HomeNewPost,
+    Actions
   },
   data () {
     return {

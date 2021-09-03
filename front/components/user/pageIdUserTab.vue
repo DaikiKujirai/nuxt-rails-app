@@ -23,18 +23,18 @@
       </v-card>
       <v-tabs-items v-model="tab">
         <tab-posts
-          ref="child"
+          ref="childPosts"
           :user="user"
         />
         <tab-comments
-          ref="child"
+          ref="childComments"
           :user="user"
         />
         <v-tab-item>
           メディア
         </v-tab-item>
         <tab-likes
-          ref="child"
+          ref="childLikes"
           :user="user"
         />
       </v-tabs-items>
@@ -66,7 +66,9 @@ export default {
   },
   methods: {
     fetchContents () {
-      this.$refs.child.fetchContents()
+      this.$refs.childPosts.fetchContents()
+      this.$refs.childComments.fetchContents()
+      this.$refs.childLikes.fetchContents()
     }
   }
 }

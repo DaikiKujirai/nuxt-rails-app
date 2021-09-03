@@ -3,8 +3,7 @@
     <template v-if="!isLike">
       <v-btn
         :color="btnColor"
-        text
-        rounded
+        icon
         @click.prevent.stop="like"
       >
         <v-icon v-text="'mdi-heart-outline'" />
@@ -13,8 +12,7 @@
     <template v-else>
       <v-btn
         :color="btnColor"
-        text
-        rounded
+        icon
         @click.prevent.stop="disLike"
       >
         <v-icon v-text="'mdi-heart'" />

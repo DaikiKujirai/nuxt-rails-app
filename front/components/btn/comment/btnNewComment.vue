@@ -2,8 +2,8 @@
   <div>
     <v-btn
       :color="btnColor"
-      text
-      rounded
+      icon
+      class="pl-1"
       @click.prevent.stop="dialog = true"
     >
       <v-icon v-text="'mdi-chat-processing-outline'" />
@@ -111,7 +111,8 @@ export default {
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      btnColor: 'btn/color'
+      btnColor: 'btn/color',
+      commentsCountPagePostId: 'post/commentsCountPagePostId'
     })
   },
   mounted () {
@@ -121,7 +122,10 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      setCommentsCountPagePostId: 'post/setCommentsCountPagePostId',
+      commentsCountPagePostIdIncrement: 'post/commentsCountPagePostIdIncrement',
+      commentsCountPagePostIdDecrement: 'post/commentsCountPagePostIdDecrement'
     }),
     async fetchComments () {
       const url = `/api/v1/find_comments/${this.post.id}`
@@ -129,8 +133,8 @@ export default {
         .then((res) => {
           this.comments = res.data.comments
           this.commentsCount = res.data.kaminari.pagination.count
-          if (this.$route.name === 'posts-id') {
-            this.fetchCommentsCount()
+          if (this.$route.name === 'posts-id' && this.post.id === Number(this.$route.params.id)) {
+            this.setCommentsCountPagePostId(this.commentsCount)
           }
         })
         .catch((err) => {
@@ -152,7 +156,7 @@ export default {
           if (this.isIndex) {
             this.$router.push(`/posts/${this.post.id}`)
           } else {
-            this.commentsCountIncrement()
+            this.commentsCountPagePostIdIncrement()
             this.fetchContents()
           }
         })
@@ -162,15 +166,6 @@ export default {
     },
     fetchContents () {
       this.$emit('fetchContents')
-    },
-    fetchCommentsCount () {
-      this.$emit('fetchCommentsCount', this.commentsCount)
-    },
-    commentsCountIncrement () {
-      this.$emit('commentsCountIncrement')
-    },
-    commentsCountDecrement () {
-      this.$emit('commentsCountDecrement')
     },
     rollBackPage () {
       this.$emit('rollBackPage')

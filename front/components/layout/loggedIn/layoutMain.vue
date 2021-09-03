@@ -3,9 +3,7 @@
     fluid
   >
     <v-row>
-      <sidebar
-        @fetchPosts="fetchPosts"
-      />
+      <sidebar />
       <v-col
         cols="6"
         offset="3"
@@ -16,16 +14,18 @@
             cols="6"
           >
             <v-card class="d-flex align-center">
-              <v-btn
-                icon
-                class="ml-3"
-                @click="pageBack"
-              >
-                <v-icon
-                  size="40"
-                  v-text="'mdi-arrow-left'"
-                />
-              </v-btn>
+              <template v-if="$route.name !== 'posts'">
+                <v-btn
+                  icon
+                  class="ml-3"
+                  @click="pageBack"
+                >
+                  <v-icon
+                    size="40"
+                    v-text="'mdi-arrow-left'"
+                  />
+                </v-btn>
+              </template>
               <breadcrumbs />
             </v-card>
           </v-col>

@@ -7,7 +7,12 @@
         exact
         class="text-truncate"
       >
-        {{ item.text }}
+        <template v-if="$route.name === 'users-id'">
+          {{ user.name }}
+        </template>
+        <template v-else>
+          {{ item.text }}
+        </template>
       </v-breadcrumbs-item>
     </template>
     <template #divider>
@@ -19,13 +24,18 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   computed: {
     items () {
       return [
         { text: this.$my.pageTitle(this.$route.name) }
       ]
-    }
+    },
+    ...mapGetters({
+      user: 'user/user'
+    })
   }
 }
 </script>

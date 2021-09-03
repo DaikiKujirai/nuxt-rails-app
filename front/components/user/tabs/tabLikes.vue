@@ -1,10 +1,10 @@
 <template>
   <v-tab-item class="mb-2">
-    <!-- <v-row
-      v-for="like in userLikes"
-      :key="like.id"
+    <v-row
+      v-for="post in posts"
+      :key="post.id"
       style="cursor: pointer;"
-      @click="toShow('posts', like.post_id)"
+      @click="toShow('posts', post.id)"
     >
       <v-col>
         <v-divider />
@@ -22,7 +22,7 @@
             />
             <v-col cols="7">
               <v-card-title>
-                {{ like.post.post_user_name }}
+                {{ post.user_name }}
               </v-card-title>
             </v-col>
             <v-card-text
@@ -32,7 +32,7 @@
                 size="16"
                 v-text="'mdi-update'"
               />
-              {{ $my.format(like.post.created_at) }}
+              {{ $my.format(post.created_at) }}
             </v-card-text>
           </v-col>
         </v-row>
@@ -41,76 +41,54 @@
             <v-card-title
               class="card-content"
             >
-              {{ like.post.content }}
+              {{ post.content }}
             </v-card-title>
           </v-col>
         </v-row>
         <template v-if="isAuthenticated">
-          <v-row>
-            <v-col>
-              <v-card-actions class="justify-space-around pa-0">
-                <template v-if="postOrComment.comment_id">
-                  <btn-new-comment-comment
-                    :comment="postOrComment"
-                    :user="postOrComment.user"
-                    :is-index="isIndex"
-                  />
-                </template>
-                <template v-else>
-                  <btn-new-comment
-                    :post="postOrComment"
-                    :user="postOrComment.user"
-                    :comments="postOrComment.comments"
-                    :is-index="isIndex"
-                  />
-                </template>
-                <template v-if="like.post.user_id !== currentUser.id">
-                  <v-btn
-                    :color="btnColor"
-                    text
-                  >
-                    <v-icon v-text="'mdi-twitter-retweet'" />
-                  </v-btn>
-                </template>
-                <like-post
-                  :post="post"
-                  :like-posts="post.like_posts"
-                />
-                <template v-if="like.post.user_id === currentUser.id">
-                  <btn-edit-post
-                    :post="post"
-                    :is-index="isIndex"
-                    @fetchUser="fetchUser"
-                  />
-                  <btn-delete-post
-                    :post="post"
-                    :is-index="isIndex"
-                    @fetchUser="fetchUser"
-                  />
-                </template>
-              </v-card-actions>
-            </v-col>
-          </v-row>
+          <actions
+            :post="post"
+            :is-index="isIndex"
+            @rollBackPage="rollBackPage"
+            @fetchContents="fetchContents"
+          />
         </template>
       </v-col>
-    </v-row> -->
+    </v-row>
+    <infinite-loading
+      ref="infiniteLoading"
+      spinner="bubbles"
+      @infinite="infiniteHandler"
+    >
+      <div
+        slot="no-results"
+        class="mt-3"
+      >
+        <v-divider class="mb-3" />
+        データはありません
+      </div>
+    </infinite-loading>
   </v-tab-item>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-// import BtnNewComment from '../../btn/comment/btnNewComment.vue'
-// import btnNewCommentComment from '../../btn/commentComment/btnNewCommentComment.vue'
+import Actions from '../../loggedIn/mainCard/actions.vue'
 
 export default {
   components: {
-    // btnNewCommentComment,
-    // BtnNewComment
+    Actions
   },
   props: {
+    user: {
+      type: Object,
+      required: true
+    }
   },
   data () {
     return {
+      posts: [],
+      page: 1,
       isIndex: true,
       src: 'https://picsum.photos/500/500'
     }
@@ -120,18 +98,42 @@ export default {
       isAuthenticated: 'auth/isAuthenticated',
       currentUser: 'auth/data'
     })
-    // userLikes () {
-    //   const userLikes = this.likes
-    //   return userLikes.sort((a, b) => {
-    //     if (a.created_at > b.created_at) { return -1 }
-    //     if (a.created_at < b.created_at) { return 1 }
-    //     return 0
-    //   })
-    // }
   },
   methods: {
+    async fetchContents () {
+      console.log(this.user)
+      const url = `/api/v1/show_user_like_posts/${this.user.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.posts = res.data.user_like_posts
+        })
+    },
+    infiniteHandler () {
+      setTimeout(() => {
+        console.log(this.user)
+        const url = `api/v1/show_user_like_posts/${this.user.id}`
+        this.page++
+        this.$axios.get(url, { params: { page: this.page } })
+          .then((res) => {
+            setTimeout(() => {
+              if (this.page <= res.data.kaminari.pagination.pages) {
+                this.posts.push(...res.data.user_like_posts)
+                this.$refs.infiniteLoading.stateChanger.loaded()
+              } else {
+                this.$refs.infiniteLoading.stateChanger.complete()
+              }
+            })
+          })
+          .catch(() => {
+            this.$refs.infiniteLoading.stateChanger.complete()
+          })
+      }, 1000)
+    },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)
+    },
+    rollBackPage () {
+      this.page = 1
     }
   }
 }

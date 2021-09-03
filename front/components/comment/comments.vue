@@ -49,42 +49,12 @@
             </v-col>
           </v-row>
           <template v-if="isAuthenticated">
-            <v-row>
-              <v-col>
-                <v-card-actions class="justify-space-around">
-                  <btn-new-comment
-                    :post="comment"
-                    :is-index="isIndex"
-                  />
-                  <template v-if="comment.user_id !== currentUser.id">
-                    <v-btn
-                      :color="btnColor"
-                      text
-                    >
-                      <v-icon v-text="'mdi-twitter-retweet'" />
-                    </v-btn>
-                  </template>
-                  <like
-                    :post="comment"
-                    :is-index="isIndex"
-                  />
-                  <template v-if="comment.user_id === currentUser.id">
-                    <btn-edit-post
-                      :post="comment"
-                      @rollBackPage="rollBackPage"
-                      @fetchContents="fetchContents"
-                    />
-                    <btn-delete-post
-                      :post="comment"
-                      :is-index="isIndex"
-                      @rollBackPage="rollBackPage"
-                      @fetchContents="fetchContents"
-                      @commentsCountDecrement="commentsCountDecrement"
-                    />
-                  </template>
-                </v-card-actions>
-              </v-col>
-            </v-row>
+            <actions
+              :post="comment"
+              :is-index="isIndex"
+              @rollBackPage="rollBackPage"
+              @fetchContents="fetchContents"
+            />
           </template>
         </v-card>
       </v-col>
@@ -106,17 +76,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import BtnNewComment from '../btn/comment/btnNewComment.vue'
-import Like from '../btn/like/like.vue'
-import BtnEditPost from '../btn/editPost/btnEditPost.vue'
-import BtnDeletePost from '../btn/deletePost/btnDeletePost.vue'
+import Actions from '../loggedIn/mainCard/actions.vue'
 
 export default {
   components: {
-    BtnNewComment,
-    Like,
-    BtnEditPost,
-    BtnDeletePost
+    Actions
   },
   props: {
     post: {
@@ -174,9 +138,6 @@ export default {
     },
     fetchContents () {
       this.$emit('fetchContents')
-    },
-    commentsCountDecrement () {
-      this.$emit('commentsCountDecrement')
     },
     rollBackPage () {
       this.page = 1

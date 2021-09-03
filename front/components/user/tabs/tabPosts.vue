@@ -46,41 +46,12 @@
           </v-col>
         </v-row>
         <template v-if="isAuthenticated">
-          <v-row>
-            <v-col>
-              <v-card-actions class="justify-space-around pa-0">
-                <btn-new-comment
-                  :post="post"
-                  :user="user"
-                  :is-index="isIndex"
-                />
-                <template v-if="post.user_id !== currentUser.id">
-                  <v-btn
-                    :color="btnColor"
-                    text
-                  >
-                    <v-icon v-text="'mdi-twitter-retweet'" />
-                  </v-btn>
-                </template>
-                <like
-                  :post="post"
-                  :is-index="isIndex"
-                />
-                <template v-if="user.id === currentUser.id">
-                  <btn-edit-post
-                    :post="post"
-                    :is-index="isIndex"
-                    @fetchContents="fetchContents"
-                  />
-                  <!-- <btn-delete-post
-                    :post="post"
-                    :is-index="isIndex"
-                    @fetchContents="fetchContents"
-                  /> -->
-                </template>
-              </v-card-actions>
-            </v-col>
-          </v-row>
+          <actions
+            :post="post"
+            :is-index="isIndex"
+            @rollBackPage="rollBackPage"
+            @fetchContents="fetchContents"
+          />
         </template>
       </v-col>
     </v-row>
@@ -102,17 +73,11 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import BtnNewComment from '../../btn/comment/btnNewComment.vue'
-import Like from '../../btn/like/like.vue'
-import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
-// import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
+import Actions from '../../loggedIn/mainCard/actions.vue'
 
 export default {
   components: {
-    BtnNewComment,
-    Like,
-    BtnEditPost
-    // BtnDeletePost
+    Actions
   },
   props: {
     user: {
@@ -124,7 +89,6 @@ export default {
     return {
       posts: [],
       page: 1,
-      kaminari: {},
       src: 'https://picsum.photos/200/200',
       isIndex: true
     }
@@ -142,30 +106,33 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.posts = res.data.user_posts
-          this.kaminari = res.data.kaminari
         })
     },
     infiniteHandler () {
-      const url = `api/v1/show_user_posts/${this.user.id}`
-      this.page++
-      this.$axios.get(url, { params: { page: this.page } })
-        .then((res) => {
-          setTimeout(() => {
-            if (this.page <= res.data.kaminari.pagination.pages) {
-              this.posts.push(...res.data.user_posts)
-              this.$refs.infiniteLoading.stateChanger.loaded()
-            } else {
-              this.$refs.infiniteLoading.stateChanger.complete()
-            }
-          }, 800)
-        })
-        .catch(() => {
-          this.$refs.infiniteLoading.stateChanger.complete()
-        })
+      setTimeout(() => {
+        const url = `api/v1/show_user_posts/${this.user.id}`
+        this.page++
+        this.$axios.get(url, { params: { page: this.page } })
+          .then((res) => {
+            setTimeout(() => {
+              if (this.page <= res.data.kaminari.pagination.pages) {
+                this.posts.push(...res.data.user_posts)
+                this.$refs.infiniteLoading.stateChanger.loaded()
+              } else {
+                this.$refs.infiniteLoading.stateChanger.complete()
+              }
+            })
+          })
+          .catch(() => {
+            this.$refs.infiniteLoading.stateChanger.complete()
+          })
+      }, 1000)
     },
-
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)
+    },
+    rollBackPage () {
+      this.page = 1
     }
   }
 }

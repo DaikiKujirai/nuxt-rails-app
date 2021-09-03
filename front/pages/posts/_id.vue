@@ -46,68 +46,36 @@
           </v-row>
           <v-divider class="mx-3" />
           <v-row>
-            <v-col class="d-flex text-center">
+            <v-col class="d-flex text-center pa-0">
               <v-card-text>
                 0 件のリツイート
               </v-card-text>
               <v-card-text>
-                {{ commentsCount }} 件のコメント
+                {{ commentsCountPagePostId }} 件のコメント
               </v-card-text>
               <v-card-text>
                 {{ likesCount }} 件のいいね
               </v-card-text>
             </v-col>
           </v-row>
-          <v-divider class="mx-3" />
+          <v-divider class="mx-3 mb-1" />
           <template v-if="isAuthenticated">
-            <v-row>
-              <v-col>
-                <v-card-actions class="justify-space-around">
-                  <btn-new-comment
-                    :post="post"
-                    :is-index="isIndex"
-                    @rollBackPage="rollBackPage"
-                    @fetchContents="fetchContents"
-                    @fetchCommentsCount="commentsCount = $event"
-                    @commentsCountIncrement="commentsCountIncrement"
-                    @commentsCountDecrement="commentsCountDecrement"
-                  />
-                  <template v-if="post.user_id !== currentUser.id">
-                    <v-btn
-                      :color="btnColor"
-                      text
-                    >
-                      <v-icon v-text="'mdi-twitter-retweet'" />
-                    </v-btn>
-                  </template>
-                  <like
-                    :post="post"
-                    :is-index="isIndex"
-                    @likesCountIncrement="likesCountIncrement"
-                    @likesCountDecrement="likesCountDecrement"
-                  />
-                  <template v-if="post.user_id === currentUser.id">
-                    <btn-edit-post
-                      :post="post"
-                      :is-index="isIndex"
-                      @fetchContents="fetchContents"
-                    />
-                    <btn-delete-post
-                      :post="post"
-                      :is-index="isIndex"
-                      @fetchContents="fetchContents"
-                    />
-                  </template>
-                </v-card-actions>
-                <v-divider class="mx-3" />
-              </v-col>
-            </v-row>
-            <page-id-comment-form
+            <actions
               :post="post"
+              :is-index="isIndex"
+              @rollBackPage="rollBackPage"
               @fetchContents="fetchContents"
-              @commentsCountIncrement="commentsCountIncrement"
+              @fetchCommentsCount="commentsCount = $event"
+              @likesCountIncrement="likesCountIncrement"
+              @likesCountDecrement="likesCountDecrement"
             />
+            <v-divider class="mx-3 mt-1" />
           </template>
+          <page-id-comment-form
+            :post="post"
+            @fetchContents="fetchContents"
+            @commentsCountIncrement="commentsCountIncrement"
+          />
         </v-card>
       </v-col>
     </v-row>
@@ -124,22 +92,16 @@
 <script>
 import { mapGetters } from 'vuex'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
-import Like from '../../components/btn/like/like.vue'
-import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
-import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
 import PageIdCommentForm from '../../components/comment/pageIdCommentForm.vue'
 import Comments from '../../components/comment/comments.vue'
+import Actions from '../../components/loggedIn/mainCard/actions.vue'
 
 export default {
   components: {
     LayoutMain,
-    BtnNewComment,
-    Like,
-    BtnEditPost,
-    BtnDeletePost,
     PageIdCommentForm,
-    Comments
+    Comments,
+    Actions
   },
   data () {
     return {
@@ -158,7 +120,8 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
-      btnColor: 'btn/color'
+      btnColor: 'btn/color',
+      commentsCountPagePostId: 'post/commentsCountPagePostId'
     })
   },
   created () {

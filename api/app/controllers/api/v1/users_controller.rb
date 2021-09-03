@@ -43,7 +43,7 @@ class Api::V1::UsersController < ApplicationController
   def show_user_comments
     user_comments = Post.find_user_comments(params[:id]).page(params[:page]).per(5)
     pagination    = resources_with_pagination(user_comments)
-    object        = { user_posts: user_comments, kaminari: pagination }
+    object        = { user_comments: user_comments, kaminari: pagination }
     render json: object
   end
 
