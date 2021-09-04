@@ -5,8 +5,6 @@
       class="list"
     >
       <v-list
-        v-for="(menu, i) in menus"
-        :key="`menu-btn-${i}`"
         nav
         rounded
       >
@@ -18,9 +16,94 @@
           <v-icon
             size="28"
             class="mr-5"
-            v-text="menu.icon"
+            v-text="'mdi-home'"
           />
-          {{ $t(`menus.${menu.title}`) }}
+          ホーム
+        </v-list-item>
+      </v-list>
+      <v-list
+        nav
+        rounded
+      >
+        <v-list-item
+          two-line
+          class="justify-center"
+          @click="goHome"
+        >
+          <v-icon
+            size="28"
+            class="mr-5"
+            v-text="'mdi-magnify'"
+          />
+          検索
+        </v-list-item>
+      </v-list>
+      <v-list
+        nav
+        rounded
+      >
+        <v-list-item
+          two-line
+          class="justify-center"
+          @click="goHome"
+        >
+          <v-icon
+            size="28"
+            class="mr-5"
+            v-text="'mdi-bell'"
+          />
+          通知
+        </v-list-item>
+      </v-list>
+      <v-list
+        nav
+        rounded
+      >
+        <v-list-item
+          two-line
+          class="justify-center"
+          @click="goHome"
+        >
+          <v-icon
+            size="28"
+            class="mr-5"
+            v-text="'mdi-chat-processing-outline'"
+          />
+          チャット
+        </v-list-item>
+      </v-list>
+      <v-list
+        nav
+        rounded
+      >
+        <v-list-item
+          two-line
+          class="justify-center"
+          @click="toFollow(1)"
+        >
+          <v-icon
+            size="28"
+            class="mr-5"
+            v-text="'mdi-account-details'"
+          />
+          フォロー
+        </v-list-item>
+      </v-list>
+      <v-list
+        nav
+        rounded
+      >
+        <v-list-item
+          two-line
+          class="justify-center"
+          @click="toFollow(0)"
+        >
+          <v-icon
+            size="28"
+            class="mr-5"
+            v-text="'mdi-account-details-outline'"
+          />
+          フォロワー
         </v-list-item>
       </v-list>
       <template v-if="isAuthenticated">
@@ -46,18 +129,6 @@ export default {
   components: {
     BtnNewPost
   },
-  data () {
-    return {
-      menus: [
-        { title: 'posts', icon: 'mdi-home' },
-        { title: 'search', icon: 'mdi-magnify' },
-        { title: 'notification', icon: 'mdi-bell' },
-        { title: 'chat', icon: 'mdi-chat-processing-outline' },
-        { title: 'follow', icon: 'mdi-account-details' },
-        { title: 'follower', icon: 'mdi-account-details-outline' }
-      ]
-    }
-  },
   computed: {
     ...mapGetters({
       isAuthenticated: 'auth/isAuthenticated',
@@ -70,6 +141,9 @@ export default {
     },
     fetchContents () {
       this.$emit('fetchContents')
+    },
+    toFollow (tab) {
+      this.$router.push(`/relationships/${this.currentUser.id}?tab=${tab}`)
     }
   }
 }
