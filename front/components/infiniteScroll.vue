@@ -8,6 +8,9 @@
       slot="no-results"
       class="mt-3"
     >
+      <v-divider
+        class="mb-2 mx-3"
+      />
       データはありません
     </div>
   </infinite-loading>
@@ -25,17 +28,6 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-    }
-  },
-  computed: {
-    pagePosts () {
-      return this.posts
-    }
-  },
-  mounted () {
-  },
   methods: {
     infiniteHandler () {
       this.pageIncrement()
@@ -44,23 +36,23 @@ export default {
           .then((res) => {
             setTimeout(() => {
               if (this.page <= res.data.kaminari.pagination.pages) {
-                this.pushPosts(res)
+                this.pushContents(res)
                 this.$refs.infiniteLoading.stateChanger.loaded()
               } else {
                 this.$refs.infiniteLoading.stateChanger.complete()
               }
-            })
+            }, 500)
           })
           .catch(() => {
             this.$refs.infiniteLoading.stateChanger.complete()
           })
-      }, 1000)
+      }, 500)
     },
     pageIncrement () {
       this.$emit('pageIncrement')
     },
-    pushPosts (res) {
-      this.$emit('pushPosts', res)
+    pushContents (res) {
+      this.$emit('pushContents', res)
     }
   }
 }

@@ -31,7 +31,7 @@
               </template>
               <template v-else>
                 <btn-follow
-                  ref="dataFollow"
+                  ref="btnFollow"
                   :user="user"
                 />
               </template>
@@ -50,27 +50,17 @@
             <v-row>
               <v-col>
                 <v-card-actions>
-                  <v-btn
-                    :color="btnColor"
-                    text
-                    rounded
-                  >
-                    フォロー
-                  </v-btn>
-                  <v-btn
-                    :color="btnColor"
-                    text
-                    rounded
-                  >
-                    フォロワー
-                  </v-btn>
+                  <btn-to-follow
+                    class="mr-2"
+                  />
+                  <btn-to-follower />
                 </v-card-actions>
               </v-col>
             </v-row>
           </template>
         </v-card>
         <page-id-user-tab
-          ref="dataShowUser"
+          ref="pageIdUserTab"
           class="mt-1"
           :user="user"
         />
@@ -83,13 +73,17 @@
 import { mapGetters, mapActions } from 'vuex'
 import BtnEditProfile from '../../components/btn/user/editProfile/btnEditProfile.vue'
 import BtnFollow from '../../components/btn/user/follow/btnFollow.vue'
+import BtnToFollow from '../../components/btn/user/follow/btnToFollow.vue'
+import BtnToFollower from '../../components/btn/user/follow/btnToFollower.vue'
 import pageIdUserTab from '../../components/user/pageIdUserTab.vue'
 
 export default {
   components: {
     pageIdUserTab,
     BtnEditProfile,
-    BtnFollow
+    BtnFollow,
+    BtnToFollow,
+    BtnToFollower
   },
   data: () => {
     return {
@@ -119,17 +113,14 @@ export default {
           this.setUser(res.data)
           setTimeout(() => {
             this.fetchShowUser()
-          }, 500)
+          }, 400)
         })
         .catch((err) => {
           console.error(err) // eslint-disable-line
         })
     },
     fetchShowUser () {
-      this.$refs.dataShowUser.fetchContents()
-      if (this.currentUser.id !== this.user.id) {
-        this.$refs.dataFollow.fetchContents()
-      }
+      this.$refs.pageIdUserTab.fetchContents()
     }
   }
 }

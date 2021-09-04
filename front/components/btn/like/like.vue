@@ -115,9 +115,9 @@ export default {
       })
         .then((res) => {
           this.isLike = res.data.is_like
-          this.likesCount = res.data.kaminari.pagination.count
+          this.likesCount = res.data.likes_count
           if (this.$route.name === 'posts-id' && !this.isIndex) {
-            this.setLikesCountPagePostId(res.data.kaminari.pagination.count)
+            this.setLikesCountPagePostId(res.data.likes_count)
           }
         })
         .catch((err) => {

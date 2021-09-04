@@ -31,10 +31,9 @@
         </v-col>
       </v-row>
       <infinite-scroll
-        :posts="posts"
         :page="page"
         :url="url"
-        @pushPosts="pushPosts"
+        @pushContents="pushContents"
         @pageIncrement="pageIncrement"
       />
     </template>
@@ -47,13 +46,15 @@ import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import HomeNewPost from '../../components/post/homeNewPost.vue'
 import Actions from '../../components/loggedIn/mainCard/actions.vue'
 import PostCard from '../../components/post/postCard.vue'
+import InfiniteScroll from '../../components/infiniteScroll.vue'
 
 export default {
   components: {
     LayoutMain,
     HomeNewPost,
     Actions,
-    PostCard
+    PostCard,
+    InfiniteScroll
   },
   data () {
     return {
@@ -98,7 +99,7 @@ export default {
     pageIncrement () {
       this.page++
     },
-    pushPosts (res) {
+    pushContents (res) {
       this.posts.push(...res.data.posts)
     }
   }

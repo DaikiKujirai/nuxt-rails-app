@@ -24,10 +24,9 @@
       </v-col>
     </v-row>
     <infinite-scroll
-      :posts="comments"
       :page="page"
       :url="url"
-      @pushPosts="pushPosts"
+      @pushContents="pushContents"
       @pageIncrement="pageIncrement"
     />
   </div>
@@ -86,7 +85,7 @@ export default {
     pageIncrement () {
       this.page++
     },
-    pushPosts (res) {
+    pushContents (res) {
       this.comments.push(...res.data.comments)
     },
     toShow (page, id) {

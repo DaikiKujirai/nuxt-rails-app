@@ -24,14 +24,13 @@ class Api::V1::LikesController < ApplicationController
   end
 
   def render_is_like_and_likes_count
-    post       = Post.find(params[:id])
-    post_likes = post.likes.page(params[:page]).per(5)
-    pagination = resources_with_pagination(post_likes)
+    post        = Post.find(params[:id])
+    likes_count = post.likes.count
     if Like.find_by(user_id: params[:user_id], post_id: post.id)
-      object   = { is_like: true, kaminari: pagination }
+      object    = { is_like: true, likes_count: likes_count }
       render json: object
     else
-      object   = { is_like: false, kaminari: pagination }
+      object    = { is_like: false, likes_count: likes_count }
       render json: object
     end
   end

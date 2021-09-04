@@ -21,10 +21,9 @@
       </v-col>
     </v-row>
     <infinite-scroll
-      :posts="posts"
       :page="page"
       :url="url"
-      @pushPosts="pushPosts"
+      @pushContents="pushContents"
       @pageIncrement="pageIncrement"
     />
   </v-tab-item>
@@ -79,7 +78,7 @@ export default {
     pageIncrement () {
       this.page++
     },
-    pushPosts (res) {
+    pushContents (res) {
       this.posts.push(...res.data.user_posts)
     }
   }

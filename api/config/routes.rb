@@ -3,7 +3,7 @@ Rails.application.routes.draw do
     namespace :v1 do
       resources :users do
         resources :relationships, only: [:create, :destroy]
-        get :is_following, :find_following_ids, :find_user_followers
+        get :is_following
       end
       resources :posts, only: %i[index show create update destroy]
       resources :likes, only: %i[create destroy]
@@ -15,7 +15,10 @@ Rails.application.routes.draw do
       # post
       get 'find_comments/:id'        => 'posts#find_comments'
       # like
-      get 'render_is_like_and_likes_count/:id'   => 'likes#render_is_like_and_likes_count'
+      get 'render_is_like_and_likes_count/:id' => 'likes#render_is_like_and_likes_count'
+      # relationship
+      get 'find_following/:id'       => 'relationships#find_following'
+      get 'find_followers/:id'       => 'relationships#find_followers'
     end
   end
 end

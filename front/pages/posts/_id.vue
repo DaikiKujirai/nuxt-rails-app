@@ -67,11 +67,11 @@
               @fetchContents="fetchContents"
             />
             <v-divider class="mx-3 mt-1" />
+            <page-id-comment-form
+              :post="post"
+              @fetchContents="fetchContents"
+            />
           </template>
-          <page-id-comment-form
-            :post="post"
-            @fetchContents="fetchContents"
-          />
         </v-card>
       </v-col>
     </v-row>
@@ -137,18 +137,6 @@ export default {
     rollBackPage () {
       this.$refs.child.rollBackPage()
     },
-    // likesCountIncrement () {
-    //   this.likesCount++
-    // },
-    // likesCountDecrement () {
-    //   this.likesCount--
-    // },
-    // commentsCountIncrement () {
-    //   this.commentsCount++
-    // },
-    // commentsCountDecrement () {
-    //   this.commentsCount--
-    // },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)
     }

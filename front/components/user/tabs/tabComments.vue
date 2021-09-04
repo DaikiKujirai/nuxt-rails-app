@@ -3,7 +3,7 @@
     <v-row
       v-for="comment in comments"
       :key="comment.id"
-      @click="toShow('page', comment.id)"
+      @click="toShow('posts', comment.id)"
     >
       <v-col>
         <post-card
@@ -20,10 +20,9 @@
       </v-col>
     </v-row>
     <infinite-scroll
-      :posts="comments"
       :page="page"
       :url="url"
-      @pushPosts="pushPosts"
+      @pushContents="pushContents"
       @pageIncrement="pageIncrement"
     />
   </v-tab-item>
@@ -78,7 +77,7 @@ export default {
     pageIncrement () {
       this.page++
     },
-    pushPosts (res) {
+    pushContents (res) {
       this.comments.push(...res.data.user_comments)
     }
   }

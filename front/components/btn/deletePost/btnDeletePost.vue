@@ -73,15 +73,13 @@ export default {
     async clickOK () {
       await this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
+          this.rollBackPage()
           if (this.$route.name === 'posts-id' && this.isIndex) {
-            this.rollBackPage()
             this.fetchContents()
             this.commentsCountPagePostIdDecrement()
           } else if (this.$route.name === 'posts-id' && !this.isIndex) {
-            this.rollBackPage()
             this.$router.replace('/posts')
           } else {
-            this.rollBackPage()
             this.fetchContents()
           }
           this.dialog = false
