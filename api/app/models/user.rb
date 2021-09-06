@@ -10,14 +10,15 @@ class User < ApplicationRecord
   has_many :followings    , through: :relationships           , source: :follow
   has_many :followers     , through: :reverse_of_relationships, source: :user
 
+  mount_uploader :avatar     , AvatarUploader
+  mount_uploader :cover_image, CoverImageUploader
+
   before_validation :downcase_email
 
-  validates :name , presence: true,
-                    length: { maximum: 30, allow_blank: true }
-  validates :email, presence: true,
-                    email: { allow_blank: true }
+  validates :name , presence: true, length: { maximum: 30, allow_blank: true }
+  validates :email, presence: true, email: { allow_blank: true }
   VALID_PASSWORD_REGEX = /\A[\w\-]+\z/
-  validates :uid,  presence: true
+  validates :uid  , presence: true
 
   ## methods
   # class method  ###########################
@@ -34,10 +35,6 @@ class User < ApplicationRecord
     users = User.where.not(id: id)
     users.find_activated(email).present?
   end
-
-  # def following(user_id)
-  #   relationships.where(user_id: user_id)
-  # end
 
   private
 

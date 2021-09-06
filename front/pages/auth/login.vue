@@ -6,10 +6,12 @@
     >
       <user-form-email
         :email.sync="user.email"
+        :outlined="true"
         no-validation
       />
       <user-form-password
         :password.sync="user.password"
+        :outlined="true"
         no-validation
       />
       <v-card-actions>

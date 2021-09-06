@@ -7,8 +7,9 @@
       <v-col
         class="d-flex"
       >
+        {{ post }}
         <v-img
-          :src="src"
+          :src="post.user_avatar.url"
           max-height="70"
           max-width="70"
           contain
@@ -31,17 +32,39 @@
       </v-col>
     </v-row>
     <template v-if="post.post_id !== 0">
-      <v-card-text>
-        返信先： {{ post.user_name }} さん
-      </v-card-text>
+      <v-row>
+        <v-col class="py-0">
+          <span class="pt-2 pl-2">
+            返信先：
+          </span>
+          <u
+            style="cursor: pointer;"
+            @click.prevent.stop="toShow('users', replyToUser.id)"
+          >
+            {{ replyToUser.name }}
+          </u>
+          <span>
+            さん
+          </span>
+        </v-col>
+      </v-row>
     </template>
     <v-row>
       <v-col>
         <v-card-title
-          class="card-content"
+          class="mx-3 pa-0"
         >
           {{ post.content }}
         </v-card-title>
+        <template v-if="post.image">
+          <v-img
+            :src="post.image.url"
+            max-height="400"
+            max-width="400"
+            contain
+            class="ma-3"
+          />
+        </template>
       </v-col>
     </v-row>
   </div>
@@ -57,10 +80,24 @@ export default {
   },
   data () {
     return {
-      src: 'https://picsum.photos/200/200'
+      replyToUser: {}
     }
   },
+  mounted () {
+    this.$nextTick(() => {
+      if (this.post.post_id !== 0) {
+        this.fetchContents()
+      }
+    })
+  },
   methods: {
+    fetchContents () {
+      const url = `/api/v1/posts/${this.post.post_id}`
+      this.$axios.get(url)
+        .then((res) => {
+          this.replyToUser = res.data.user
+        })
+    },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)
     }

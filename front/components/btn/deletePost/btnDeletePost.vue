@@ -50,7 +50,7 @@ export default {
       type: Object,
       required: true
     },
-    isIndex: {
+    isList: {
       type: Boolean,
       required: true
     }
@@ -74,10 +74,10 @@ export default {
       await this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
           this.rollBackPage()
-          if (this.$route.name === 'posts-id' && this.isIndex) {
+          if (this.$route.name === 'posts-id' && this.isList) {
             this.fetchContents()
             this.commentsCountPagePostIdDecrement()
-          } else if (this.$route.name === 'posts-id' && !this.isIndex) {
+          } else if (this.$route.name === 'posts-id' && !this.isList) {
             this.$router.replace('/posts')
           } else {
             this.fetchContents()

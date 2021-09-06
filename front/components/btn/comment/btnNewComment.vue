@@ -58,7 +58,10 @@
             v-model="isValid"
           >
             <new-comment-form
-              :content.sync="newComment.content"
+              :content.sync="content"
+            />
+            <input-file-form
+              @setImageInPostImage="image = $event"
             />
             <v-btn
               :disabled="!isValid || loading"
@@ -73,7 +76,7 @@
         </v-container>
       </v-card>
     </v-dialog>
-    <template v-if="isIndex && commentsCount">
+    <template v-if="isList && commentsCount">
       {{ commentsCount }}
     </template>
   </div>
@@ -82,17 +85,19 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import newCommentForm from '../../btn/comment/newCommentForm.vue'
+import InputFileForm from '../../post/InputFileForm.vue'
 
 export default {
   components: {
-    newCommentForm
+    newCommentForm,
+    InputFileForm
   },
   props: {
     post: {
       type: Object,
       required: true
     },
-    isIndex: {
+    isList: {
       type: Boolean,
       required: true
     }
@@ -104,7 +109,8 @@ export default {
       loading: false,
       comments: [],
       commentsCount: 0,
-      newComment: { content: '' },
+      content: '',
+      image: '',
       src: 'https://picsum.photos/200/200'
     }
   },
@@ -116,9 +122,9 @@ export default {
     })
   },
   mounted () {
-    setTimeout(() => {
+    this.$nextTick(() => {
       this.fetchComments()
-    }, 500)
+    })
   },
   methods: {
     ...mapActions({
@@ -144,16 +150,21 @@ export default {
     },
     async submitComment () {
       this.loading = true
-      this.newComment.user_id = this.currentUser.id
-      this.newComment.post_id = this.post.id
-      await this.$axios.$post('/api/v1/posts', this.newComment)
+      const formData = new FormData()
+      formData.append('post[user_id]', this.currentUser.id)
+      formData.append('post[post_id]', this.post.id)
+      formData.append('post[content]', this.content)
+      if (this.image) {
+        formData.append('post[image]', this.image)
+      }
+      await this.$axios.$post('/api/v1/posts', formData)
         .then(() => {
           this.rollBackPage()
           this.loading = false
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
           this.$refs.form.reset()
-          if (this.isIndex) {
+          if (this.isList) {
             this.$router.push(`/posts/${this.post.id}`)
           } else {
             this.commentsCountPagePostIdIncrement()

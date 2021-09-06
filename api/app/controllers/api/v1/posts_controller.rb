@@ -1,18 +1,16 @@
 class Api::V1::PostsController < ApplicationController
   include Pagination
   def index
-    posts = Post.joins(:user).select("posts.*, users.name AS user_name")
-                .where(post_id: 0).order(created_at: :desc).page(params[:page]).per(5)
+    posts      = Post.find_posts.page(params[:page]).per(5)
     pagination = resources_with_pagination(posts)
-    object = { posts: posts, kaminari: pagination }
+    object     = { posts: posts, kaminari: pagination }
     render json: object
   end
 
   def show
-    post = {}
-    post[:post]  = Post.find(params[:id])
-    post[:user]  = User.find(post[:post].user_id)
-    post[:likes] = Like.where(post_id: post[:post].id)
+    post        = {}
+    post[:post] = Post.select_detail.find(params[:id])
+    post[:user] = User.find(post[:post].user_id)
     render json: post
   end
 
@@ -35,7 +33,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def destroy
-    post = Post.find(params[:id])
+    post  = Post.find(params[:id])
     posts = Post.where(post_id: post.id)
     if post.destroy
       posts.destroy_all
@@ -46,16 +44,15 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def find_comments
-    comments = Post.joins(:user).select("posts.*, users.name AS user_name")
-                   .where(post_id: params[:id]).order(created_at: :desc).page(params[:page]).per(5)
+    comments   = Post.find_post_comments(params[:id]).page(params[:page]).per(5)
     pagination = resources_with_pagination(comments)
-    object = { comments: comments, kaminari: pagination }
+    object     = { comments: comments, kaminari: pagination }
     render json: object
   end
 
   private
 
   def post_params
-    params.require(:post).permit(:user_id, :post_id, :content)
+    params.require(:post).permit(:user_id, :post_id, :content, :image)
   end
 end

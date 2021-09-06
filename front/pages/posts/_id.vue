@@ -31,6 +31,15 @@
               >
                 {{ post.content }}
               </v-card-title>
+              <template v-if="post.image">
+                <v-img
+                  :src="post"
+                  max-height="500"
+                  max-width="500"
+                  contain
+                  class="ma-3"
+                />
+              </template>
             </v-col>
           </v-row>
           <v-row>
@@ -62,7 +71,7 @@
           <template v-if="isAuthenticated">
             <actions
               :post="post"
-              :is-index="isIndex"
+              :is-list="isList"
               @rollBackPage="rollBackPage"
               @fetchContents="fetchContents"
             />
@@ -78,7 +87,6 @@
     <comments
       ref="child"
       :post="post"
-      :user="user"
       @fetchContents="fetchContents"
     />
   </layout-main>
@@ -103,8 +111,7 @@ export default {
       post: {},
       user: {},
       time: '',
-      src: 'https://picsum.photos/200/200',
-      isIndex: false
+      isList: false
     }
   },
   computed: {
@@ -125,8 +132,6 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.post = res.data.post
-          this.user = res.data.user
-          this.post.user_name = res.data.user.name
           this.time = this.$my.format(this.post.created_at)
           this.fetchComments()
         })

@@ -6,7 +6,7 @@
           <v-row>
             <v-col>
               <v-img
-                :src="src"
+                :src="coverImage"
                 height="250"
               />
             </v-col>
@@ -16,7 +16,7 @@
               class="d-flex"
             >
               <v-img
-                :src="src"
+                :src="avatar"
                 max-height="70"
                 max-width="70"
                 contain
@@ -88,6 +88,8 @@ export default {
   data: () => {
     return {
       user: {},
+      avatar: '',
+      coverImage: '',
       src: 'https://picsum.photos/500/500'
     }
   },
@@ -110,6 +112,8 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.user = res.data
+          this.avatar = res.data.avatar.url
+          this.coverImage = res.data.cover_image.url
           this.setUser(res.data)
           setTimeout(() => {
             this.fetchShowUser()

@@ -18,7 +18,7 @@
         <v-icon v-text="'mdi-heart'" />
       </v-btn>
     </template>
-    <template v-if="likesCount && isIndex">
+    <template v-if="likesCount && isList">
       {{ likesCount }}
     </template>
   </div>
@@ -33,7 +33,7 @@ export default {
       type: Object,
       required: true
     },
-    isIndex: {
+    isList: {
       type: Boolean,
       required: true
     }
@@ -52,7 +52,7 @@ export default {
     })
   },
   mounted () {
-    if (this.$route.name === 'posts-id' && !this.isIndex) {
+    if (this.$route.name === 'posts-id' && !this.isList) {
       this.fetchContents(this.$route.params.id)
     } else {
       this.fetchContents(this.post.id)
@@ -71,7 +71,7 @@ export default {
       const url = '/api/v1/likes'
       await this.$axios.post(url, this.newLike)
         .then(() => {
-          if (this.$route.name === 'posts-id' && !this.isIndex) {
+          if (this.$route.name === 'posts-id' && !this.isList) {
             this.likesCountPagePostIdIncrement()
           } else {
             this.likesCountIncrement()
@@ -93,7 +93,7 @@ export default {
         }
       })
         .then(() => {
-          if (this.$route.name === 'posts-id' && !this.isIndex) {
+          if (this.$route.name === 'posts-id' && !this.isList) {
             this.likesCountPagePostIdDecrement()
           } else {
             this.likesCountDecrement()
@@ -116,7 +116,7 @@ export default {
         .then((res) => {
           this.isLike = res.data.is_like
           this.likesCount = res.data.likes_count
-          if (this.$route.name === 'posts-id' && !this.isIndex) {
+          if (this.$route.name === 'posts-id' && !this.isList) {
             this.setLikesCountPagePostId(res.data.likes_count)
           }
         })

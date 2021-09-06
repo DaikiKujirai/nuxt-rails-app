@@ -6,12 +6,15 @@
     >
       <user-form-name
         :name.sync="user.name"
+        :outlined="true"
       />
       <user-form-email
         :email.sync="user.email"
+        :outlined="true"
       />
       <user-form-password
         :password.sync="user.password"
+        :outlined="true"
       />
       <v-btn
         :disabled="!isValid || loading"
@@ -68,8 +71,8 @@ export default {
           this.createUser(res)
         })
         .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.log('サインアップエラー', err)
+          this.loading = false
+          this.flashMessage({ message: err.errors.messages, type: 'error', status: true })
         })
     },
     createUser (res) {
@@ -85,11 +88,11 @@ export default {
             this.flashMessage({ message: '登録に成功しました', type: 'success', status: true })
             this.$router.push('/posts')
             this.loading = false
-          }, 1000)
+          }, 500)
         })
         .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.log('アカウント作成失敗', err)
+          this.loading = false
+          this.flashMessage({ message: err.errors.messages, type: 'error', status: true })
         })
     }
   }

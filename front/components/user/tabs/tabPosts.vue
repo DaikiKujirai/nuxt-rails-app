@@ -13,7 +13,7 @@
         <template v-if="isAuthenticated">
           <actions
             :post="post"
-            :is-index="isIndex"
+            :is-list="isList"
             @rollBackPage="rollBackPage"
             @fetchContents="fetchContents"
           />
@@ -51,7 +51,7 @@ export default {
       page: 1,
       url: `/api/v1/show_user_posts/${this.$route.params.id}`,
       src: 'https://picsum.photos/200/200',
-      isIndex: true
+      isList: true
     }
   },
   computed: {

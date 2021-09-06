@@ -1,28 +1,24 @@
 <template>
-  <v-text-field
-    v-model="setName"
+  <v-textarea
+    v-model="setIntroduction"
     :rules="rules"
     :counter="max"
-    label="ユーザー名を入力"
-    placeholder="あなたの表示名"
-    :outlined="outlined"
+    label="紹介文を入力"
+    auto-grow
+    outlined
   />
 </template>
 
 <script>
 export default {
   props: {
-    name: {
+    introduction: {
       type: String,
       default: ''
-    },
-    outlined: {
-      type: Boolean,
-      required: true
     }
   },
   data () {
-    const max = 30
+    const max = 200
     return {
       max,
       rules: [
@@ -32,9 +28,9 @@ export default {
     }
   },
   computed: {
-    setName: {
-      get () { return this.name },
-      set (newVal) { return this.$emit('update:name', newVal) }
+    setIntroduction: {
+      get () { return this.introduction },
+      set (newVal) { return this.$emit('update:introduction', newVal) }
     }
   }
 }

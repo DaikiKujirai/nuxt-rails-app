@@ -61,7 +61,7 @@ export default {
       type: Object,
       required: true
     },
-    isIndex: {
+    isList: {
       type: Boolean,
       required: true
     }
@@ -91,7 +91,7 @@ export default {
       await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
         .then(() => {
           this.rollBackPage()
-          if (this.$route.name === 'posts-id' && !this.isIndex) {
+          if (this.$route.name === 'posts-id' && !this.isList) {
             this.fetchContents()
           } else {
             this.$router.push(`/posts/${this.post.id}`)

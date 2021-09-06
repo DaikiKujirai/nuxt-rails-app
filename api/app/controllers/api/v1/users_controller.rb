@@ -62,6 +62,8 @@ class Api::V1::UsersController < ApplicationController
                                 :name        ,
                                 :email       ,
                                 :uid         ,
+                                :avatar      ,
+                                :cover_image ,
                                 :introduction,
                                 :is_active   ,
                                 :admin

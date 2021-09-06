@@ -15,7 +15,7 @@
           <template v-if="isAuthenticated">
             <actions
               :post="comment"
-              :is-index="isIndex"
+              :is-list="isList"
               @rollBackPage="rollBackPage"
               @fetchContents="fetchContents"
             />
@@ -46,16 +46,12 @@ export default {
     post: {
       type: Object,
       required: true
-    },
-    user: {
-      type: Object,
-      required: true
     }
   },
   data () {
     return {
       comments: [],
-      isIndex: true,
+      isList: true,
       page: 1,
       url: `/api/v1/find_comments/${this.$route.params.id}`,
       src: 'https://picsum.photos/500/500'

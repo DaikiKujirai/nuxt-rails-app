@@ -22,7 +22,7 @@
             <template v-if="isAuthenticated">
               <actions
                 :post="post"
-                :is-index="isIndex"
+                :is-list="isList"
                 @fetchContents="fetchContents"
                 @rollBackPage="rollBackPage"
               />
@@ -61,8 +61,7 @@ export default {
       posts: [],
       page: 1,
       url: '/api/v1/posts',
-      src: 'https://picsum.photos/200/200',
-      isIndex: true
+      isList: true
     }
   },
   computed: {
@@ -86,8 +85,7 @@ export default {
           this.posts = res.data.posts
         })
         .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
+          this.flashMessage({ message: err.errors.messages, type: 'error', status: true })
         })
     },
     toShow (page, id) {

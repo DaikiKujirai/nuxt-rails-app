@@ -5,7 +5,7 @@
         <btn-new-comment
           ref="child"
           :post="post"
-          :is-index="isIndex"
+          :is-list="isList"
           @rollBackPage="rollBackPage"
           @fetchContents="fetchContents"
         />
@@ -19,20 +19,20 @@
         </template>
         <like
           :post="post"
-          :is-index="isIndex"
+          :is-list="isList"
           @likesCountIncrement="likesCountIncrement"
           @likesCountDecrement="likesCountDecrement"
         />
         <template v-if="post.user_id === currentUser.id">
           <btn-edit-post
             :post="post"
-            :is-index="isIndex"
+            :is-list="isList"
             @rollBackPage="rollBackPage"
             @fetchContents="fetchContents"
           />
           <btn-delete-post
             :post="post"
-            :is-index="isIndex"
+            :is-list="isList"
             @rollBackPage="rollBackPage"
             @fetchContents="fetchContents"
           />
@@ -61,7 +61,7 @@ export default {
       type: Object,
       required: true
     },
-    isIndex: {
+    isList: {
       type: Boolean,
       required: true
     }

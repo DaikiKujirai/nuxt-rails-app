@@ -13,7 +13,7 @@
         <template v-if="isAuthenticated">
           <actions
             :post="post"
-            :is-index="isIndex"
+            :is-list="isList"
             @rollBackPage="rollBackPage"
             @fetchContents="fetchContents"
           />
@@ -51,7 +51,7 @@ export default {
     return {
       posts: [],
       page: 1,
-      isIndex: true,
+      isList: true,
       url: `/api/v1/show_user_like_posts/${this.$route.params.id}`,
       src: 'https://picsum.photos/500/500'
     }
