@@ -27,6 +27,7 @@ export default {
   methods: {
     // 画像を選択時に画像データをエンコード //
     async setImage () {
+<<<<<<< HEAD
       const pageEdit = this.$route.name === 'users-edit'
       const typeChange = event.type === 'change'
       const labelAvatar = this.$options.propsData.label === 'プロフィール画像を選択してください'
@@ -49,6 +50,14 @@ export default {
       } else if (pageEdit && !event.target.files.length && labelCoverImage) {
         this.setImageInPreview(this.currentUser.cover_image.url)
         return
+=======
+      if (event.type !== 'change') {
+        this.setImageInPreview('')
+        return
+      } else if (!event.target.files.length) {
+        this.setImageInPreview('')
+        return
+>>>>>>> af3e88e ([fix] S3)
       }
       const images = event.target.files || event.dataTransfer.files
       this.setImageInPostImage(event.target.files[0])
