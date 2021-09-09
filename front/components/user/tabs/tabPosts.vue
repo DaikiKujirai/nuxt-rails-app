@@ -33,11 +33,13 @@
 import { mapGetters } from 'vuex'
 import Actions from '../../loggedIn/mainCard/actions.vue'
 import PostCard from '../../post/postCard.vue'
+import InfiniteScroll from '../../ui/infiniteScroll.vue'
 
 export default {
   components: {
     Actions,
-    PostCard
+    PostCard,
+    InfiniteScroll
   },
   props: {
     user: {

@@ -31,7 +31,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import InfiniteScroll from '../../infiniteScroll.vue'
+import InfiniteScroll from '../../ui/infiniteScroll.vue'
 import Actions from '../../loggedIn/mainCard/actions.vue'
 import PostCard from '../../post/postCard.vue'
 

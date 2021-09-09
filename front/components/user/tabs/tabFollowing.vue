@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import infiniteScroll from '../../infiniteScroll.vue'
+import infiniteScroll from '../../ui/infiniteScroll.vue'
 import UserTemplate from '../userTemplate.vue'
 
 export default {
