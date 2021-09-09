@@ -11,10 +11,10 @@
               />
               <input-file-form
                 :label="labelCoverImage"
-                class="mx-15 mt-3"
-                @change="coverImage = $event"
+                class="mx-15 mt-3 coverImage"
+                @setImageInPreview="coverImage = $event"
+                @setImageInPostImage="editCoverImage = $event"
               />
-              {{ coverImage }}
             </v-col>
           </v-row>
           <v-row>
@@ -25,13 +25,13 @@
                 max-width="120"
                 contain
                 style="border-radius: 50%;"
-                class="ml-10"
+                class="ml-10 avatar"
               />
-              {{ avatar }}
               <input-file-form
                 :label="labelAvatar"
                 class="mx-8 mt-10"
-                @change="coverImage = $event"
+                @setImageInPreview="avatar = $event"
+                @setImageInPostImage="editAvatar = $event"
               />
             </v-col>
           </v-row>
@@ -42,7 +42,6 @@
                 :outlined="false"
                 class="mx-15"
               />
-              {{ name }}
             </v-col>
           </v-row>
           <v-row>
@@ -51,7 +50,6 @@
                 :introduction.sync="introduction"
                 class="mx-15"
               />
-              {{ introduction }}
             </v-col>
           </v-row>
           <v-row>
@@ -90,7 +88,9 @@ export default {
       name: '',
       introduction: '',
       coverImage: '',
-      avatar: ''
+      avatar: '',
+      editAvatar: '',
+      editCoverImage: ''
     }
   },
   computed: {
@@ -108,7 +108,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      updateCurrentUser: 'auth/updateCurrentUser'
     }),
     async submitEdit () {
       this.loading = true
@@ -116,15 +117,20 @@ export default {
       formData.append('user[id]', this.currentUser.id)
       formData.append('user[name]', this.name)
       formData.append('user[introduction]', this.introduction)
-      formData.append('user[avatar]', this.avatar)
-      formData.append('user[cover_image]', this.cover_image)
+      if (this.editAvatar) {
+        formData.append('user[avatar]', this.editAvatar)
+      }
+      if (this.editCoverImage) {
+        formData.append('user[cover_image]', this.editCoverImage)
+      }
       // const config = {
       //   header: {
       //     'content-type': 'multipart/form-data'
       //   }
       // }
       await this.$axios.patch(`/api/v1/users/${this.currentUser.id}`, formData)
-        .then(() => {
+        .then((res) => {
+          this.updateCurrentUser(res.data)
           this.flashMessage({ message: 'プロフィールを更新しました', type: 'success', status: true })
           this.$router.push(`/users/${this.currentUser.id}`)
           this.loading = false
