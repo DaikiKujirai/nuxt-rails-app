@@ -78,11 +78,13 @@ export default {
     })
   },
   mounted () {
-    this.name = this.currentUser.name
-    this.email = this.currentUser.email
-    this.password = this.currentUser.password
-    this.coverImage = this.currentUser.cover_image.url
-    this.avatar = this.currentUser.avatar.url
+    setTimeout(() => {
+      this.name = this.currentUser.name
+      this.email = this.currentUser.email
+      this.password = this.currentUser.password
+      this.coverImage = this.currentUser.cover_image.url
+      this.avatar = this.currentUser.avatar.url
+    }, 500)
   },
   methods: {
     ...mapActions({

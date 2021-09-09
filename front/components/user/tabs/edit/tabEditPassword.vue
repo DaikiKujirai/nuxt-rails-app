@@ -12,7 +12,7 @@
             :password.sync="password"
             :outlined="outlined"
             label="現在のパスワードを入力"
-            class="mx-15"
+            class="mx-15 px-10"
           />
         </v-col>
       </v-row>
@@ -22,7 +22,7 @@
             :new-password.sync="newPassword"
             :outlined="outlined"
             label="新しいパスワードを入力"
-            class="mx-15"
+            class="mx-15 px-10"
           />
         </v-col>
       </v-row>
@@ -58,6 +58,8 @@ export default {
       password: '',
       newPassword: ''
     }
+  },
+  methods: {
   }
 }
 </script>
