@@ -1,19 +1,24 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources   :users do
-        resource :relationships, only: [:create, :destroy]
-        get :following, :followers
+      resources :users do
+        resources :relationships, only: [:create, :destroy]
+        get :is_following
       end
-      resources   :posts        , only: %i[index show create update destroy]
-      resources   :comments     , only: %i[show create update destroy]
-      resources   :like_posts   , only: %i[show create destroy]
-      resources   :like_comments, only: %i[show create destroy]
+      resources :posts, only: %i[index show create update destroy]
+      resources :likes, only: %i[create destroy]
       # user
-      get 'find_login_user/:uid' => 'users#find_login_user'
-      get 'search_likes'         => 'users#search_likes'
-      # comment
-      get 'search_comments/:id'  => 'comments#search_comments'
+      get 'find_login_user/:uid'     => 'users#find_login_user'
+      get 'show_user_posts/:id'      => 'users#show_user_posts'
+      get 'show_user_like_posts/:id' => 'users#show_user_like_posts'
+      get 'show_user_comments/:id'   => 'users#show_user_comments'
+      # post
+      get 'find_comments/:id'        => 'posts#find_comments'
+      # like
+      get 'render_is_like_and_likes_count/:id' => 'likes#render_is_like_and_likes_count'
+      # relationship
+      get 'find_following/:id'       => 'relationships#find_following'
+      get 'find_followers/:id'       => 'relationships#find_followers'
     end
   end
 end

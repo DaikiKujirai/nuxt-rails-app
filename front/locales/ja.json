@@ -1,27 +1,27 @@
 {
   "menus": {
-    "users" : "会員一覧",
-    "posts" : "ホーム",
-    "search": "投稿を検索",
-    "notification": "通知",
-    "chat": "チャット",
-    "follow": "フォロー",
-    "follower": "フォロワー"
+    "users"       : "会員一覧"  ,
+    "posts"       : "ホーム"    ,
+    "search"      : "投稿を検索" ,
+    "notification": "通知"      ,
+    "chat"        : "チャット"  ,
+    "follow"      : "フォロー"  ,
+    "follower"    : "フォロワー"
   },
   "pages": {
-    "auth-signup": "会員登録",
-    "auth-login" : "ログイン",
-    "logout": "ログアウト",
-    "account": {
-      "settings": "アカウント設定",
-      "password": "パスワード変更"
+    "auth-signup": "会員登録"     ,
+    "auth-login" : "ログイン"     ,
+    "logout"     : "ログアウト"   ,
+    "account"    : {
+      "settings" : "アカウント設定",
+      "password" : "パスワード変更"
     },
-    "users" : "会員一覧",
-    "posts" : "ホーム",
-    "search": "投稿を検索",
-    "notification": "通知",
-    "chat": "チャット",
-    "follow": "フォロー",
-    "follower": "フォロワー"
+    "posts"        : "ホーム"    ,
+    "posts-id"     : "投稿"     ,
+    "search"       : "投稿を検索",
+    "notification" : "通知"     ,
+    "chat"         : "チャット"  ,
+    "follow"       : "フォロー"  ,
+    "follower"     : "フォロワー"
   }
 }

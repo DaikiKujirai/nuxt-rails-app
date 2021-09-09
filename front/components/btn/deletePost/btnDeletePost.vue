@@ -1,12 +1,10 @@
 <template>
   <div>
     <v-btn
+      icon
       :color="btnColor"
-      text
-      rounded
       @click.prevent.stop="dialog = true"
     >
-      削除
       <v-icon v-text="'mdi-delete-empty'" />
     </v-btn>
     <v-dialog
@@ -52,7 +50,7 @@ export default {
       type: Object,
       required: true
     },
-    isIndex: {
+    isList: {
       type: Boolean,
       required: true
     }
@@ -69,17 +67,20 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      commentsCountPagePostIdDecrement: 'commentsCountPagePostIdDecrement'
     }),
     async clickOK () {
       await this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
-          if (this.$route.name === 'users-id') {
-            this.fetchUser()
-          } else if (this.isIndex) {
-            this.fetchPosts()
-          } else {
+          this.rollBackPage()
+          if (this.$route.name === 'posts-id' && this.isList) {
+            this.fetchContents()
+            this.commentsCountPagePostIdDecrement()
+          } else if (this.$route.name === 'posts-id' && !this.isList) {
             this.$router.replace('/posts')
+          } else {
+            this.fetchContents()
           }
           this.dialog = false
           this.flashMessage({ message: '削除しました', type: 'primary', status: true })
@@ -89,11 +90,14 @@ export default {
           console.log('投稿の削除に失敗', err)
         })
     },
-    fetchPosts () {
-      this.$emit('fetchPosts')
+    fetchContents () {
+      this.$emit('fetchContents')
     },
-    fetchUser () {
-      this.$emit('fetchUser')
+    commentsCountDecrement () {
+      this.$emit('commentsCountDecrement')
+    },
+    rollBackPage () {
+      this.$emit('rollBackPage')
     }
   }
 }

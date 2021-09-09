@@ -30,7 +30,9 @@ export default {
     'plugins/myInject',
     'plugins/firebase',
     '~/plugins/authenticate.js',
-    { src: '~plugins/persistedstate.js', ssr: false }
+    { src: '~plugins/persistedstate.js', ssr: false },
+    { src: '~/plugins/infiniteloading', ssr: false },
+    '~plugins/day.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

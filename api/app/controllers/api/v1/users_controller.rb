@@ -1,4 +1,5 @@
 class Api::V1::UsersController < ApplicationController
+  include Pagination
   def index
     users = User.all
     render json: users.as_json(only: %i[id name introduction])
@@ -6,15 +7,7 @@ class Api::V1::UsersController < ApplicationController
 
   def show
     user = User.find(params[:id])
-    render json: user, include: [
-                              :posts                          ,
-                              :like_posts                     ,
-                              :comments                       ,
-                              :like_comments                  ,
-                              { posts:         [:like_posts] },
-                              { posts:         [:comments]   },
-                              { comments:      [:user]       },
-                            ]
+    render json: user
   end
 
   def create
@@ -27,39 +20,63 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def update
+    user = User.find(params[:user][:id])
+    if user.update(user_params)
+      render json: user
+    else
+      render json: { errors_message: '失敗しました' }
+    end
+  end
+
   def find_login_user
     user = User.find_by(uid: params[:uid])
     render json: user
   end
 
-  def search_likes
-    like_posts = []
-    like_comments = []
+  def show_user_posts
+    user_posts = Post.find_user_posts(params[:id]).page(params[:page]).per(5)
+    pagination = resources_with_pagination(user_posts)
+    object     = { user_posts: user_posts, kaminari: pagination }
+    render json: object
+  end
 
-    params[:like_post_ids].each do |post_id|
-      like_posts.push(Post.find(post_id))
+  def show_user_like_posts
+    user_likes      = Like.find_user_likes(params[:id]).page(params[:page]).per(5)
+    user_like_posts = Post.find_user_like_posts(user_likes)
+    pagination      = resources_with_pagination(user_likes)
+    object          = { user_like_posts: user_like_posts, kaminari: pagination }
+    render json: object
+  end
+
+  def show_user_comments
+    user_comments = Post.find_user_comments(params[:id]).page(params[:page]).per(5)
+    pagination    = resources_with_pagination(user_comments)
+    object        = { user_comments: user_comments, kaminari: pagination }
+    render json: object
+  end
+
+  def is_following
+    if Relationship.exists?(user_id: params[:id], follow_id: params[:user_id])
+      render json: true
+    else
+      render json: false
     end
-
-    params[:like_comment_ids].each do |comment_id|
-      like_comments.push(Comment.find(comment_id))
-    end
-
-    likes = like_posts.concat(like_comments)
-
-    render json: likes, include: :user
   end
 
   private
 
   def user_params
     params.require(:user).permit(
-      :name,
-      :email,
-      :uid,
-      :introduction,
-      :is_active,
-      :admin
-    )
+                                :name        ,
+                                :email       ,
+                                :uid         ,
+                                :avatar      ,
+                                :cover_image ,
+                                :introduction,
+                                :is_active   ,
+                                :admin
+                              )
   end
 
 end

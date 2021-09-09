@@ -5,7 +5,7 @@
     :counter="max"
     label="ユーザー名を入力"
     placeholder="あなたの表示名"
-    outlined
+    :outlined="outlined"
   />
 </template>
 
@@ -15,6 +15,10 @@ export default {
     name: {
       type: String,
       default: ''
+    },
+    outlined: {
+      type: Boolean,
+      required: true
     }
   },
   data () {

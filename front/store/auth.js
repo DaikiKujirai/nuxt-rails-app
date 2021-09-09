@@ -48,6 +48,10 @@ export const actions = {
       })
   },
 
+  updateCurrentUser ({ commit }, user) {
+    commit('setData', user)
+  },
+
   logout ({ commit }) {
     firebase.auth().signOut()
       .then(() => {

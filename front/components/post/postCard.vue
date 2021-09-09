@@ -1,0 +1,107 @@
+<template>
+  <div>
+    <template v-if="$route.name === 'users-id'">
+      <v-divider class="mb-2" />
+    </template>
+    <v-row>
+      <v-col
+        class="d-flex"
+      >
+        <v-img
+          :src="avatar"
+          max-height="70"
+          max-width="70"
+          contain
+          style="border-radius: 50%;"
+          class="ml-3"
+          @click.prevent.stop="toShow('users', post.user_id)"
+        />
+        <v-card-text>
+          {{ user.name }}
+        </v-card-text>
+        <v-card-text
+          class="text-right"
+        >
+          <v-icon
+            size="16"
+            v-text="'mdi-update'"
+          />
+          {{ $my.format(post.created_at) }}
+        </v-card-text>
+      </v-col>
+    </v-row>
+    <template v-if="post.post_id !== 0">
+      <v-row>
+        <v-col class="py-0">
+          <span class="pt-2 pl-2">
+            返信先：
+          </span>
+          <u
+            style="cursor: pointer;"
+            @click.prevent.stop="toShow('users', replyToUser.id)"
+          >
+            {{ replyToUser.name }}
+          </u>
+          <span>
+            さん
+          </span>
+        </v-col>
+      </v-row>
+    </template>
+    <v-row>
+      <v-col>
+        <v-card-title
+          class="mx-3 pa-0"
+        >
+          {{ post.content }}
+        </v-card-title>
+        <template v-if="post.image">
+          <v-img
+            :src="post.image.url"
+            max-height="400"
+            max-width="400"
+            contain
+            class="ma-3"
+          />
+        </template>
+      </v-col>
+    </v-row>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    post: {
+      type: Object,
+      required: true
+    }
+  },
+  data () {
+    return {
+      user: {},
+      replyToUser: {},
+      avatar: ''
+    }
+  },
+  created () {
+    this.$nextTick(() => {
+      this.fetchContents()
+    })
+  },
+  methods: {
+    fetchContents () {
+      const url = `/api/v1/posts/${this.post.id}`
+      this.$axios.get(url)
+        .then((res) => {
+          this.user = res.data.user
+          this.replyToUser = res.data.reply_to_user
+          this.avatar = res.data.user.avatar.url
+        })
+    },
+    toShow (page, id) {
+      this.$router.push(`/${page}/${id}`)
+    }
+  }
+}
+</script>

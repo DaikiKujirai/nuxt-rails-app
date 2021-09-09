@@ -3,9 +3,7 @@
     fluid
   >
     <v-row>
-      <sidebar
-        @fetchPosts="fetchPosts"
-      />
+      <sidebar />
       <v-col
         cols="6"
         offset="3"
@@ -16,16 +14,18 @@
             cols="6"
           >
             <v-card class="d-flex align-center">
-              <v-btn
-                icon
-                class="ml-3"
-                @click="pageBack"
-              >
-                <v-icon
-                  size="40"
-                  v-text="'mdi-arrow-left'"
-                />
-              </v-btn>
+              <template v-if="$route.name !== 'posts'">
+                <v-btn
+                  icon
+                  class="ml-3"
+                  @click="pageBack"
+                >
+                  <v-icon
+                    size="40"
+                    v-text="'mdi-arrow-left'"
+                  />
+                </v-btn>
+              </template>
               <breadcrumbs />
             </v-card>
           </v-col>
@@ -33,7 +33,6 @@
         <v-main>
           <div class="mt-5">
             <slot
-              ref="fetchPosts"
               name="layout-main"
             />
           </div>
@@ -43,6 +42,28 @@
         <v-card>
           サイドバー
         </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col>
+        <v-btn
+          icon
+          elevation="20"
+          height="80px"
+          width="80px"
+          fixed
+          right
+          bottom
+          color="info"
+          class="mb-10"
+          @click="toTop"
+        >
+          <v-icon
+            size="50"
+            color="dark"
+            v-text="'mdi-chevron-up'"
+          />
+        </v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -61,8 +82,11 @@ export default {
     pageBack () {
       this.$router.go(-1)
     },
-    fetchPosts () {
-      console.log(this)
+    toTop () {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
     }
   }
 }

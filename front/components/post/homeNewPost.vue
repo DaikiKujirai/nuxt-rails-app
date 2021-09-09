@@ -7,21 +7,32 @@
           v-model="isValid"
         >
           <v-row>
-            <v-col class="d-flex">
+            <v-col class="d-flex pb-0">
               <v-img
-                :src="src"
+                :src="currentUser.avatar.url"
                 max-height="70"
                 max-width="70"
                 contain
                 style="border-radius: 50%;"
               />
               <home-new-post-form-content
-                :content.sync="post.content"
+                :content.sync="content"
               />
             </v-col>
           </v-row>
           <v-row>
-            <v-col class="d-flex justify-end">
+            <v-col class="d-flex justify-end align-end pt-0">
+              <input-file-form
+                @setImageInPostImage="image = $event"
+                @setImageInPreview="preview = $event"
+              />
+              <v-img
+                :src="preview"
+                height="80px"
+                width="80px"
+                contain
+                class="mr-3"
+              />
               <v-btn
                 :disabled="!isValid || loading"
                 :loading="loading"
@@ -41,16 +52,21 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import homeNewPostFormContent from './homeNewPostForm.vue'
+import InputFileForm from './InputFileForm.vue'
 
 export default {
-  components: { homeNewPostFormContent },
+  components: {
+    homeNewPostFormContent,
+    InputFileForm
+  },
   data () {
     return {
       dialog: false,
       isValid: false,
       loading: false,
-      post: { content: '' },
-      src: 'https://picsum.photos/200/200'
+      content: '',
+      image: '',
+      preview: ''
     }
   },
   computed: {
@@ -64,11 +80,22 @@ export default {
     }),
     async submitPost () {
       this.loading = true
-      this.post.user_id = this.currentUser.id
-      await this.$axios.post('/api/v1/posts', this.post)
+      const formData = new FormData()
+      formData.append('post[user_id]', this.currentUser.id)
+      formData.append('post[content]', this.content)
+      if (this.image) {
+        formData.append('post[image]', this.image)
+      }
+      // const config = {
+      //   header: {
+      //     'content-type': 'multipart/form-data'
+      //   }
+      // }
+      await this.$axios.post('/api/v1/posts', formData)
         .then(() => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
-          this.fetchPosts()
+          this.rollBackPage()
+          this.fetchContents()
           this.loading = false
           this.dialog = false
           this.$refs.form.reset()
@@ -78,8 +105,11 @@ export default {
           this.loading = false
         })
     },
-    fetchPosts () {
-      this.$emit('fetchPosts')
+    rollBackPage () {
+      this.$emit('rollBackPage')
+    },
+    fetchContents () {
+      this.$emit('fetchContents')
     }
   }
 }

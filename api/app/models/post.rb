@@ -1,25 +1,36 @@
 class Post < ApplicationRecord
   belongs_to :user
-
-  has_many :comments     , dependent: :destroy
-  has_many :like_posts   , dependent: :destroy
+  has_many   :likes, dependent: :destroy
+  mount_uploader :image, ImageUploader
 
   validates :content, presence: true
 
+  scope :created_desc , -> { order(created_at: :desc) }
+
   class << self
-    def get_comment_and_user_data(post_comments)
-      post_comments.joins(:user).select("
-                                  comments.id,
-                                  comments.user_id,
-                                  comments.post_id,
-                                  comments.comment_id,
-                                  comments.content,
-                                  comments.created_at,
-                                  users.name AS user_name
-                                ")
-      # post_comments.joins(:like_comments).select("
-      #                                     like_comments.id
-      #                                   ")
+    def find_posts
+      where(post_id: 0).created_desc
     end
+
+    def find_post_comments(post_id)
+      where(post_id: post_id).created_desc
+    end
+
+    def find_user_posts(user_id)
+      where(user_id: user_id, post_id: 0).created_desc
+    end
+
+    def find_user_like_posts(user_likes)
+      user_like_posts = []
+      user_likes.each do |like|
+        user_like_posts.push(Post.find(like.post_id))
+      end
+      return user_like_posts
+    end
+
+    def find_user_comments(user_id)
+      where(user_id: user_id).where.not(post_id: 0).created_desc
+    end
+
   end
 end

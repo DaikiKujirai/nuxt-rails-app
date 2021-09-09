@@ -9,7 +9,7 @@
     :hide-details="noValidation"
     :append-icon="toggle.icon"
     :type="toggle.type"
-    outlined
+    :outlined="outlined"
     autocomplete="on"
     @click:append="show = !show"
   />
@@ -25,6 +25,10 @@ export default {
     noValidation: {
       type: Boolean,
       default: false
+    },
+    outlined: {
+      type: Boolean,
+      required: true
     }
   },
   data () {

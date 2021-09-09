@@ -8,17 +8,17 @@
               class="d-flex"
             >
               <v-img
-                :src="src"
+                :src="avatar"
                 max-height="70"
                 max-width="70"
                 contain
                 style="border-radius: 50%; cursor: pointer;"
                 class="ml-3"
-                @click.prevent.stop="toShowUser(post.user_id)"
+                @click.prevent.stop="toShow('users', post.user_id)"
               />
               <v-card-title
                 style="cursor: pointer;"
-                @click.prevent.stop="toShowUser(post.user_id)"
+                @click.prevent.stop="toShow('users', post.user_id)"
               >
                 {{ user.name }}
               </v-card-title>
@@ -31,6 +31,15 @@
               >
                 {{ post.content }}
               </v-card-title>
+              <template v-if="post.image">
+                <v-img
+                  :src="post"
+                  max-height="500"
+                  max-width="500"
+                  contain
+                  class="ma-3"
+                />
+              </template>
             </v-col>
           </v-row>
           <v-row>
@@ -46,73 +55,39 @@
           </v-row>
           <v-divider class="mx-3" />
           <v-row>
-            <v-col class="d-flex text-center">
+            <v-col class="d-flex text-center pa-0">
               <v-card-text>
                 0 件のリツイート
               </v-card-text>
               <v-card-text>
-                {{ commentsCount }} 件のコメント
+                {{ commentsCountPagePostId }} 件のコメント
               </v-card-text>
               <v-card-text>
-                {{ likeCount }} 件のいいね
+                {{ likesCountPagePostId }} 件のいいね
               </v-card-text>
             </v-col>
           </v-row>
-          <v-divider class="mx-3" />
+          <v-divider class="mx-3 mb-1" />
           <template v-if="isAuthenticated">
-            <v-row>
-              <v-col>
-                <v-card-actions class="justify-space-around">
-                  <btn-new-comment
-                    :post="post"
-                    :user="user"
-                    :comments="comments"
-                    :is-index="isIndex"
-                    @fetchPost="fetchPost"
-                  />
-                  <template v-if="post.user_id !== currentUser.id">
-                    <v-btn
-                      :color="btnColor"
-                      text
-                    >
-                      <v-icon v-text="'mdi-twitter-retweet'" />
-                    </v-btn>
-                  </template>
-                  <like-post
-                    :post="post"
-                    :like-posts="likePosts"
-                    :like-post-count="likeCount"
-                    @likeCountIncrement="likeCountIncrement"
-                    @likeCountDecrement="likeCountDecrement"
-                  />
-                  <template v-if="post.user_id === currentUser.id">
-                    <btn-edit-post
-                      :post="post"
-                      :is-index="isIndex"
-                      @fetchPost="fetchPost"
-                    />
-                    <btn-delete-post
-                      :post="post"
-                      :is-index="isIndex"
-                      @fetchPost="fetchPost"
-                    />
-                  </template>
-                </v-card-actions>
-                <v-divider class="mx-3" />
-              </v-col>
-            </v-row>
-            <page-id-post-comment-form
+            <actions
               :post="post"
-              @fetchPost="fetchPost"
+              :is-list="isList"
+              @rollBackPage="rollBackPage"
+              @fetchContents="fetchContents"
+            />
+            <v-divider class="mx-3 mt-1" />
+            <page-id-comment-form
+              :post="post"
+              @fetchContents="fetchContents"
             />
           </template>
         </v-card>
       </v-col>
     </v-row>
-    <post-comment
+    <comments
+      ref="child"
       :post="post"
-      :user="user"
-      @fetchPost="fetchPost"
+      @fetchContents="fetchContents"
     />
   </layout-main>
 </template>
@@ -120,68 +95,58 @@
 <script>
 import { mapGetters } from 'vuex'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import BtnNewComment from '../../components/btn/comment/btnNewComment.vue'
-import LikePost from '../../components/btn/like/likePost.vue'
-import BtnEditPost from '../../components/btn/editPost/btnEditPost.vue'
-import BtnDeletePost from '../../components/btn/deletePost/btnDeletePost.vue'
-import PostComment from '../../components/comment/postComments.vue'
-import PageIdPostCommentForm from '../../components/comment/pageIdPostComment.vue'
+import PageIdCommentForm from '../../components/comment/pageIdCommentForm.vue'
+import Comments from '../../components/comment/comments.vue'
+import Actions from '../../components/loggedIn/mainCard/actions.vue'
 
 export default {
   components: {
     LayoutMain,
-    BtnNewComment,
-    LikePost,
-    BtnEditPost,
-    PostComment,
-    BtnDeletePost,
-    PageIdPostCommentForm
+    PageIdCommentForm,
+    Comments,
+    Actions
   },
   data () {
     return {
       post: {},
       user: {},
-      comments: [],
-      likePosts: [],
-      commentsCount: 0,
-      likeCount: 0,
+      avatar: '',
       time: '',
-      src: 'https://picsum.photos/200/200',
-      isIndex: false
+      isList: false
     }
   },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
-      btnColor: 'btn/color'
+      btnColor: 'btn/color',
+      commentsCountPagePostId: 'post/commentsCountPagePostId',
+      likesCountPagePostId: 'like/likesCountPagePostId'
     })
   },
   created () {
-    this.fetchPost()
+    this.fetchContents()
   },
   methods: {
-    async fetchPost () {
+    async fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.post = res.data
+          this.post = res.data.post
           this.user = res.data.user
-          this.comments = res.data.comments
-          this.commentsCount = res.data.comments.length
-          this.likePosts = res.data.like_posts
-          this.likeCount = res.data.like_posts.length
+          this.avatar = res.data.user.avatar.url
           this.time = this.$my.format(this.post.created_at)
+          this.fetchComments()
         })
     },
-    likeCountIncrement () {
-      this.likeCount++
+    fetchComments () {
+      this.$refs.child.fetchComments()
     },
-    likeCountDecrement () {
-      this.likeCount--
+    rollBackPage () {
+      this.$refs.child.rollBackPage()
     },
-    toShowUser (id) {
-      this.$router.push(`/users/${id}`)
+    toShow (page, id) {
+      this.$router.push(`/${page}/${id}`)
     }
   }
 }

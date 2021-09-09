@@ -4,7 +4,7 @@
     :rules="rules"
     label="メールアドレスを入力"
     :placeholder="form.placeholder"
-    outlined
+    :outlined="outlined"
   />
 </template>
 
@@ -18,6 +18,10 @@ export default {
     noValidation: {
       type: Boolean,
       default: false
+    },
+    outlined: {
+      type: Boolean,
+      required: true
     }
   },
   data () {

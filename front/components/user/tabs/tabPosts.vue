@@ -1,121 +1,57 @@
 <template>
   <v-tab-item class="mb-2">
     <v-row
-      v-for="post in userPosts"
+      v-for="post in posts"
       :key="post.id"
       style="cursor: pointer;"
-      @click="toShowPost(post.id)"
+      @click="toShow('posts', post.id)"
     >
       <v-col>
-        <v-divider />
-        <v-row>
-          <v-col
-            class="d-flex"
-          >
-            <v-img
-              :src="src"
-              max-height="70"
-              max-width="70"
-              contain
-              style="border-radius: 50%;"
-              class="ml-3 mt-3"
-            />
-            <v-col cols="7">
-              <v-card-title>
-                {{ user.name }}
-              </v-card-title>
-            </v-col>
-            <v-card-text
-              class="text-right"
-            >
-              <v-icon
-                size="16"
-                v-text="'mdi-update'"
-              />
-              {{ $my.format(post.created_at) }}
-            </v-card-text>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <v-card-title
-              class="card-content"
-            >
-              {{ post.content }}
-            </v-card-title>
-          </v-col>
-        </v-row>
+        <post-card
+          :post="post"
+        />
         <template v-if="isAuthenticated">
-          <v-row>
-            <v-col>
-              <v-card-actions class="justify-space-around pa-0">
-                <btn-new-comment
-                  :post="post"
-                  :user="user"
-                  :comments="post.comments"
-                  :is-index="isIndex"
-                />
-                <template v-if="post.user_id !== currentUser.id">
-                  <v-btn
-                    :color="btnColor"
-                    text
-                  >
-                    <v-icon v-text="'mdi-twitter-retweet'" />
-                  </v-btn>
-                </template>
-                <like-post
-                  :post="post"
-                  :like-posts="post.like_posts"
-                />
-                <template v-if="user.id === currentUser.id">
-                  <btn-edit-post
-                    :post="post"
-                    :is-index="isIndex"
-                    @fetchUser="fetchUser"
-                  />
-                  <btn-delete-post
-                    :post="post"
-                    :is-index="isIndex"
-                    @fetchUser="fetchUser"
-                  />
-                </template>
-              </v-card-actions>
-            </v-col>
-          </v-row>
+          <actions
+            :post="post"
+            :is-list="isList"
+            @rollBackPage="rollBackPage"
+            @fetchContents="fetchContents"
+          />
         </template>
       </v-col>
     </v-row>
+    <infinite-scroll
+      :page="page"
+      :url="url"
+      @pushContents="pushContents"
+      @pageIncrement="pageIncrement"
+    />
   </v-tab-item>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import BtnNewComment from '../../btn/comment/btnNewComment.vue'
-import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
-import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
-import LikePost from '../../btn/like/likePost.vue'
+import Actions from '../../loggedIn/mainCard/actions.vue'
+import PostCard from '../../post/postCard.vue'
 
 export default {
   components: {
-    BtnNewComment,
-    LikePost,
-    BtnEditPost,
-    BtnDeletePost
+    Actions,
+    PostCard
   },
   props: {
     user: {
       type: Object,
       required: true
-    },
-    posts: {
-      type: Array,
-      required: true
     }
   },
   data () {
     return {
+      posts: [],
+      page: 1,
+      url: `/api/v1/show_user_posts/${this.$route.params.id}`,
       src: 'https://picsum.photos/200/200',
-      isIndex: true
+      isList: true
     }
   },
   computed: {
@@ -123,24 +59,27 @@ export default {
       isAuthenticated: 'auth/isAuthenticated',
       currentUser: 'auth/data',
       btnColor: 'btn/color'
-    }),
-    userPosts () {
-      const userPosts = this.posts
-      return userPosts.sort((a, b) => {
-        if (a.created_at > b.created_at) { return -1 }
-        if (a.created_at < b.created_at) { return 1 }
-        return 0
-      })
-    }
-  },
-  mounted () {
+    })
   },
   methods: {
-    toShowPost (id) {
-      this.$router.push(`/posts/${id}`)
+    async fetchContents () {
+      const url = `/api/v1/show_user_posts/${this.user.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.posts = res.data.user_posts
+        })
     },
-    fetchUser () {
-      this.$emit('fetchUser')
+    toShow (page, id) {
+      this.$router.push(`/${page}/${id}`)
+    },
+    rollBackPage () {
+      this.page = 1
+    },
+    pageIncrement () {
+      this.page++
+    },
+    pushContents (res) {
+      this.posts.push(...res.data.user_posts)
     }
   }
 }

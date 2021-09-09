@@ -2,11 +2,9 @@
   <div>
     <v-btn
       :color="btnColor"
-      text
-      rounded
+      icon
       @click.prevent.stop="dialog = true"
     >
-      編集
       <v-icon v-text="'mdi-lead-pencil'" />
     </v-btn>
     <v-dialog
@@ -63,7 +61,7 @@ export default {
       type: Object,
       required: true
     },
-    isIndex: {
+    isList: {
       type: Boolean,
       required: true
     }
@@ -92,12 +90,11 @@ export default {
       this.loading = true
       await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
         .then(() => {
-          if (this.$route.name === 'users-id') {
-            this.fetchUser()
-          } else if (this.isIndex) {
-            this.fetchPosts()
+          this.rollBackPage()
+          if (this.$route.name === 'posts-id' && !this.isList) {
+            this.fetchContents()
           } else {
-            this.fetchPost()
+            this.$router.push(`/posts/${this.post.id}`)
           }
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
@@ -110,14 +107,11 @@ export default {
           this.loading = false
         })
     },
-    fetchPosts () {
-      this.$emit('fetchPosts')
+    fetchContents () {
+      this.$emit('fetchContents')
     },
-    fetchPost () {
-      this.$emit('fetchPost')
-    },
-    fetchUser () {
-      this.$emit('fetchUser')
+    rollBackPage () {
+      this.$emit('rollBackPage')
     }
   }
 }
