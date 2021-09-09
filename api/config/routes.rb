@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       get 'show_user_posts/:id'      => 'users#show_user_posts'
       get 'show_user_like_posts/:id' => 'users#show_user_like_posts'
       get 'show_user_comments/:id'   => 'users#show_user_comments'
+      put 'update_account/:id'       => 'users#update_account'
       # post
       get 'find_comments/:id'        => 'posts#find_comments'
       # like
