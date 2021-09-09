@@ -27,16 +27,11 @@ export default {
   methods: {
     // 画像を選択時に画像データをエンコード //
     async setImage () {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a464482 ([add] edit_profile)
       const pageEdit = this.$route.name === 'users-edit'
       const typeChange = event.type === 'change'
       const labelAvatar = this.$options.propsData.label === 'プロフィール画像を選択してください'
       const labelCoverImage = this.$options.propsData.label === 'カバー画像を選択してください'
       if (!pageEdit && !typeChange) {
-<<<<<<< HEAD
         this.setImageInPreview('')
         return
       } else if (!pageEdit && !event.target.files.length) {
@@ -54,31 +49,6 @@ export default {
       } else if (pageEdit && !event.target.files.length && labelCoverImage) {
         this.setImageInPreview(this.currentUser.cover_image.url)
         return
-=======
-      if (event.type !== 'change') {
-=======
->>>>>>> a464482 ([add] edit_profile)
-        this.setImageInPreview('')
-        return
-      } else if (!pageEdit && !event.target.files.length) {
-        this.setImageInPreview('')
-        return
-<<<<<<< HEAD
->>>>>>> af3e88e ([fix] S3)
-=======
-      } else if (pageEdit && !typeChange && labelAvatar) {
-        this.setImageInPreview(this.currentUser.avatar.url)
-        return
-      } else if (pageEdit && !typeChange && labelCoverImage) {
-        this.setImageInPreview(this.currentUser.cover_image.url)
-        return
-      } else if (pageEdit && !event.target.files.length && labelAvatar) {
-        this.setImageInPreview(this.currentUser.avatar.url)
-        return
-      } else if (pageEdit && !event.target.files.length && labelCoverImage) {
-        this.setImageInPreview(this.currentUser.cover_image.url)
-        return
->>>>>>> a464482 ([add] edit_profile)
       }
       const images = event.target.files || event.dataTransfer.files
       this.setImageInPostImage(event.target.files[0])

@@ -63,17 +63,6 @@
               </v-btn>
             </v-col>
           </v-row>
-          <v-row>
-            <v-col class="text-center mb-3">
-              <v-btn
-                rounded
-                color="success"
-                @click="submitEdit"
-              >
-                プロフィールを更新
-              </v-btn>
-            </v-col>
-          </v-row>
         </v-card>
       </v-col>
     </v-row>
@@ -99,19 +88,9 @@ export default {
       name: '',
       introduction: '',
       coverImage: '',
-<<<<<<< HEAD
-<<<<<<< HEAD
       avatar: '',
       editAvatar: '',
       editCoverImage: ''
-=======
-      avatar: ''
->>>>>>> af3e88e ([fix] S3)
-=======
-      avatar: '',
-      editAvatar: '',
-      editCoverImage: ''
->>>>>>> a464482 ([add] edit_profile)
     }
   },
   computed: {
@@ -129,17 +108,8 @@ export default {
   },
   methods: {
     ...mapActions({
-<<<<<<< HEAD
-<<<<<<< HEAD
       flashMessage: 'flash/flashMessage',
       updateCurrentUser: 'auth/updateCurrentUser'
-=======
-      flashMessage: 'flash/flashMessage'
->>>>>>> af3e88e ([fix] S3)
-=======
-      flashMessage: 'flash/flashMessage',
-      updateCurrentUser: 'auth/updateCurrentUser'
->>>>>>> a464482 ([add] edit_profile)
     }),
     async submitEdit () {
       this.loading = true
@@ -147,40 +117,20 @@ export default {
       formData.append('user[id]', this.currentUser.id)
       formData.append('user[name]', this.name)
       formData.append('user[introduction]', this.introduction)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
->>>>>>> a464482 ([add] edit_profile)
       if (this.editAvatar) {
         formData.append('user[avatar]', this.editAvatar)
       }
       if (this.editCoverImage) {
         formData.append('user[cover_image]', this.editCoverImage)
       }
-<<<<<<< HEAD
-=======
-      formData.append('user[avatar]', this.avatar)
-      formData.append('user[cover_image]', this.cover_image)
->>>>>>> af3e88e ([fix] S3)
-=======
->>>>>>> a464482 ([add] edit_profile)
       // const config = {
       //   header: {
       //     'content-type': 'multipart/form-data'
       //   }
       // }
       await this.$axios.patch(`/api/v1/users/${this.currentUser.id}`, formData)
-<<<<<<< HEAD
-<<<<<<< HEAD
         .then((res) => {
           this.updateCurrentUser(res.data)
-=======
-        .then(() => {
->>>>>>> af3e88e ([fix] S3)
-=======
-        .then((res) => {
-          this.updateCurrentUser(res.data)
->>>>>>> a464482 ([add] edit_profile)
           this.flashMessage({ message: 'プロフィールを更新しました', type: 'success', status: true })
           this.$router.push(`/users/${this.currentUser.id}`)
           this.loading = false
