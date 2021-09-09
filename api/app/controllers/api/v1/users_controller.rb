@@ -20,6 +20,15 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def update
+    user = User.find(params[:user][:id])
+    if user.update(user_params)
+      render json: user
+    else
+      render json: { errors_message: '失敗しました' }
+    end
+  end
+
   def find_login_user
     user = User.find_by(uid: params[:uid])
     render json: user

@@ -58,8 +58,8 @@ ActiveRecord::Schema.define(version: 2021_08_31_145623) do
     t.string "name", null: false
     t.string "email", null: false
     t.string "uid", null: false
-    t.string "avatar", default: "default.png", null: false
-    t.string "cover_image", default: "cover.jpeg", null: false
+    t.string "avatar"
+    t.string "cover_image"
     t.string "introduction", default: "よろしくお願いします。", null: false
     t.boolean "is_active", default: false, null: false
     t.boolean "admin", default: false, null: false

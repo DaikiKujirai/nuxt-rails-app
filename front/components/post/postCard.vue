@@ -7,9 +7,8 @@
       <v-col
         class="d-flex"
       >
-        {{ post }}
         <v-img
-          :src="post.user_avatar.url"
+          :src="avatar"
           max-height="70"
           max-width="70"
           contain
@@ -18,7 +17,7 @@
           @click.prevent.stop="toShow('users', post.user_id)"
         />
         <v-card-text>
-          {{ post.user_name }}
+          {{ user.name }}
         </v-card-text>
         <v-card-text
           class="text-right"
@@ -80,22 +79,24 @@ export default {
   },
   data () {
     return {
-      replyToUser: {}
+      user: {},
+      replyToUser: {},
+      avatar: ''
     }
   },
-  mounted () {
+  created () {
     this.$nextTick(() => {
-      if (this.post.post_id !== 0) {
-        this.fetchContents()
-      }
+      this.fetchContents()
     })
   },
   methods: {
     fetchContents () {
-      const url = `/api/v1/posts/${this.post.post_id}`
+      const url = `/api/v1/posts/${this.post.id}`
       this.$axios.get(url)
         .then((res) => {
-          this.replyToUser = res.data.user
+          this.user = res.data.user
+          this.replyToUser = res.data.reply_to_user
+          this.avatar = res.data.user.avatar.url
         })
     },
     toShow (page, id) {

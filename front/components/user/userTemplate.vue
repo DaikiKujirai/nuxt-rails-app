@@ -6,7 +6,7 @@
         class="d-flex"
       >
         <v-img
-          :src="src"
+          :src="user.avatar.url"
           max-height="70"
           max-width="70"
           contain

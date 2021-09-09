@@ -9,8 +9,11 @@ class Api::V1::PostsController < ApplicationController
 
   def show
     post        = {}
-    post[:post] = Post.select_detail.find(params[:id])
+    post[:post] = Post.find(params[:id])
     post[:user] = User.find(post[:post].user_id)
+    if post[:post].post_id != 0
+      post[:reply_to_user] = User.find(post[:post].user_id)
+    end
     render json: post
   end
 

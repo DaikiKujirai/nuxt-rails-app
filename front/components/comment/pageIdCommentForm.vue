@@ -7,7 +7,7 @@
       <v-row>
         <v-col class="d-flex">
           <v-img
-            :src="src"
+            :src="currentUser.avatar.url"
             max-height="70"
             max-width="70"
             contain
@@ -52,8 +52,7 @@ export default {
     return {
       isValid: false,
       loading: false,
-      newComment: { content: '' },
-      src: 'https://picsum.photos/200/200'
+      newComment: { content: '' }
     }
   },
   computed: {

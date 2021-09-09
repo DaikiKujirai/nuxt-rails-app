@@ -8,7 +8,7 @@
               class="d-flex"
             >
               <v-img
-                :src="src"
+                :src="avatar"
                 max-height="70"
                 max-width="70"
                 contain
@@ -20,7 +20,7 @@
                 style="cursor: pointer;"
                 @click.prevent.stop="toShow('users', post.user_id)"
               >
-                {{ post.user_name }}
+                {{ user.name }}
               </v-card-title>
             </v-col>
           </v-row>
@@ -110,6 +110,7 @@ export default {
     return {
       post: {},
       user: {},
+      avatar: '',
       time: '',
       isList: false
     }
@@ -132,6 +133,8 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.post = res.data.post
+          this.user = res.data.user
+          this.avatar = res.data.user.avatar.url
           this.time = this.$my.format(this.post.created_at)
           this.fetchComments()
         })

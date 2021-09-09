@@ -7,7 +7,7 @@
           v-model="isValid"
         >
           <v-row>
-            <v-col class="d-flex">
+            <v-col class="d-flex pb-0">
               <v-img
                 :src="currentUser.avatar.url"
                 max-height="70"
@@ -21,14 +21,18 @@
             </v-col>
           </v-row>
           <v-row>
-            <v-col class="d-flex justify-end">
+            <v-col class="d-flex justify-end align-end pt-0">
               <input-file-form
                 @setImageInPostImage="image = $event"
+                @setImageInPreview="preview = $event"
               />
-              <!-- <v-img
+              <v-img
                 :src="preview"
+                height="80px"
+                width="80px"
+                contain
                 class="mr-3"
-              /> -->
+              />
               <v-btn
                 :disabled="!isValid || loading"
                 :loading="loading"
