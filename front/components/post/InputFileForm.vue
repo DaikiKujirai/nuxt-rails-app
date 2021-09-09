@@ -25,7 +25,6 @@ export default {
     })
   },
   methods: {
-    // 画像を選択時に画像データをエンコード //
     setImage () {
       const pageEdit = this.$route.name === 'users-edit'
       const typeChange = event.type === 'change'

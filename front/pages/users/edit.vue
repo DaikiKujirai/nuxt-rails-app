@@ -15,7 +15,7 @@
                 />
                 <input-file-form
                   :label="labelCoverImage"
-                  class="mx-15 mt-3 coverImage"
+                  class="mx-15 mt-3"
                   @setImageInPreview="coverImage = $event"
                   @setImageInPostImage="editCoverImage = $event"
                 />
@@ -29,7 +29,7 @@
                   max-width="120"
                   contain
                   style="border-radius: 50%;"
-                  class="ml-10 avatar"
+                  class="ml-10"
                 />
                 <input-file-form
                   :label="labelAvatar"

@@ -4,7 +4,7 @@
     :rules="form.rules"
     :counter="!noValidation"
     :hint="form.hint"
-    label="パスワードを入力"
+    :label="label"
     :placeholder="form.placeholder"
     :hide-details="noValidation"
     :append-icon="toggle.icon"
@@ -29,6 +29,10 @@ export default {
     outlined: {
       type: Boolean,
       required: true
+    },
+    label: {
+      type: String,
+      default: 'パスワードを入力'
     }
   },
   data () {
