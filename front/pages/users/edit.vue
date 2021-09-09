@@ -2,68 +2,75 @@
   <layoutMain #layout-main> <!--eslint-disable-line-->
     <v-row>
       <v-col>
-        <v-card>
-          <v-row>
-            <v-col class="pb-0">
-              <v-img
-                :src="coverImage"
-                height="250"
-              />
-              <input-file-form
-                :label="labelCoverImage"
-                class="mx-15 mt-3 coverImage"
-                @setImageInPreview="coverImage = $event"
-                @setImageInPostImage="editCoverImage = $event"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col class="d-flex pt-0">
-              <v-img
-                :src="avatar"
-                max-height="120"
-                max-width="120"
-                contain
-                style="border-radius: 50%;"
-                class="ml-10 avatar"
-              />
-              <input-file-form
-                :label="labelAvatar"
-                class="mx-8 mt-10"
-                @setImageInPreview="avatar = $event"
-                @setImageInPostImage="editAvatar = $event"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col class="px-15">
-              <user-form-name
-                :name.sync="name"
-                :outlined="false"
-                class="mx-15"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col class="px-15 pb-0">
-              <user-form-introduction
-                :introduction.sync="introduction"
-                class="mx-15"
-              />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col class="text-center mb-3">
-              <v-btn
-                rounded
-                color="success"
-                @click="submitEdit"
-              >
-                プロフィールを更新
-              </v-btn>
-            </v-col>
-          </v-row>
-        </v-card>
+        <v-form
+          ref="form"
+          v-model="isValid"
+        >
+          <v-card>
+            <v-row>
+              <v-col class="pb-0">
+                <v-img
+                  :src="coverImage"
+                  height="250"
+                />
+                <input-file-form
+                  :label="labelCoverImage"
+                  class="mx-15 mt-3 coverImage"
+                  @setImageInPreview="coverImage = $event"
+                  @setImageInPostImage="editCoverImage = $event"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="d-flex pt-0">
+                <v-img
+                  :src="avatar"
+                  max-height="120"
+                  max-width="120"
+                  contain
+                  style="border-radius: 50%;"
+                  class="ml-10 avatar"
+                />
+                <input-file-form
+                  :label="labelAvatar"
+                  class="mx-8 mt-10"
+                  @setImageInPreview="avatar = $event"
+                  @setImageInPostImage="editAvatar = $event"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="px-15">
+                <user-form-name
+                  :name.sync="name"
+                  :outlined="false"
+                  class="mx-15"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="px-15 pb-0">
+                <user-form-introduction
+                  :introduction.sync="introduction"
+                  class="mx-15"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="text-center mb-3">
+                <v-btn
+                  :disabled="!isValid || loading"
+                  :loading="loading"
+                  rounded
+                  color="success"
+                  @click="submitEdit"
+                >
+                  プロフィールを更新
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-form>
       </v-col>
     </v-row>
   </layoutMain>
@@ -83,6 +90,8 @@ export default {
   },
   data () {
     return {
+      isValid: false,
+      loading: false,
       labelCoverImage: 'カバー画像を選択してください',
       labelAvatar: 'プロフィール画像を選択してください',
       name: '',
@@ -123,11 +132,6 @@ export default {
       if (this.editCoverImage) {
         formData.append('user[cover_image]', this.editCoverImage)
       }
-      // const config = {
-      //   header: {
-      //     'content-type': 'multipart/form-data'
-      //   }
-      // }
       await this.$axios.patch(`/api/v1/users/${this.currentUser.id}`, formData)
         .then((res) => {
           this.updateCurrentUser(res.data)

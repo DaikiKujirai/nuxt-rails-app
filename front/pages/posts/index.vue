@@ -46,7 +46,7 @@ import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import HomeNewPost from '../../components/post/homeNewPost.vue'
 import Actions from '../../components/loggedIn/mainCard/actions.vue'
 import PostCard from '../../components/post/postCard.vue'
-import InfiniteScroll from '../../components/infiniteScroll.vue'
+import InfiniteScroll from '../../components/ui/infiniteScroll.vue'
 
 export default {
   components: {
