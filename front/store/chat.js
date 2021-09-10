@@ -1,12 +1,16 @@
 import firebase from '~/plugins/firebase.js'
 
 export const state = () => ({
-  chats: []
+  chats: [],
+  messageRecipientUser: {}
 })
 
 export const getters = {
   chats (state) {
     return state.chats
+  },
+  messageRecipientUser (state) {
+    return state.messageRecipientUser
   }
 }
 
@@ -35,12 +39,14 @@ export const mutations = {
 
   clear (state) {
     state.chats = []
+  },
+  setMessageRecipientUser (state, payload) {
+    state.setMessageRecipientUser = payload
   }
 }
 
 export const actions = {
   subscribe ({ commit }, { roomId }) {
-    console.log(roomId, firebase)
     return firebase.firestore()
       .collection('rooms')
       .doc(roomId)
@@ -73,5 +79,9 @@ export const actions = {
 
   clear ({ commit }) {
     commit('clear')
+  },
+
+  setMessageRecipientUser ({ commit }, user) {
+    commit('setMessageRecipientUser', user)
   }
 }

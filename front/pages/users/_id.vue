@@ -33,7 +33,9 @@
                   <btn-edit-profile />
                 </template>
                 <template v-else>
-                  <btn-to-chat />
+                  <btn-to-chat
+                    :user="user"
+                  />
                   <btn-follow
                     ref="btnFollow"
                     :user="user"
