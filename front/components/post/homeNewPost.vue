@@ -13,7 +13,9 @@
                 max-height="70"
                 max-width="70"
                 contain
-                style="border-radius: 50%;"
+                style="border-radius: 50%; cursor: pointer;"
+                class="img"
+                @click="toMyPage"
               />
               <home-new-post-form-content
                 :content.sync="content"
@@ -86,11 +88,6 @@ export default {
       if (this.image) {
         formData.append('post[image]', this.image)
       }
-      // const config = {
-      //   header: {
-      //     'content-type': 'multipart/form-data'
-      //   }
-      // }
       await this.$axios.post('/api/v1/posts', formData)
         .then(() => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
@@ -105,6 +102,9 @@ export default {
           this.loading = false
         })
     },
+    toMyPage () {
+      this.$router.push(`/users/${this.currentUser.id}`)
+    },
     rollBackPage () {
       this.$emit('rollBackPage')
     },
@@ -114,3 +114,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .img:hover {
+    opacity: 0.7;
+  }
+</style>

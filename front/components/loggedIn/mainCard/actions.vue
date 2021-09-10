@@ -14,7 +14,7 @@
             :color="btnColor"
             text
           >
-            <v-icon v-text="'mdi-twitter-retweet'" />
+            <v-icon v-text="'mdi-repeat-variant'" />
           </v-btn>
         </template>
         <like

@@ -1,15 +1,22 @@
 <template>
   <div>
-    <v-btn
-      :color="btnColor"
-      icon
-      @click.prevent.stop="dialog = true"
-    >
-      <v-icon v-text="'mdi-lead-pencil'" />
-    </v-btn>
+    <v-tooltip bottom>
+      <template #activator="{ on, attrs }">
+        <v-btn
+          :color="btnColor"
+          icon
+          v-bind="attrs"
+          v-on="on"
+          @click.prevent.stop="dialog = true"
+        >
+          <v-icon v-text="'mdi-lead-pencil'" />
+        </v-btn>
+      </template>
+      <span>編集</span>
+    </v-tooltip>
     <v-dialog
       v-model="dialog"
-      width="500"
+      width="550"
     >
       <v-card>
         <div class="d-flex">
@@ -32,15 +39,34 @@
             <edit-post-form-content
               :content.sync="editPost.content"
             />
-            <v-btn
-              :disabled="!isValid || loading"
-              :loading="loading"
-              block
-              color="info"
-              @click="updatePost"
-            >
-              更新する
-            </v-btn>
+            <v-row>
+              <v-col class="d-flex">
+                <input-file-form
+                  @setImageInPostImage="image = $event"
+                  @setImageInPreview="preview = $event"
+                />
+                <v-img
+                  :src="preview"
+                  height="80px"
+                  width="80px"
+                  contain
+                  class="mb-3"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="text-center pt-0">
+                <v-btn
+                  :disabled="!isValid || loading"
+                  :loading="loading"
+                  rounded
+                  color="info"
+                  @click="updatePost"
+                >
+                  更新する
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-form>
         </v-container>
       </v-card>
@@ -51,10 +77,12 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import editPostFormContent from '../../post/editPostFormContent.vue'
+import InputFileForm from '../../post/InputFileForm.vue'
 
 export default {
   components: {
-    editPostFormContent
+    editPostFormContent,
+    InputFileForm
   },
   props: {
     post: {
@@ -71,7 +99,9 @@ export default {
       dialog: false,
       isValid: false,
       loading: false,
-      editPost: { content: '' }
+      editPost: { content: '' },
+      image: '',
+      preview: ''
     }
   },
   computed: {
@@ -81,6 +111,7 @@ export default {
   },
   mounted () {
     this.editPost.content = this.post.content
+    this.image = this.post.image.url
   },
   methods: {
     ...mapActions({
@@ -88,7 +119,14 @@ export default {
     }),
     async updatePost () {
       this.loading = true
-      await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, this.editPost)
+      const formData = new FormData()
+      formData.append('post[user_id]', this.post.user_id)
+      formData.append('post[post_id]', this.post.id)
+      formData.append('post[content]', this.editPost.content)
+      if (this.image) {
+        formData.append('post[image]', this.image)
+      }
+      await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, formData)
         .then(() => {
           this.rollBackPage()
           if (this.$route.name === 'posts-id' && !this.isList) {

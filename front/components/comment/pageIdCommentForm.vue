@@ -11,15 +11,28 @@
             max-height="70"
             max-width="70"
             contain
-            style="border-radius: 50%;"
+            style="border-radius: 50%; cursor: pointer;"
+            class="img"
+            @click.prevent.stop="toShow('users', post.user_id)"
           />
           <page-id-post-comment-form
-            :content.sync="newComment.content"
+            :content.sync="content"
           />
         </v-col>
       </v-row>
       <v-row>
-        <v-col class="d-flex justify-end">
+        <v-col class="d-flex justify-end align-end pt-0">
+          <input-file-form
+            @setImageInPostImage="image = $event"
+            @setImageInPreview="preview = $event"
+          />
+          <v-img
+            :src="preview"
+            height="80px"
+            width="80px"
+            contain
+            class="mr-3"
+          />
           <v-btn
             :disabled="!isValid || loading"
             :loading="loading"
@@ -36,11 +49,13 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import InputFileForm from '../post/InputFileForm.vue'
 import pageIdPostCommentForm from './pageIdCommentFormContent.vue'
 
 export default {
   components: {
-    pageIdPostCommentForm
+    pageIdPostCommentForm,
+    InputFileForm
   },
   props: {
     post: {
@@ -52,7 +67,9 @@ export default {
     return {
       isValid: false,
       loading: false,
-      newComment: { content: '' }
+      image: '',
+      preview: '',
+      content: ''
     }
   },
   computed: {
@@ -67,9 +84,14 @@ export default {
     }),
     async submitComment () {
       this.loading = true
-      this.newComment.user_id = this.currentUser.id
-      this.newComment.post_id = this.post.id
-      await this.$axios.$post('/api/v1/posts', this.newComment)
+      const formData = new FormData()
+      formData.append('post[user_id]', this.currentUser.id)
+      formData.append('post[content]', this.content)
+      formData.append('post[post_id]', this.post.id)
+      if (this.image) {
+        formData.append('post[image]', this.image)
+      }
+      await this.$axios.$post('/api/v1/posts', formData)
         .then(() => {
           this.commentsCountPagePostIdIncrement()
           this.fetchContents()
@@ -78,6 +100,7 @@ export default {
           this.$refs.form.reset()
         })
         .catch(() => {
+          this.loading = false
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
         })
     },

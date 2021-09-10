@@ -62,7 +62,7 @@
         <v-list-item
           two-line
           class="justify-center"
-          @click="goHome"
+          @click="toChat"
         >
           <v-icon
             size="28"
@@ -144,6 +144,9 @@ export default {
     },
     toFollow (tab) {
       this.$router.push(`/relationships/${this.currentUser.id}?tab=${tab}`)
+    },
+    toChat () {
+      this.$router.push(`/chat/${this.currentUser.id}`)
     }
   }
 }

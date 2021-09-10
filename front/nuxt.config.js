@@ -64,8 +64,8 @@ export default {
           measurementId: process.env.FIREBASE_MEASUREMENT_ID
         },
         services: {
-          auth: true
-          // firestore: true,
+          auth: true,
+          firestore: true
           // functions: true,
           // storage: true,
           // database: true,

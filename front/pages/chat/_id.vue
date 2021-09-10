@@ -5,13 +5,13 @@
     <v-row>
       <sidebar />
       <v-col
-        cols="6"
+        cols="4"
         offset="3"
       >
         <v-row>
           <v-col
             class="breadcrumbs"
-            cols="6"
+            cols="4"
           >
             <v-card class="d-flex align-center">
               <template v-if="$route.name !== 'posts'">
@@ -32,36 +32,29 @@
         </v-row>
         <v-main>
           <div class="mt-5">
-            <slot
-              name="layout-main"
-            />
+            <chat-list />
           </div>
         </v-main>
       </v-col>
-      <v-col cols="3">
-        <v-card>
-          サイドバー
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col>
-        <to-top />
+      <v-col cols="5">
+        <chat-message />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
-import ToTop from '../../btn/toTop.vue'
-import Sidebar from '../../loggedIn/sidebar/sidebar.vue'
-import Breadcrumbs from '../../loggedIn/ui/breadcrumbs.vue'
+import ChatList from '../../components/chat/chatList.vue'
+import ChatMessage from '../../components/chat/chatMessage.vue'
+import Sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
+import Breadcrumbs from '../../components/loggedIn/ui/breadcrumbs.vue'
 
 export default {
   components: {
     Sidebar,
     Breadcrumbs,
-    ToTop
+    ChatList,
+    ChatMessage
   },
   methods: {
     pageBack () {

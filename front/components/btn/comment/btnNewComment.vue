@@ -1,17 +1,24 @@
 <template>
   <div>
-    <v-btn
-      :color="btnColor"
-      icon
-      class="pl-1"
-      @click.prevent.stop="dialog = true"
-    >
-      <v-icon v-text="'mdi-chat-processing-outline'" />
-      &nbsp;
-    </v-btn>
+    <v-tooltip bottom>
+      <template #activator="{ on, attrs }">
+        <v-btn
+          :color="btnColor"
+          icon
+          class="pl-1"
+          v-bind="attrs"
+          v-on="on"
+          @click.prevent.stop="dialog = true"
+        >
+          <v-icon v-text="'mdi-chat-processing-outline'" />
+          &nbsp;
+        </v-btn>
+      </template>
+      <span>コメント</span>
+    </v-tooltip>
     <v-dialog
       v-model="dialog"
-      width="500"
+      width="550"
     >
       <v-card class="pa-2">
         <div class="d-flex">
@@ -33,7 +40,7 @@
             class="ml-2"
           />
           <v-card-title>
-            {{ post.user_name }}
+            {{ user.name }}
           </v-card-title>
         </div>
         <div class="d-flex">
@@ -48,7 +55,7 @@
             </v-card-subtitle>
             <v-spacer />
             <v-card-text>
-              返信先：{{ post.user_name }} さん
+              返信先：{{ user.name }} さん
             </v-card-text>
           </div>
         </div>
@@ -60,18 +67,34 @@
             <new-comment-form
               :content.sync="content"
             />
-            <input-file-form
-              @setImageInPostImage="image = $event"
-            />
-            <v-btn
-              :disabled="!isValid || loading"
-              :loading="loading"
-              block
-              color="info"
-              @click="submitComment"
-            >
-              投稿する
-            </v-btn>
+            <v-row>
+              <v-col class="d-flex">
+                <input-file-form
+                  @setImageInPostImage="image = $event"
+                  @setImageInPreview="preview = $event"
+                />
+                <v-img
+                  :src="preview"
+                  height="80px"
+                  width="80px"
+                  contain
+                  class="mb-2"
+                />
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="text-center pt-0">
+                <v-btn
+                  :disabled="!isValid || loading"
+                  :loading="loading"
+                  rounded
+                  color="info"
+                  @click="submitComment"
+                >
+                  投稿する
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-form>
         </v-container>
       </v-card>
@@ -108,9 +131,11 @@ export default {
       isValid: false,
       loading: false,
       comments: [],
+      user: {},
       commentsCount: 0,
       content: '',
       image: '',
+      preview: '',
       src: 'https://picsum.photos/200/200'
     }
   },
@@ -122,9 +147,9 @@ export default {
     })
   },
   mounted () {
-    this.$nextTick(() => {
+    setTimeout(() => {
       this.fetchComments()
-    })
+    }, 500)
   },
   methods: {
     ...mapActions({
@@ -142,6 +167,18 @@ export default {
           if (this.$route.name === 'posts-id' && this.post.id === Number(this.$route.params.id)) {
             this.setCommentsCountPagePostId(this.commentsCount)
           }
+          this.fetchCommentUser()
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(err)
+        })
+    },
+    async fetchCommentUser () {
+      const url = `/api/v1/users/${this.post.user_id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.user = res.data
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

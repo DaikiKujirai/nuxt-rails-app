@@ -1,13 +1,20 @@
 <template>
   <div>
     <template v-if="!isLike">
-      <v-btn
-        :color="btnColor"
-        icon
-        @click.prevent.stop="like"
-      >
-        <v-icon v-text="'mdi-heart-outline'" />
-      </v-btn>
+      <v-tooltip bottom>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            :color="btnColor"
+            icon
+            v-bind="attrs"
+            v-on="on"
+            @click.prevent.stop="like"
+          >
+            <v-icon v-text="'mdi-heart-outline'" />
+          </v-btn>
+        </template>
+        <span>いいね</span>
+      </v-tooltip>
     </template>
     <template v-else>
       <v-btn
