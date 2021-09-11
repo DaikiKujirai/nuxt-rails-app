@@ -19,7 +19,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import firebase from '~/plugins/firebase'
 
 export default {
   props: {
@@ -35,22 +34,11 @@ export default {
   },
   methods: {
     ...mapActions({
-      setMessageRecipientUser: 'chat/setMessageRecipientUser'
+      setFirstDisplayedChatsUser: 'chat/setFirstDisplayedChatsUser'
     }),
     toChat () {
-      // const params = { messageRecipientId: this.user.id, user_id: this.currentUser.id }
-      firebase.firestore()
-        .collection('rooms')
-        .doc(this.$route.params.id)
-        .collectionset({ message: 'メッセージ' })
-      // firebase.firestore().collection('rooms').where('user_id', '==', this.currentUser.id).get()
-        .then((res) => {
-          console.log(res)
-          // this.setMessageRecipientUser(this.user)
-        })
-        .catch((err) => {
-          console.log('err', err)
-        })
+      this.setFirstDisplayedChatsUser(this.user)
+      this.$router.push(`/chats/${this.currentUser.id}`)
     }
   }
 }

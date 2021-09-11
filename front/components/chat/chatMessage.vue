@@ -69,14 +69,20 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-// import firebase from '~/plugins/firebase'
+import firebase from '~/plugins/firebase'
 
 export default {
-  async asyncData ({ store, params }) {
-    const roomId = params.id
-    const unsubscribe = await store.dispatch('chats/subscribe', { roomId })
-    return {
-      unsubscribe
+  // async asyncData ({ store, params }) {
+  //   const roomId = params.id
+  //   const unsubscribe = await store.dispatch('chats/subscribe', { roomId })
+  //   return {
+  //     unsubscribe
+  //   }
+  // },
+  props: {
+    channelId: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -88,19 +94,33 @@ export default {
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      chats: 'chat/chats'
+      chats: 'chat/chats',
+      firstDisplayedChatsUser: 'chat/firstDisplayedChatsUser'
     })
   },
   created () {
-    // firebase.firestore().collection('rooms').doc(this.$route.params.id).get()
-    //   .then((res) => {
-    //     console.log(res)
-    //   })
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
-    })
+    }),
+    sendMessage () {
+      const chat = {
+        message: this.message,
+        createdAt: new Date()
+      }
+      firebase.firestore()
+        .collection('rooms')
+        .doc(this.channelId)
+        .collection('chats')
+        .add(chat)
+        .then((res) => {
+          console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
+    }
   }
 }
 </script>

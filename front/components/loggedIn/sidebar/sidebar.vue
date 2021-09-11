@@ -146,7 +146,7 @@ export default {
       this.$router.push(`/relationships/${this.currentUser.id}?tab=${tab}`)
     },
     toChat () {
-      this.$router.push(`/chat/${this.currentUser.id}`)
+      this.$router.push(`/chats/${this.currentUser.id}`)
     }
   }
 }

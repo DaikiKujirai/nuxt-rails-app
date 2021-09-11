@@ -2,15 +2,15 @@ import firebase from '~/plugins/firebase.js'
 
 export const state = () => ({
   chats: [],
-  messageRecipientUser: {}
+  firstDisplayedChatsUser: {}
 })
 
 export const getters = {
   chats (state) {
     return state.chats
   },
-  messageRecipientUser (state) {
-    return state.messageRecipientUser
+  firstDisplayedChatsUser (state) {
+    return state.firstDisplayedChatsUser
   }
 }
 
@@ -40,8 +40,8 @@ export const mutations = {
   clear (state) {
     state.chats = []
   },
-  setMessageRecipientUser (state, payload) {
-    state.setMessageRecipientUser = payload
+  setFirstDisplayedChatsUser (state, payload) {
+    state.firstDisplayedChatsUser = payload
   }
 }
 
@@ -81,7 +81,7 @@ export const actions = {
     commit('clear')
   },
 
-  setMessageRecipientUser ({ commit }, user) {
-    commit('setMessageRecipientUser', user)
+  setFirstDisplayedChatsUser ({ commit }, user) {
+    commit('setFirstDisplayedChatsUser', user)
   }
 }
