@@ -69,7 +69,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import firebase from '~/plugins/firebase'
+import ActionCable from 'actioncable'
 
 export default {
   // async asyncData ({ store, params }) {
@@ -99,27 +99,34 @@ export default {
     })
   },
   created () {
+    const cable = ActionCable.createConsumer('ws:localhost:3000/cable')
+    this.prototype.$cable = cable
+    this.messageChannel = cable.subscriptions.create('RoomChannel', {
+      received: (data) => {
+        this.$store.commit('addMessage', data)
+      }
+    })
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
     }),
     sendMessage () {
-      const chat = {
-        message: this.message,
-        createdAt: new Date()
-      }
-      firebase.firestore()
-        .collection('rooms')
-        .doc(this.channelId)
-        .collection('chats')
-        .add(chat)
-        .then((res) => {
-          console.log(res)
-        })
-        .catch((err) => {
-          console.log(err)
-        })
+      // const chat = {
+      //   message: this.message,
+      //   createdAt: new Date()
+      // }
+      // firebase.firestore()
+      //   .collection('rooms')
+      //   .doc(this.channelId)
+      //   .collection('chats')
+      //   .add(chat)
+      //   .then((res) => {
+      //     console.log(res)
+      //   })
+      //   .catch((err) => {
+      //     console.log(err)
+      //   })
     }
   }
 }
