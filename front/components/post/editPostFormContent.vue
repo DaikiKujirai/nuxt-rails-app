@@ -4,6 +4,7 @@
     label="内容"
     :placeholder="form.placeholder"
     :rules="rules"
+    auto-grow
     outlined
   />
 </template>

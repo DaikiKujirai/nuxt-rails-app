@@ -14,10 +14,10 @@
             :color="btnColor"
             text
           >
-            <v-icon v-text="'mdi-twitter-retweet'" />
+            <v-icon v-text="'mdi-repeat-variant'" />
           </v-btn>
         </template>
-        <like
+        <btn-like
           :post="post"
           :is-list="isList"
           @likesCountIncrement="likesCountIncrement"
@@ -44,15 +44,15 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import btnNewComment from '../../btn/comment/btnNewComment.vue'
+import BtnNewComment from '../../btn/comment/btnNewComment.vue'
 import BtnDeletePost from '../../btn/deletePost/btnDeletePost.vue'
 import BtnEditPost from '../../btn/editPost/btnEditPost.vue'
-import Like from '../../btn/like/like.vue'
+import BtnLike from '../../btn/like/btnLike.vue'
 
 export default {
   components: {
-    btnNewComment,
-    Like,
+    BtnLike,
+    BtnNewComment,
     BtnEditPost,
     BtnDeletePost
   },

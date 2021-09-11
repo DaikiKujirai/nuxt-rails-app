@@ -1,7 +1,5 @@
 <template>
-  <v-col
-    class="text-right mr-2"
-  >
+  <span>
     <template v-if="!isFollow">
       <v-btn
         color="info"
@@ -34,7 +32,7 @@
         フォロー解除
       </v-btn>
     </template>
-  </v-col>
+  </span>
 </template>
 
 <script>

@@ -20,6 +20,8 @@ Rails.application.routes.draw do
       # relationship
       get 'find_following/:id'       => 'relationships#find_following'
       get 'find_followers/:id'       => 'relationships#find_followers'
+      # ActionCable
+      mount ActionCable.server       => '/cable'
     end
   end
 end

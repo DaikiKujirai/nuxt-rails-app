@@ -13,7 +13,7 @@
                 max-width="70"
                 contain
                 style="border-radius: 50%; cursor: pointer;"
-                class="ml-3"
+                class="ml-3 img"
                 @click.prevent.stop="toShow('users', post.user_id)"
               />
               <v-card-title
@@ -31,11 +31,14 @@
               >
                 {{ post.content }}
               </v-card-title>
-              <template v-if="post.image">
+              <template
+                v-if="post.image"
+                class="text-center"
+              >
                 <v-img
-                  :src="post"
-                  max-height="500"
-                  max-width="500"
+                  :src="post.image.url"
+                  max-height="400"
+                  max-width="400"
                   contain
                   class="ma-3"
                 />

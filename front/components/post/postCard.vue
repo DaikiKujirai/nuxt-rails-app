@@ -12,8 +12,9 @@
           max-height="70"
           max-width="70"
           contain
+          hover
           style="border-radius: 50%;"
-          class="ml-3"
+          class="ml-3 img"
           @click.prevent.stop="toShow('users', post.user_id)"
         />
         <v-card-text>
@@ -58,8 +59,8 @@
         <template v-if="post.image">
           <v-img
             :src="post.image.url"
-            max-height="400"
-            max-width="400"
+            max-height="300"
+            max-width="300"
             contain
             class="ma-3"
           />
@@ -105,3 +106,9 @@ export default {
   }
 }
 </script>
+
+<style>
+  .img:hover {
+    opacity: 0.7;
+  }
+</style>

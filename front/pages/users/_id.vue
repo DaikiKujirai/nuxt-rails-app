@@ -26,15 +26,22 @@
               <v-card-title>
                 {{ user.name }}
               </v-card-title>
-              <template v-if="user.id === currentUser.id">
-                <btn-edit-profile />
-              </template>
-              <template v-else>
-                <btn-follow
-                  ref="btnFollow"
-                  :user="user"
-                />
-              </template>
+              <v-col
+                class="text-right mr-2"
+              >
+                <template v-if="user.id === currentUser.id">
+                  <btn-edit-profile />
+                </template>
+                <template v-else>
+                  <btn-to-chat
+                    :user="user"
+                  />
+                  <btn-follow
+                    ref="btnFollow"
+                    :user="user"
+                  />
+                </template>
+              </v-col>
             </v-col>
           </v-row>
           <v-row>
@@ -71,6 +78,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import BtnToChat from '../../components/btn/chat/btnToChat.vue'
 import BtnEditProfile from '../../components/btn/user/editProfile/btnEditProfile.vue'
 import BtnFollow from '../../components/btn/user/follow/btnFollow.vue'
 import BtnToFollow from '../../components/btn/user/follow/btnToFollow.vue'
@@ -83,14 +91,14 @@ export default {
     BtnEditProfile,
     BtnFollow,
     BtnToFollow,
-    BtnToFollower
+    BtnToFollower,
+    BtnToChat
   },
-  data: () => {
+  data () {
     return {
       user: {},
       avatar: '',
-      coverImage: '',
-      src: 'https://picsum.photos/500/500'
+      coverImage: ''
     }
   },
   computed: {

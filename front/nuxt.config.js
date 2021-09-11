@@ -51,6 +51,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-i18n',
     '@nuxtjs/dotenv',
+    'wscat',
     [
       '@nuxtjs/firebase',
       {
@@ -64,8 +65,8 @@ export default {
           measurementId: process.env.FIREBASE_MEASUREMENT_ID
         },
         services: {
-          auth: true
-          // firestore: true,
+          auth: true,
+          firestore: true
           // functions: true,
           // storage: true,
           // database: true,

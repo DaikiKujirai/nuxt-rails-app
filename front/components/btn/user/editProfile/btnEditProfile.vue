@@ -1,7 +1,5 @@
 <template>
-  <v-col
-    class="text-right mr-2"
-  >
+  <span>
     <v-btn
       color="success"
       outlined
@@ -10,7 +8,7 @@
     >
       プロフィール編集
     </v-btn>
-  </v-col>
+  </span>
 </template>
 
 <script>

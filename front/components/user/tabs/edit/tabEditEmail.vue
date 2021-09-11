@@ -106,6 +106,7 @@ export default {
           this.updateCurrentUser(res.data)
           this.flashMessage({ message: 'アカウント情報を更新しました', type: 'primary', status: true })
           this.loading = false
+          this.$router.replace('/posts')
         })
         .catch(() => {
           this.flashMessage({ message: '更新に失敗しました', type: 'error', status: true })
