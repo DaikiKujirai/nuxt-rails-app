@@ -52,6 +52,7 @@ export default {
     'nuxt-i18n',
     '@nuxtjs/dotenv',
     'wscat',
+    'ws',
     [
       '@nuxtjs/firebase',
       {
