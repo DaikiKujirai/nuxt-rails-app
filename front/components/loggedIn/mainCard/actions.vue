@@ -11,7 +11,6 @@
         />
         <template v-if="post.user_id !== currentUser.id">
           <v-btn
-            :color="btnColor"
             text
           >
             <v-icon v-text="'mdi-repeat-variant'" />
@@ -74,8 +73,7 @@ export default {
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      isAuthenticated: 'auth/isAuthenticated',
-      btnColor: 'btn/color'
+      isAuthenticated: 'auth/isAuthenticated'
     })
   },
   methods: {

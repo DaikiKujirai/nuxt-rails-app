@@ -46,13 +46,14 @@ export const mutations = {
 }
 
 export const actions = {
-  subscribe ({ commit }, { roomId }) {
+  fetchChats ({ commit }, roomId) {
     return firebase.firestore()
       .collection('rooms')
       .doc(roomId)
       .collection('chats')
       .orderBy('createdAt', 'asc')
       .onSnapshot((chatsSnapShot) => {
+        console.log(chatsSnapShot)
         chatsSnapShot.docChanges().forEach((snapshot) => {
           const docData = snapshot.doc.data()
           const chat = {
@@ -75,6 +76,9 @@ export const actions = {
           }
         })
       })
+  },
+  setChats ({ commit }, chats) {
+    commit('chats', chats)
   },
 
   clear ({ commit }) {

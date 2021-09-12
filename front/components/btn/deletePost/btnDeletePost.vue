@@ -4,7 +4,7 @@
       <template #activator="{ on, attrs }">
         <v-btn
           icon
-          :color="btnColor"
+          class="btn-delete"
           v-bind="attrs"
           v-on="on"
           @click.prevent.stop="dialog = true"
@@ -109,3 +109,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .btn-delete:hover {
+    color: #fc8678;
+  }
+</style>

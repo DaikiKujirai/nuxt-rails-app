@@ -3,8 +3,8 @@
     <v-tooltip bottom>
       <template #activator="{ on, attrs }">
         <v-btn
-          :color="btnColor"
           icon
+          class="btn-edit"
           v-bind="attrs"
           v-on="on"
           @click.prevent.stop="dialog = true"
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import editPostFormContent from '../../post/editPostFormContent.vue'
 import InputFileForm from '../../post/InputFileForm.vue'
 
@@ -103,11 +103,6 @@ export default {
       image: '',
       preview: ''
     }
-  },
-  computed: {
-    ...mapGetters({
-      btnColor: 'btn/color'
-    })
   },
   mounted () {
     this.editPost.content = this.post.content
@@ -154,3 +149,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .btn-edit:hover {
+    color: #02b97c;
+  }
+</style>

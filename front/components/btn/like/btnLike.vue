@@ -4,8 +4,8 @@
       <v-tooltip bottom>
         <template #activator="{ on, attrs }">
           <v-btn
-            :color="btnColor"
             icon
+            class="btn-like"
             v-bind="attrs"
             v-on="on"
             @click.prevent.stop="like"
@@ -18,7 +18,7 @@
     </template>
     <template v-else>
       <v-btn
-        :color="btnColor"
+        color="#fa187f"
         icon
         @click.prevent.stop="disLike"
       >
@@ -54,8 +54,7 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentUser: 'auth/data',
-      btnColor: 'btn/color'
+      currentUser: 'auth/data'
     })
   },
   mounted () {
@@ -141,3 +140,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .btn-like:hover {
+    color: #fa187f;
+  }
+</style>

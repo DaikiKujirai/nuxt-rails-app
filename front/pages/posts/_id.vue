@@ -122,7 +122,6 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
-      btnColor: 'btn/color',
       commentsCountPagePostId: 'post/commentsCountPagePostId',
       likesCountPagePostId: 'like/likesCountPagePostId'
     })

@@ -2,7 +2,6 @@
   <div>
     {{ followerCountPageUserId }}
     <v-btn
-      :color="btnColor"
       text
       rounded
       class="px-0"
@@ -19,7 +18,6 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   computed: {
     ...mapGetters({
-      btnColor: 'btn/color',
       followerCountPageUserId: 'relationship/followerCountPageUserId'
     })
   },
