@@ -14,7 +14,6 @@
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/firebase": "^7.6.1",
-    "actioncable": "^5.2.6",
     "core-js": "^3.15.1",
     "dayjs": "^1.10.6",
     "firebase": "^8.9.0",
@@ -23,8 +22,7 @@
     "nuxt-i18n": "^6.27.3",
     "save": "^2.4.0",
     "vue-infinite-loading": "^2.4.5",
-    "vuex-persistedstate": "^4.0.0",
-    "ws": "^8.2.2"
+    "vuex-persistedstate": "^4.0.0"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.14.7",

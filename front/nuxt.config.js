@@ -51,7 +51,6 @@ export default {
     '@nuxtjs/axios',
     'nuxt-i18n',
     '@nuxtjs/dotenv',
-    'wscat',
     [
       '@nuxtjs/firebase',
       {

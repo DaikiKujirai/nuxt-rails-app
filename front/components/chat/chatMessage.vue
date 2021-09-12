@@ -69,7 +69,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ActionCable from 'actioncable'
 
 export default {
   // async asyncData ({ store, params }) {
@@ -99,13 +98,6 @@ export default {
     })
   },
   created () {
-    const cable = ActionCable.createConsumer('ws:localhost:3000/cable')
-    this.prototype.$cable = cable
-    this.messageChannel = cable.subscriptions.create('RoomChannel', {
-      received: (data) => {
-        this.$store.commit('addMessage', data)
-      }
-    })
   },
   methods: {
     ...mapActions({
