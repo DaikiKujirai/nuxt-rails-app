@@ -104,8 +104,7 @@ export default {
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      isAuthenticated: 'auth/isAuthenticated',
-      btnColor: 'btn/color'
+      isAuthenticated: 'auth/isAuthenticated'
     })
   },
   created () {

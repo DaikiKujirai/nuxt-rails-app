@@ -3,9 +3,8 @@
     <v-tooltip bottom>
       <template #activator="{ on, attrs }">
         <v-btn
-          :color="btnColor"
           icon
-          class="pl-1"
+          class="pl-1 btn-comment"
           v-bind="attrs"
           v-on="on"
           @click.prevent.stop="dialog = true"
@@ -32,7 +31,7 @@
         </div>
         <div class="d-flex">
           <v-img
-            :src="src"
+            :src="userAvatar"
             max-height="60"
             max-width="60"
             contain
@@ -132,17 +131,17 @@ export default {
       loading: false,
       comments: [],
       user: {},
+      userAvatar: '',
       commentsCount: 0,
       content: '',
       image: '',
       preview: '',
-      src: 'https://picsum.photos/200/200'
+      color: 'deep-purple lighten-2'
     }
   },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      btnColor: 'btn/color',
       commentsCountPagePostId: 'post/commentsCountPagePostId'
     })
   },
@@ -179,6 +178,7 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.user = res.data
+          this.userAvatar = res.data.avatar.url
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -221,3 +221,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .btn-comment:hover {
+    color: #1c9cef;
+  }
+</style>

@@ -2,7 +2,6 @@
   <div>
     {{ followCount }}
     <v-btn
-      :color="btnColor"
       text
       rounded
       class="px-0"
@@ -14,18 +13,11 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
-
 export default {
   data () {
     return {
       followCount: 0
     }
-  },
-  computed: {
-    ...mapGetters({
-      btnColor: 'btn/color'
-    })
   },
   mounted () {
     this.fetchContents()

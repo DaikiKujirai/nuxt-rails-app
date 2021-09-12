@@ -4,7 +4,7 @@
     "posts"       : "ホーム"    ,
     "search"      : "投稿を検索" ,
     "notification": "通知"      ,
-    "chat"        : "チャット"  ,
+    "chats"       : "チャット"  ,
     "follow"      : "フォロー"  ,
     "follower"    : "フォロワー"
   },

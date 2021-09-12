@@ -40,6 +40,6 @@ module App
     # Skip views, helpers and assets when generating a new resource.
     config.api_only = true
     config.autoload_paths += %W(#{config.root}/lib/validator)
-    config.action_cable.mount_path = '/cable'
+    # config.action_cable.mount_path = '/cable'
   end
 end

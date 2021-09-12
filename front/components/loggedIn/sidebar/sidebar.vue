@@ -67,7 +67,7 @@
           <v-icon
             size="28"
             class="mr-5"
-            v-text="'mdi-chat-processing-outline'"
+            v-text="'mdi-wechat'"
           />
           チャット
         </v-list-item>
@@ -79,7 +79,7 @@
         <v-list-item
           two-line
           class="justify-center"
-          @click="toFollow(1)"
+          @click="toFollow('following')"
         >
           <v-icon
             size="28"
@@ -96,7 +96,7 @@
         <v-list-item
           two-line
           class="justify-center"
-          @click="toFollow(0)"
+          @click="toFollow('follower')"
         >
           <v-icon
             size="28"

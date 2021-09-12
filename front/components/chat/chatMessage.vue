@@ -1,144 +1,156 @@
 <template>
   <v-card>
-    <v-text-field
-      v-model="message"
-      class="mx-15 px-10"
-    />
-    {{ message }}
-    <v-btn
-      @click="sendMessage"
+    <v-app-bar
+      dense
+      flat
+      color="white"
     >
-      送信
-    </v-btn>
-    <!-- <v-row v-for="chat in chats" :key="chat.id" dense>
-      <v-col v-if="chat.userId !== currentUser.uid">
-        <div v-if="currentUser.id !== buyerUser.id" class="balloon_l">
-          <div class="face_icon">
-            <v-avatar v-if="buyerUser.avatar_url !== null ">
-              <v-img :src="buyerUser.avatar_url" />
-            </v-avatar>
-            <v-avatar v-else>
-              <v-img :src="image" />
-            </v-avatar>
-            <div>
-              {{ chat.name }}
+      <v-toolbar-title>
+        {{ user.name }}
+      </v-toolbar-title>
+    </v-app-bar>
+    <v-list
+      id="chat-height"
+      color="info"
+      max-height="600"
+    >
+      <v-list-item
+        v-for="(msg, i) in chats"
+        :key="i"
+      >
+        <v-col v-if="msg.userId != currentUser.uid">
+          <div class="balloon_l">
+            <div class="face_icon">
+              <v-avatar
+                size="60"
+              >
+                <img
+                  :src="userAvatar"
+                  contain
+                >
+              </v-avatar>
             </div>
+            <p class="says">
+              {{ msg.message }}
+            </p>
           </div>
-          <p class="says other">
-            {{ chat.body }}
-          </p>
-        </div>
-        <div v-else class="balloon_l">
-          <div class="face_icon">
-            <v-avatar v-if="sellerUser.avatar_url !== null ">
-              <v-img :src="sellerUser.avatar_url" />
-            </v-avatar>
-            <v-avatar v-else>
-              <v-img :src="image" />
-            </v-avatar>
-            <div>
-              {{ sellerUser.name }}
-            </div>
+        </v-col>
+        <v-col v-else>
+          <div class="balloon_r">
+            <p class="says-current">
+              {{ msg.message }}
+              <!-- {{ msg.createdAt }} -->
+            </p>
           </div>
-          <p class="says other">
-            {{ chat.body }}
-          </p>
-        </div>
-      </v-col>
-      <v-col v-else>
-        <div class="balloon_r">
-          <div class="face_icon">
-            <v-avatar v-if="currentUser.avatar.url !== null ">
-              <v-img :src="currentUser.avatar.url" />
-            </v-avatar>
-            <v-avatar v-else>
-              <v-img :src="image" />
-            </v-avatar>
-            <div>
-              {{ currentUser.name }}
-            </div>
-          </div>
-          <p class="says">
-            {{ chat.body }}
-          </p>
-        </div>
-      </v-col>
-    </v-row> -->
+        </v-col>
+      </v-list-item>
+    </v-list>
+    <!-- form送信部分 -->
+    <v-divider
+      id="scroll-inner"
+    />
+    <div class="ma-0 pa-0 d-flex flex-row align-baseline">
+      <v-text-field
+        ref="form"
+        v-model="message"
+        label="メッセージを入力"
+        type="text"
+        outlined
+        dense
+        rounded
+      />
+      <v-btn
+        class="ma-2 pa-2"
+        outlined
+        rounded
+        color="success"
+        @click="sendMessage"
+      >
+        送信
+      </v-btn>
+    </div>
   </v-card>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import firebase from '~/plugins/firebase'
 
 export default {
-  // async asyncData ({ store, params }) {
-  //   const roomId = params.id
-  //   const unsubscribe = await store.dispatch('chats/subscribe', { roomId })
-  //   return {
-  //     unsubscribe
-  //   }
-  // },
-  props: {
-    channelId: {
-      type: String,
-      required: true
-    }
-  },
   data () {
     return {
       user: {},
-      message: ''
+      message: '',
+      userAvatar: '',
+      roomId: ''
     }
   },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      chats: 'chat/chats',
-      firstDisplayedChatsUser: 'chat/firstDisplayedChatsUser'
+      chats: 'chat/chats'
+      // firstDisplayedChatsUser: 'chat/firstDisplayedChatsUser'
     })
   },
   created () {
+    this.fetchContents()
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      fetchChats: 'chat/fetchChats'
     }),
+    async fetchContents () {
+      const url = `/api/v1/users/${this.$route.params.id}`
+      await this.$axios.get(url)
+        .then((res) => {
+          this.user = res.data
+          this.userAvatar = res.data.avatar.url
+          this.setRoomId()
+          this.fetchChats(this.roomId)
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(err)
+        })
+    },
+    setRoomId () {
+      this.user.uid > this.currentUser.uid
+        ? (this.roomId = this.user.uid + '-' + this.currentUser.uid)
+        : (this.roomId = this.currentUser.uid + '-' + this.user.uid)
+    },
+    scrollBottom () {
+      const chatBack = document.getElementById('chat-height')
+      chatBack.scrollTop = chatBack.scrollHeight
+    },
     sendMessage () {
-      // const chat = {
-      //   message: this.message,
-      //   createdAt: new Date()
-      // }
-      // firebase.firestore()
-      //   .collection('rooms')
-      //   .doc(this.channelId)
-      //   .collection('chats')
-      //   .add(chat)
-      //   .then((res) => {
-      //     console.log(res)
-      //   })
-      //   .catch((err) => {
-      //     console.log(err)
-      //   })
+      const chat = {
+        userId: this.currentUser.uid,
+        name: this.currentUser.name,
+        message: this.message,
+        createdAt: new Date()
+      }
+      firebase.firestore()
+        .collection('rooms')
+        .doc(this.roomId)
+        .collection('chats')
+        .add(chat)
+        .then(() => {
+          this.$refs.form.reset()
+          // this.fetchNewMessage()
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log(err)
+        })
     }
   }
 }
 </script>
 
 <style scoped>
-h2 {
-  clear: both;
-  background: #43a047;
-  box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
-  padding: 10px 10px 10px 20px;
-  border-radius: 10px;
-  color: #FFF;
-}
-.card-title {
-  background: red;
-}
 .balloon_l,
 .balloon_r {
-  margin: 10px 0;
   display: flex;
   justify-content: flex-start;
   align-items: flex-start;
@@ -147,17 +159,11 @@ h2 {
   justify-content: flex-end;
 }
 .face_icon img {
-  width: 80px;
+  width: 60px;
   height: auto;
 }
-.balloon_r .face_icon {
-  margin-left: 25px;
-}
 .balloon_l .face_icon {
-  margin-right: 25px;
-}
-.balloon_r .face_icon {
-  order: 2 !important;
+  margin-right: 10px;
 }
 .says {
   max-width: 300px;
@@ -165,11 +171,24 @@ h2 {
   flex-wrap: wrap;
   position: relative;
   padding: 10px;
-  border-radius: 12px;
+  border-radius: 30px;
+  background: #f6f6f4;
+  box-sizing: border-box;
+  margin: 0 !important;
+  line-height: 1.3;
+}
+.says-current {
+  max-width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  padding: 10px;
+  border-radius: 30px;
   background: #8DE055;
   box-sizing: border-box;
   margin: 0 !important;
-  line-height: 1.5;
+  line-height: 1.3;
+  /*   align-items: center; */
 }
 .other {
   background: #EDF1EE;
@@ -183,16 +202,23 @@ h2 {
 .says:after {
   content: "";
   position: absolute;
-  border: 10px solid transparent;
-  margin-top: -3px;
+  border: 5px solid transparent;
+  transform: rotate(20deg);
+}
+.says-current:after {
+  content: "";
+  position: absolute;
+  border: 5px solid transparent;
+  transform: rotate(-35deg);
+  margin-top: -10px;
 }
 .balloon_l .says:after {
-  left: -26px;
-  border-right: 22px solid #EDF1EE;
+  left: -13px;
+  border-right: 20px solid #f6f6f4;
 }
-.balloon_r .says:after {
-  right: -26px;
-  border-left: 22px solid #8DE055;
+.balloon_r .says-current:after {
+  right: -13px;
+  border-left: 20px solid #8DE055;
 }
 .chat-back {
   background-color: #96b0d6;

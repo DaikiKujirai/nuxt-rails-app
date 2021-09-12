@@ -14,18 +14,16 @@
             cols="4"
           >
             <v-card class="d-flex align-center">
-              <template v-if="$route.name !== 'posts'">
-                <v-btn
-                  icon
-                  class="ml-3"
-                  @click="pageBack"
-                >
-                  <v-icon
-                    size="40"
-                    v-text="'mdi-arrow-left'"
-                  />
-                </v-btn>
-              </template>
+              <v-btn
+                icon
+                class="ml-3"
+                @click="pageBack"
+              >
+                <v-icon
+                  size="40"
+                  v-text="'mdi-arrow-left'"
+                />
+              </v-btn>
               <breadcrumbs />
             </v-card>
           </v-col>
@@ -37,9 +35,7 @@
         </v-main>
       </v-col>
       <v-col cols="5">
-        <chat-message
-          :channel-id="channelId"
-        />
+        <chat-message />
       </v-col>
     </v-row>
   </v-container>
@@ -73,18 +69,18 @@ export default {
     })
   },
   mounted () {
-    if (this.firstDisplayedChatsUser) {
-      this.user = this.firstDisplayedChatsUser
-    }
-    this.setChannelId()
-    this.fetchContents()
+    // if (this.firstDisplayedChatsUser) {
+    //   this.user = this.firstDisplayedChatsUser
+    // }
+    // this.setChannelId()
+    // this.fetchContents()
   },
   methods: {
-    setChannelId () {
-      this.user.uid > this.currentUser.uid
-        ? (this.channelId = this.user.uid + '-' + this.currentUser.uid)
-        : (this.channelId = this.currentUser.uid + '-' + this.user.uid)
-    },
+    // setChannelId () {
+    //   this.user.uid > this.currentUser.uid
+    //     ? (this.channelId = this.user.uid + '-' + this.currentUser.uid)
+    //     : (this.channelId = this.currentUser.uid + '-' + this.user.uid)
+    // },
     pageBack () {
       this.$router.go(-1)
     }

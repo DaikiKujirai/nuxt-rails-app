@@ -40,7 +40,18 @@ export default {
   },
   data () {
     return {
-      tab: Number(this.$route.query.tab)
+      tab: 0
+    }
+  },
+  created () {
+    this.fetchContents()
+  },
+  methods: {
+    fetchContents () {
+      console.log(this.$route.query.tab)
+      if (this.$route.query.tab === 'following') {
+        this.tab = 1
+      }
     }
   }
 }
