@@ -73,7 +73,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      setIsPost: 'post/setIsPost'
     }),
     async submitPost () {
       this.loading = true
@@ -81,7 +82,11 @@ export default {
       await this.$axios.$post('/api/v1/posts', this.post)
         .then(() => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
-          this.fetchContents()
+          if (this.$route.name === 'posts') {
+            this.setIsPost(true)
+          } else {
+            this.$router.push('/posts')
+          }
           this.loading = false
           this.dialog = false
           this.$refs.form.reset()

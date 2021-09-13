@@ -1,15 +1,11 @@
 export const state = () => ({
-  posts: [],
-  post: {},
+  isPost: false,
   commentsCountPagePostId: 0
 })
 
 export const getters = {
-  posts (state) {
-    return state.posts
-  },
-  post (state) {
-    return state.post
+  isPost (state) {
+    return state.isPost
   },
   commentsCountPagePostId (state) {
     return state.commentsCountPagePostId
@@ -17,11 +13,8 @@ export const getters = {
 }
 
 export const mutations = {
-  setPosts (state, payload) {
-    state.posts = payload
-  },
-  setPost (state, payload) {
-    state.post = payload
+  setIsPost (state, payload) {
+    state.isPost = payload
   },
   setCommentsCountPagePostId (state, payload) {
     state.commentsCountPagePostId = payload
@@ -35,11 +28,8 @@ export const mutations = {
 }
 
 export const actions = {
-  setPosts ({ commit }, posts) {
-    commit('setPosts', posts)
-  },
-  setPost ({ commit }, post) {
-    commit('setPost', post)
+  setIsPost ({ commit }, isPost) {
+    commit('setIsPost', isPost)
   },
   setCommentsCountPagePostId ({ commit }, comment) {
     commit('setCommentsCountPagePostId', comment)

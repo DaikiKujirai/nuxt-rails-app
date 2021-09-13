@@ -15,7 +15,7 @@ export const getters = {
 }
 
 export const mutations = {
-  add (state, { chat }) {
+  fetchChats (state, { chat }) {
     const isEmpty = state.chats.length === 0
     const isNotAdded = !state.chats.find(c => c.id === chat.id)
 
@@ -23,20 +23,6 @@ export const mutations = {
       state.chats.push(chat)
     }
   },
-
-  update (state, { chat }) {
-    state.chats = state.chats.map((c) => {
-      if (c.id === chat.id) {
-        c = chat
-      }
-      return c
-    })
-  },
-
-  remove (state, { chat }) {
-    state.chats = state.chats.filter(c => c.id !== chat.id)
-  },
-
   clear (state) {
     state.chats = []
   },
@@ -53,38 +39,19 @@ export const actions = {
       .collection('chats')
       .orderBy('createdAt', 'asc')
       .onSnapshot((chatsSnapShot) => {
-        console.log(chatsSnapShot)
         chatsSnapShot.docChanges().forEach((snapshot) => {
           const docData = snapshot.doc.data()
           const chat = {
             id: snapshot.doc.id,
             ...docData
           }
-
-          switch (snapshot.type) {
-            case 'added':
-              commit('add', { chat })
-              break
-
-            case 'modified':
-              commit('update', { chat })
-              break
-
-            case 'removed':
-              commit('remove', { chat })
-              break
-          }
+          commit('fetchChats', { chat })
         })
       })
   },
-  setChats ({ commit }, chats) {
-    commit('chats', chats)
-  },
-
   clear ({ commit }) {
     commit('clear')
   },
-
   setFirstDisplayedChatsUser ({ commit }, user) {
     commit('setFirstDisplayedChatsUser', user)
   }
