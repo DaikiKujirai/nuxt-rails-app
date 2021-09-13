@@ -1,12 +1,5 @@
 <template>
-  <!-- <v-textarea
-    v-model="setContent"
-    label="いまなにしてる？"
-    auto-grow
-    :rules="rules"
-    class="mx-3"
-  /> -->
-  <v-text-field
+  <v-textarea
     v-model="setMessage"
     :rules="rules"
     label="メッセージを入力"

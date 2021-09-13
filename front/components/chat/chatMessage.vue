@@ -46,14 +46,13 @@
         </v-col>
       </v-list-item>
     </v-list>
-    <!-- form送信部分 -->
     <v-divider
       id="scroll-inner"
     />
     <v-form
       ref="form"
       v-model="isValid"
-      class="d-flex align-start mx-2"
+      class="d-flex align-start mx-2 pt-2"
     >
       <chat-message-form
         :message.sync="message"
@@ -84,36 +83,30 @@ export default {
     return {
       disabled: false,
       isValid: false,
+      chats: [],
+      roomId: '',
       user: {},
       message: '',
-      userAvatar: '',
-      roomId: ''
+      userAvatar: ''
     }
   },
   computed: {
     ...mapGetters({
-      currentUser: 'auth/data',
-      chats: 'chat/chats'
-      // firstDisplayedChatsUser: 'chat/firstDisplayedChatsUser'
+      currentUser: 'auth/data'
     })
   },
   created () {
     this.fetchContents()
-    setTimeout(() => {
-      this.scrollBottom()
-    }, 100)
   },
   updated () {
     this.scrollBottom()
   },
   destroyed () {
-    this.clear()
+    this.chats = []
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage',
-      fetchChats: 'chat/fetchChats',
-      clear: 'chat/clear'
+      flashMessage: 'flash/flashMessage'
     }),
     async fetchContents () {
       const url = `/api/v1/users/${this.$route.params.id}`
@@ -122,11 +115,32 @@ export default {
           this.user = res.data
           this.userAvatar = res.data.avatar.url
           this.setRoomId()
-          this.fetchChats(this.roomId)
+          this.fetchChats()
+          setTimeout(() => {
+            this.scrollBottom()
+          }, 100)
         })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
+    },
+    async fetchChats () {
+      await firebase.firestore()
+        .collection('rooms')
+        .doc(this.roomId)
+        .collection('chats')
+        .orderBy('createdAt', 'asc')
+        .onSnapshot((chatsSnapShot) => {
+          chatsSnapShot.docChanges().forEach((snapshot) => {
+            const docData = snapshot.doc.data()
+            const chat = {
+              id: snapshot.doc.id,
+              ...docData
+            }
+            const isEmpty = this.chats.length === 0
+            const isNotAdded = !this.chats.find(c => c.id === chat.id)
+
+            if (isEmpty || isNotAdded) {
+              this.chats.push(chat)
+            }
+          })
         })
     },
     setRoomId () {

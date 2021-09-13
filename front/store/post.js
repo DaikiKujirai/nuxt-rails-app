@@ -28,8 +28,8 @@ export const mutations = {
 }
 
 export const actions = {
-  setIsPost ({ commit }, isPost) {
-    commit('setIsPost', isPost)
+  setIsPost ({ commit }, bool) {
+    commit('setIsPost', bool)
   },
   setCommentsCountPagePostId ({ commit }, comment) {
     commit('setCommentsCountPagePostId', comment)
