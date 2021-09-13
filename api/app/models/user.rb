@@ -4,6 +4,7 @@ class User < ApplicationRecord
 
   has_many :posts         , dependent: :destroy
   has_many :likes         , dependent: :destroy
+  has_many :chat_rooms
 
   has_many :relationships
   has_many :reverse_of_relationships, class_name: 'Relationship', foreign_key: 'follow_id'

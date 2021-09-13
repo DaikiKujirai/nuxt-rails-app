@@ -28,6 +28,11 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      userUid: ''
+    }
+  },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data'
@@ -35,10 +40,10 @@ export default {
   },
   methods: {
     ...mapActions({
-      setFirstDisplayedChatsUser: 'chat/setFirstDisplayedChatsUser'
+      setDisplayedChatUser: 'chat/setDisplayedChatUser',
+      setRoomId: 'chat/setRoomId'
     }),
     toChat () {
-      // this.setFirstDisplayedChatsUser(this.user)
       this.$router.push(`/chats/${this.user.id}`)
     }
   }

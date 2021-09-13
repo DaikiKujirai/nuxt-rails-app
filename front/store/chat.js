@@ -1,16 +1,24 @@
 import firebase from '~/plugins/firebase.js'
 
 export const state = () => ({
-  chats: [],
-  firstDisplayedChatsUser: {}
+  // chats: [],
+  // displayedChatUser: {},
+  // roomId: ''
+  isSort: false
 })
 
 export const getters = {
   chats (state) {
     return state.chats
   },
-  firstDisplayedChatsUser (state) {
-    return state.firstDisplayedChatsUser
+  displayedChatUser (state) {
+    return state.displayedChatUser
+  },
+  roomId (state) {
+    return state.roomId
+  },
+  isSort (state) {
+    return state.isSort
   }
 }
 
@@ -26,8 +34,14 @@ export const mutations = {
   clear (state) {
     state.chats = []
   },
-  setFirstDisplayedChatsUser (state, payload) {
-    state.firstDisplayedChatsUser = payload
+  setDisplayedChatUser (state, payload) {
+    state.displayedChatUser = payload
+  },
+  setRoomId (state, payload) {
+    state.roomId = payload
+  },
+  setIsSort (state, payload) {
+    state.isSort = payload
   }
 }
 
@@ -52,7 +66,18 @@ export const actions = {
   clear ({ commit }) {
     commit('clear')
   },
-  setFirstDisplayedChatsUser ({ commit }, user) {
-    commit('setFirstDisplayedChatsUser', user)
+  setDisplayedChatUser ({ commit }, user) {
+    commit('setDisplayedChatUser', user)
+  },
+  setRoomId ({ commit }, {
+    currentUserUid,
+    otherUserUid
+  }) {
+    otherUserUid > currentUserUid
+      ? (commit('setRoomId', otherUserUid + '-' + currentUserUid))
+      : (commit('setRoomId', currentUserUid + '-' + otherUserUid))
+  },
+  setIsSort ({ commit }, bool) {
+    commit('setIsSort', bool)
   }
 }

@@ -35,7 +35,7 @@
         </v-main>
       </v-col>
       <v-col cols="5">
-        <chat-message />
+        選択してください
       </v-col>
     </v-row>
   </v-container>
@@ -44,7 +44,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import ChatLists from '../../components/chat/chatLists.vue'
-import ChatMessage from '../../components/chat/chatMessage.vue'
 import Sidebar from '../../components/loggedIn/sidebar/sidebar.vue'
 import Breadcrumbs from '../../components/loggedIn/ui/breadcrumbs.vue'
 
@@ -52,8 +51,7 @@ export default {
   components: {
     Sidebar,
     Breadcrumbs,
-    ChatLists,
-    ChatMessage
+    ChatLists
   },
   computed: {
     ...mapGetters({
