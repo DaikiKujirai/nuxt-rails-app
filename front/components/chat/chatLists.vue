@@ -10,7 +10,7 @@
     >
       <chat-list
         :room="room"
-        @sortChatRooms="sortChatRooms"
+        @sortChatRooms="chatRooms = $event"
       />
     </v-card>
   </div>
@@ -67,15 +67,6 @@ export default {
     },
     toShow (url, id) {
       this.$router.push(`/${url}/${id}`)
-    },
-    sortChatRooms (room) {
-      console.log(room)
-      const sortChatRooms = this.chatRooms
-      return sortChatRooms.sort((a, b) => {
-        if (a.created_at > b.created_at) { return -1 }
-        if (a.created_at < b.created_at) { return 1 }
-        return 0
-      })
     }
   }
 }
