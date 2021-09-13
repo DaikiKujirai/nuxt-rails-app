@@ -67,19 +67,28 @@ export default {
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      isAuthenticated: 'auth/isAuthenticated'
+      isAuthenticated: 'auth/isAuthenticated',
+      isPost: 'post/isPost'
     })
+  },
+  watch: {
+    isPost (val) {
+      if (val) {
+        this.fetchContents()
+        this.setIsPost(false)
+      }
+    }
   },
   created () {
     this.fetchContents()
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      setIsPost: 'post/setIsPost'
     }),
     async fetchContents () {
-      const url = '/api/v1/posts'
-      await this.$axios.get(url)
+      await this.$axios.get(this.url)
         .then((res) => {
           this.posts = res.data.posts
         })

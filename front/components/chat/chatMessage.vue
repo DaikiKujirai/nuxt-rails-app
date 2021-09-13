@@ -10,9 +10,10 @@
       </v-toolbar-title>
     </v-app-bar>
     <v-list
-      id="chat-height"
+      id="chat-display"
+      class="overflow-y-auto"
       color="info"
-      max-height="600"
+      height="600"
     >
       <v-list-item
         v-for="(msg, i) in chats"
@@ -49,36 +50,40 @@
     <v-divider
       id="scroll-inner"
     />
-    <div class="ma-0 pa-0 d-flex flex-row align-baseline">
-      <v-text-field
-        ref="form"
-        v-model="message"
-        label="メッセージを入力"
-        type="text"
-        outlined
-        dense
-        rounded
+    <v-form
+      ref="form"
+      v-model="isValid"
+      class="d-flex align-start mx-2"
+    >
+      <chat-message-form
+        :message.sync="message"
+        class="mr-2"
       />
       <v-btn
-        class="ma-2 pa-2"
-        outlined
+        :disabled="!isValid"
         rounded
         color="success"
         @click="sendMessage"
       >
         送信
       </v-btn>
-    </div>
+    </v-form>
   </v-card>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import chatMessageForm from './chatMessageForm.vue'
 import firebase from '~/plugins/firebase'
 
 export default {
+  components: {
+    chatMessageForm
+  },
   data () {
     return {
+      disabled: false,
+      isValid: false,
       user: {},
       message: '',
       userAvatar: '',
@@ -94,11 +99,21 @@ export default {
   },
   created () {
     this.fetchContents()
+    setTimeout(() => {
+      this.scrollBottom()
+    }, 100)
+  },
+  updated () {
+    this.scrollBottom()
+  },
+  destroyed () {
+    this.clear()
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      fetchChats: 'chat/fetchChats'
+      fetchChats: 'chat/fetchChats',
+      clear: 'chat/clear'
     }),
     async fetchContents () {
       const url = `/api/v1/users/${this.$route.params.id}`
@@ -120,7 +135,7 @@ export default {
         : (this.roomId = this.currentUser.uid + '-' + this.user.uid)
     },
     scrollBottom () {
-      const chatBack = document.getElementById('chat-height')
+      const chatBack = document.getElementById('chat-display')
       chatBack.scrollTop = chatBack.scrollHeight
     },
     sendMessage () {
@@ -137,7 +152,9 @@ export default {
         .add(chat)
         .then(() => {
           this.$refs.form.reset()
-          // this.fetchNewMessage()
+          setTimeout(() => {
+            this.scrollBottom()
+          }, 100)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

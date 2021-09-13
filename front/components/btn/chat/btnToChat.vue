@@ -10,11 +10,11 @@
         @click="toChat"
       >
         <v-icon
-          v-text="'mdi-we-chat'"
+          v-text="'mdi-wechat'"
         />
       </v-btn>
     </template>
-    <span>メッセージ</span>
+    <span>チャット</span>
   </v-tooltip>
 </template>
 
