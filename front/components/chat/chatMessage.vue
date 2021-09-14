@@ -11,7 +11,7 @@
     </v-app-bar>
     <v-list
       id="chat-display"
-      class="overflow-y-auto"
+      class="overflow-y-auto overflow-x-0"
       color="info"
       height="600"
     >
@@ -19,31 +19,35 @@
         v-for="(msg, i) in chats"
         :key="i"
       >
-        <v-col v-if="msg.userId != currentUser.uid">
-          <div class="balloon_l">
-            <div class="face_icon">
-              <v-avatar
-                size="60"
-              >
-                <img
-                  :src="userAvatar"
-                  contain
+        <template v-if="msg.userId != currentUser.uid">
+          <v-col class="pl-0">
+            <div class="balloon_l">
+              <div class="face_icon">
+                <v-avatar
+                  size="60"
                 >
-              </v-avatar>
+                  <img
+                    :src="userAvatar"
+                    contain
+                  >
+                </v-avatar>
+              </div>
+              <p class="says">
+                {{ msg.message }}
+              </p>
             </div>
-            <p class="says">
-              {{ msg.message }}
-            </p>
-          </div>
-        </v-col>
-        <v-col v-else>
-          <div class="balloon_r">
-            <p class="says-current">
-              {{ msg.message }}
-              <!-- {{ msg.createdAt }} -->
-            </p>
-          </div>
-        </v-col>
+          </v-col>
+        </template>
+        <template v-else>
+          <v-col class="pr-5">
+            <div class="balloon_r">
+              <p class="says-current">
+                {{ msg.message }}
+                <!-- {{ msg.createdAt }} -->
+              </p>
+            </div>
+          </v-col>
+        </template>
       </v-list-item>
     </v-list>
     <v-divider
@@ -180,6 +184,9 @@ export default {
 </script>
 
 <style scoped>
+#chat-display {
+  overflow: hidden;
+}
 .balloon_l,
 .balloon_r {
   display: flex;

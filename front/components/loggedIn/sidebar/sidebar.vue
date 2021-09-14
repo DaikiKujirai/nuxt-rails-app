@@ -4,116 +4,18 @@
       cols="3"
       class="list"
     >
-      <v-list
-        nav
-        rounded
-      >
-        <v-list-item
-          two-line
-          class="justify-center"
-          @click="goHome"
-        >
-          <v-icon
-            size="28"
-            class="mr-5"
-            v-text="'mdi-home'"
-          />
-          ホーム
-        </v-list-item>
-      </v-list>
-      <v-list
-        nav
-        rounded
-      >
-        <v-list-item
-          two-line
-          class="justify-center"
-          @click="goHome"
-        >
-          <v-icon
-            size="28"
-            class="mr-5"
-            v-text="'mdi-magnify'"
-          />
-          検索
-        </v-list-item>
-      </v-list>
-      <v-list
-        nav
-        rounded
-      >
-        <v-list-item
-          two-line
-          class="justify-center"
-          @click="goHome"
-        >
-          <v-icon
-            size="28"
-            class="mr-5"
-            v-text="'mdi-bell'"
-          />
-          通知
-        </v-list-item>
-      </v-list>
-      <v-list
-        nav
-        rounded
-      >
-        <v-list-item
-          two-line
-          class="justify-center"
-          @click="toChat"
-        >
-          <v-icon
-            size="28"
-            class="mr-5"
-            v-text="'mdi-wechat'"
-          />
-          チャット
-        </v-list-item>
-      </v-list>
-      <v-list
-        nav
-        rounded
-      >
-        <v-list-item
-          two-line
-          class="justify-center"
-          @click="toFollow('following')"
-        >
-          <v-icon
-            size="28"
-            class="mr-5"
-            v-text="'mdi-account-details'"
-          />
-          フォロー
-        </v-list-item>
-      </v-list>
-      <v-list
-        nav
-        rounded
-      >
-        <v-list-item
-          two-line
-          class="justify-center"
-          @click="toFollow('follower')"
-        >
-          <v-icon
-            size="28"
-            class="mr-5"
-            v-text="'mdi-account-details-outline'"
-          />
-          フォロワー
-        </v-list-item>
-      </v-list>
+      <link-home />
+      <link-search />
       <template v-if="isAuthenticated">
+        <link-notification />
+        <link-chat />
+        <link-following />
+        <link-follower />
         <v-list>
           <v-list-item
             class="justify-center"
           >
-            <btn-new-post
-              @fetchContents="fetchContents"
-            />
+            <btn-new-post />
           </v-list-item>
         </v-list>
       </template>
@@ -123,31 +25,30 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import LinkHome from './linkHome.vue'
+import LinkSearch from './linkSearch.vue'
+import LinkNotification from './linkNotification.vue'
+import LinkChat from './linkChat.vue'
+import LinkFollowing from './linkFollowing.vue'
+import LinkFollower from './linkFollower.vue'
 import BtnNewPost from '~/components/btn/newPost/btnNewPost.vue'
 
 export default {
   components: {
-    BtnNewPost
+    BtnNewPost,
+    LinkHome,
+    LinkSearch,
+    LinkNotification,
+    LinkChat,
+    LinkFollowing,
+    LinkFollower
   },
   computed: {
     ...mapGetters({
-      isAuthenticated: 'auth/isAuthenticated',
-      currentUser: 'auth/data'
+      isAuthenticated: 'auth/isAuthenticated'
     })
   },
   methods: {
-    goHome () {
-      this.$router.push('/posts')
-    },
-    fetchContents () {
-      this.$emit('fetchContents')
-    },
-    toFollow (tab) {
-      this.$router.push(`/relationships/${this.currentUser.id}?tab=${tab}`)
-    },
-    toChat () {
-      this.$router.push('/chats')
-    }
   }
 }
 </script>

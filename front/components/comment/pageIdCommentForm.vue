@@ -13,7 +13,7 @@
             contain
             style="border-radius: 50%; cursor: pointer;"
             class="img"
-            @click.prevent.stop="toShow('users', post.user_id)"
+            @click.prevent.stop="toShow('users', currentUser.id)"
           />
           <page-id-post-comment-form
             :content.sync="content"
@@ -91,7 +91,7 @@ export default {
       if (this.image) {
         formData.append('post[image]', this.image)
       }
-      await this.$axios.$post('/api/v1/posts', formData)
+      await this.$axios.$post('/api/v1/create_comment', formData)
         .then(() => {
           this.commentsCountPagePostIdIncrement()
           this.fetchContents()
@@ -109,6 +109,9 @@ export default {
     },
     commentsCountIncrement () {
       this.$emit('commentsCountIncrement')
+    },
+    toShow (url, id) {
+      this.$router.push(`/${url}/${id}`)
     }
   }
 }

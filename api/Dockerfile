@@ -8,9 +8,6 @@ ENV RUNTIME_PACKAGES="linux-headers libxml2-dev make gcc libc-dev nodejs tzdata 
     LANG=C.UTF-8 \
     TZ=Asia/Tokyo
 
-# ENV test（このRUN命令は確認のためなので無くても良い）
-RUN echo ${HOME}
-
 WORKDIR ${HOME}
 
 COPY Gemfile* ./

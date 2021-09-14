@@ -1,4 +1,4 @@
-version: '3.3'
+version: '3.8'
 
 services:
   db:
@@ -22,7 +22,7 @@ services:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
       API_DOMAIN: "localhost:$FRONT_PORT"
     volumes:
-      - ./api:/app:cached
+      - ./api:/app
     depends_on:
       - db
     ports:
@@ -37,7 +37,7 @@ services:
         API_URL: "http://localhost:$API_PORT"
     command: yarn run dev
     volumes:
-      - ./front:/app:cached
+      - ./front:/app
     ports:
       - "$FRONT_PORT:$CONTAINER_PORT"
     depends_on:

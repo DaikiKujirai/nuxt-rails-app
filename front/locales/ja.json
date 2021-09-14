@@ -23,5 +23,9 @@
     "chats-id"     : "チャット"  ,
     "follow"       : "フォロー"  ,
     "follower"     : "フォロワー"
+  },
+  "actions": {
+    "comment": "コメント",
+    "like"   : "いいね"
   }
 }

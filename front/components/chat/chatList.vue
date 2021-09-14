@@ -45,7 +45,6 @@ export default {
     this.fetchContents()
   },
   beforeDestroy () {
-    this.sortChatRooms(this.room)
   },
   methods: {
     ...mapActions({
@@ -83,14 +82,26 @@ export default {
             }
             this.lastChat = chat
           })
+          // this.updateChatRooms()
         })
     },
+    // updateChatRooms () {
+    //   const url = `/api/v1/chat_rooms/${this.user.id}`
+    //   this.$axios.patch(url, this.room)
+    //     .then((res) => {
+    //       // console.log(res)
+    //       this.fetchChatRooms()
+    //     })
+    //     .catch((err) => {
+    //       console.log(err)
+    //     })
+    // },
     sliceMessage (chat) {
       chat.message = chat.message.substr(0, 15) + '...'
+    },
+    fetchChatRooms () {
+      this.$emit('fetchChatRooms')
     }
-  },
-  sortChatRooms (room) {
-    this.$emit('sortChatRooms', room)
   }
 }
 </script>

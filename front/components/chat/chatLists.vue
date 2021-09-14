@@ -10,7 +10,7 @@
     >
       <chat-list
         :room="room"
-        @sortChatRooms="sortChatRooms"
+        @sortChatRooms="chatRooms = $event"
       />
     </v-card>
   </div>
@@ -35,26 +35,26 @@ export default {
       isSort: 'chat/isSort'
     })
   },
-  watch: {
-    isSort () {
-      this.setIsSort(false)
-    }
-  },
+  // watch: {
+  //   isSort () {
+  //     this.setIsSort(false)
+  //   }
+  // },
   created () {
     setTimeout(() => {
       this.fetchContents()
-    }, 200)
+    }, 500)
   },
   methods: {
     ...mapActions({
       setIsSort: 'chat/setIsSort'
-    }),
+    }, 500),
     async fetchContents () {
       const url = `/api/v1/chat_rooms/${this.currentUser.id}`
       await this.$axios.get(url, {
         params: {
           user_id: this.$route.params.id,
-          page: this.$route.name
+          page_name: this.$route.name
         }
       })
         .then((res) => {
@@ -67,15 +67,6 @@ export default {
     },
     toShow (url, id) {
       this.$router.push(`/${url}/${id}`)
-    },
-    sortChatRooms (room) {
-      console.log(room)
-      const sortChatRooms = this.chatRooms
-      return sortChatRooms.sort((a, b) => {
-        if (a.created_at > b.created_at) { return -1 }
-        if (a.created_at < b.created_at) { return 1 }
-        return 0
-      })
     }
   }
 }
