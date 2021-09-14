@@ -8,6 +8,9 @@ class Api::V1::LikesController < ApplicationController
   def create
     like = Like.new(like_params)
     if like.save
+      post         = Post.find(params[:post_id])
+      current_user = User.find(params[:user_id])
+      post.create_notification_like!(current_user)
       render json: like
     else
       render json: { error_message: '失敗しました' }

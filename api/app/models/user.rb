@@ -11,6 +11,9 @@ class User < ApplicationRecord
   has_many :followings    , through: :relationships           , source: :follow
   has_many :followers     , through: :reverse_of_relationships, source: :user
 
+  has_many :active_notifications , class_name: 'Notification', foreign_key: 'visitor_id', dependent: :destroy
+  has_many :passive_notifications, class_name: 'Notification', foreign_key: 'visited_id', dependent: :destroy
+
   mount_uploader :avatar     , AvatarUploader
   mount_uploader :cover_image, CoverImageUploader
 
@@ -21,20 +24,28 @@ class User < ApplicationRecord
   VALID_PASSWORD_REGEX = /\A[\w\-]+\z/
   validates :uid  , presence: true
 
-  ## methods
-  # class method  ###########################
   class << self
     # emailからアクティブなユーザーを返す
     def find_activated(email)
       find_by(email: email, is_active: true)
     end
   end
-  # class method end #########################
 
   # 自分以外の同じemailのアクティブなユーザーがいる場合にtrueを返す
   def email_activated?
     users = User.where.not(id: id)
     users.find_activated(email).present?
+  end
+
+  def create_notification_follow!(current_user)
+    temp = Notification.where(["visitor_id = ? and visited_id ? and action = ?", current_user.id, id, 'follow'])
+    if temp.blank?
+      notification = current_user.active_notifications.new(
+                                                          visited_id: id,
+                                                          action: 'follow'
+                                                        )
+      notification.save if notification.valid?
+    end
   end
 
   private

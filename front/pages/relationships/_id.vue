@@ -48,7 +48,6 @@ export default {
   },
   methods: {
     fetchContents () {
-      console.log(this.$route.query.tab)
       if (this.$route.query.tab === 'following') {
         this.tab = 1
       }

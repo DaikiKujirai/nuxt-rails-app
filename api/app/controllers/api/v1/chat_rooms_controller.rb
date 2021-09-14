@@ -1,8 +1,9 @@
 class Api::V1::ChatRoomsController < ApplicationController
+  include Pagination
   def show
     current_user = User.find(params[:id])
 
-    if params[:page] != 'chats'
+    if params[:page_name] != 'chats'
       other_user = User.find(params[:user_id])
       room_id    = ChatRoom.make_room_id(current_user.uid, other_user.uid)
 
@@ -11,6 +12,7 @@ class Api::V1::ChatRoomsController < ApplicationController
         ChatRoom.create!(user_id: other_user.id, name: room_id, distination_user_id: current_user.id)
       end
     end
+
     chat_rooms = ChatRoom.find_my_chat_rooms(current_user)
     render json: chat_rooms
   end

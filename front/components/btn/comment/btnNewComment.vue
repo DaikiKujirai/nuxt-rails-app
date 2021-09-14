@@ -194,7 +194,7 @@ export default {
       if (this.image) {
         formData.append('post[image]', this.image)
       }
-      await this.$axios.$post('/api/v1/posts', formData)
+      await this.$axios.$post('/api/v1/create_comment', formData)
         .then(() => {
           this.rollBackPage()
           this.loading = false
@@ -210,6 +210,7 @@ export default {
         })
         .catch(() => {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })
+          this.loading = false
         })
     },
     fetchContents () {

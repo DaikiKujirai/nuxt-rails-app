@@ -80,24 +80,22 @@ export default {
             if (chat.message.length > 15) {
               this.sliceMessage(chat)
             }
-            if (this.lastChat) {
-              this.updateChatRooms()
-            }
             this.lastChat = chat
           })
+          // this.updateChatRooms()
         })
     },
-    updateChatRooms () {
-      const url = `/api/v1/chat_rooms/${this.user.id}`
-      this.$axios.patch(url, this.room)
-        .then((res) => {
-          console.log(res)
-          // this.fetchChatRooms()
-        })
-        .catch((err) => {
-          console.log(err)
-        })
-    },
+    // updateChatRooms () {
+    //   const url = `/api/v1/chat_rooms/${this.user.id}`
+    //   this.$axios.patch(url, this.room)
+    //     .then((res) => {
+    //       // console.log(res)
+    //       this.fetchChatRooms()
+    //     })
+    //     .catch((err) => {
+    //       console.log(err)
+    //     })
+    // },
     sliceMessage (chat) {
       chat.message = chat.message.substr(0, 15) + '...'
     },

@@ -10,7 +10,7 @@
       <v-row
         v-for="post in posts"
         :key="post.id"
-        class="mb-1"
+        class="pb-1"
       >
         <v-col>
           <v-card
@@ -79,7 +79,7 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.fetchContents()
   },
   methods: {

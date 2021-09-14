@@ -35,26 +35,26 @@ export default {
       isSort: 'chat/isSort'
     })
   },
-  watch: {
-    isSort () {
-      this.setIsSort(false)
-    }
-  },
+  // watch: {
+  //   isSort () {
+  //     this.setIsSort(false)
+  //   }
+  // },
   created () {
     setTimeout(() => {
       this.fetchContents()
-    }, 200)
+    }, 500)
   },
   methods: {
     ...mapActions({
       setIsSort: 'chat/setIsSort'
-    }),
+    }, 500),
     async fetchContents () {
       const url = `/api/v1/chat_rooms/${this.currentUser.id}`
       await this.$axios.get(url, {
         params: {
           user_id: this.$route.params.id,
-          page: this.$route.name
+          page_name: this.$route.name
         }
       })
         .then((res) => {

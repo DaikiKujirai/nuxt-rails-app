@@ -1,6 +1,8 @@
 class ChatRoom < ApplicationRecord
   belongs_to :user
 
+  has_many :notifications, dependent: :destroy
+
   scope :updated_desc , -> { order(updated_at: :desc) }
 
   class << self
