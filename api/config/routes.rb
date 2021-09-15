@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       resources :posts        , only: %i[index show create update destroy]
       resources :likes        , only: %i[create destroy]
       resources :chat_rooms   , only: %i[show update]
-      resources :notifications, only: %i[show]
+      resources :notifications, only: %i[show create]
       # user
       get  'find_login_user/:uid'     => 'users#find_login_user'
       get  'show_user_posts/:id'      => 'users#show_user_posts'

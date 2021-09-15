@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import firebase from '~/plugins/firebase'
 
 export default {
@@ -41,14 +41,30 @@ export default {
       lastChat: ''
     }
   },
+  computed: {
+    ...mapGetters({
+      isUpdate: 'chat/isUpdate'
+    })
+  },
+  watch: {
+    isUpdate (val) {
+      if (val.bool && val.userId === this.user.id) {
+        this.updateChatRooms()
+        this.setIsUpdate({
+          bool: false,
+          userId: 0
+        })
+      }
+    }
+  },
   created () {
     this.fetchContents()
   },
-  beforeDestroy () {
+  updated () {
   },
   methods: {
     ...mapActions({
-      setIsSort: 'chat/setIsSort'
+      setIsUpdate: 'chat/setIsUpdate'
     }),
     fetchContents () {
       const url = `/api/v1/users/${this.room.distination_user_id}`
@@ -82,25 +98,24 @@ export default {
             }
             this.lastChat = chat
           })
-          // this.updateChatRooms()
         })
     },
-    // updateChatRooms () {
-    //   const url = `/api/v1/chat_rooms/${this.user.id}`
-    //   this.$axios.patch(url, this.room)
-    //     .then((res) => {
-    //       // console.log(res)
-    //       this.fetchChatRooms()
-    //     })
-    //     .catch((err) => {
-    //       console.log(err)
-    //     })
-    // },
+    updateChatRooms () {
+      const url = `/api/v1/chat_rooms/${this.user.id}`
+      this.$axios.patch(url, this.room)
+        .then(() => {
+          this.fetchChatRooms()
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.log(err)
+        })
+    },
     sliceMessage (chat) {
       chat.message = chat.message.substr(0, 15) + '...'
     },
     fetchChatRooms () {
-      this.$emit('fetchChatRooms')
+      this.$emit('fetchContents')
     }
   }
 }

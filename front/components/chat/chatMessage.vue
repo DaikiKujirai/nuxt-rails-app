@@ -71,6 +71,7 @@
         送信
       </v-btn>
     </v-form>
+    {{ isUpdate }}
   </v-card>
 </template>
 
@@ -96,21 +97,20 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentUser: 'auth/data'
+      currentUser: 'auth/data',
+      isUpdate: 'chat/isUpdate'
     })
   },
   created () {
     this.fetchContents()
-  },
-  updated () {
-    this.scrollBottom()
   },
   destroyed () {
     this.chats = []
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      setIsUpdate: 'chat/setIsUpdate'
     }),
     async fetchContents () {
       const url = `/api/v1/users/${this.$route.params.id}`
@@ -143,6 +143,9 @@ export default {
 
             if (isEmpty || isNotAdded) {
               this.chats.push(chat)
+              setTimeout(() => {
+                this.scrollBottom()
+              }, 100)
             }
           })
         })
@@ -170,6 +173,7 @@ export default {
         .add(chat)
         .then(() => {
           this.$refs.form.reset()
+          this.createNotification()
           setTimeout(() => {
             this.scrollBottom()
           }, 100)
@@ -177,6 +181,25 @@ export default {
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.log(err)
+        })
+    },
+    createNotification () {
+      const url = '/api/v1/notifications'
+      this.$axios.post(url, {
+        chat: {
+          id: this.currentUser.id,
+          user_id: this.user.id
+        }
+      })
+        .then(() => {
+          this.setIsUpdate({
+            bool: true,
+            userId: this.user.id
+          })
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(err)
         })
     }
   }

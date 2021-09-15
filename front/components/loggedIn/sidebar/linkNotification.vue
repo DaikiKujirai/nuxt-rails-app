@@ -16,6 +16,7 @@
       通知
       <template v-if="count">
         <v-badge
+          bordered
           color="error"
           :content="count"
         />

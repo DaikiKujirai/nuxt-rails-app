@@ -48,6 +48,14 @@ class User < ApplicationRecord
     end
   end
 
+  def create_notification_chat!(current_user)
+    notification = current_user.active_notifications.new(
+                                                        visited_id: id,
+                                                        action: 'chat'
+                                                      )
+    notification.save if notification.valid?
+  end
+
   private
 
   def downcase_email

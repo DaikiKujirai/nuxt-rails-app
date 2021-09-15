@@ -1,9 +1,9 @@
 class Api::V1::UsersController < ApplicationController
   include Pagination
-  def index
-    users = User.all
-    render json: users.as_json(only: %i[id name introduction])
-  end
+  # def index
+  #   users = User.all
+  #   render json: users.as_json(only: %i[id name introduction])
+  # end
 
   def show
     user = User.find(params[:id])

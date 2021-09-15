@@ -8,13 +8,18 @@
           style="cursor: pointer;"
           class="mb-4"
         >
-          <template v-if="notification.action !== 'follow' ">
-            <card-template
+          <template v-if="notification.action === 'follow'">
+            <follow-card
+              :notification="notification"
+            />
+          </template>
+          <template v-else-if="notification.action === 'chat'">
+            <chat-card
               :notification="notification"
             />
           </template>
           <template v-else>
-            <follow-card-template
+            <like-comment-card
               :notification="notification"
             />
           </template>
@@ -33,16 +38,18 @@
 <script>
 import { mapGetters } from 'vuex'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import CardTemplate from '../../components/notification/cardTemplate.vue'
-import FollowCardTemplate from '../../components/notification/followCardTemplate.vue'
+import LikeCommentCard from '../../components/notification/likeCommentCard.vue'
+import FollowCard from '../../components/notification/followCard.vue'
 import InfiniteScroll from '../../components/ui/infiniteScroll.vue'
+import ChatCard from '../../components/notification/chatCard.vue'
 
 export default {
   components: {
     layoutMain,
-    CardTemplate,
+    LikeCommentCard,
     InfiniteScroll,
-    FollowCardTemplate
+    FollowCard,
+    ChatCard
   },
   data () {
     return {

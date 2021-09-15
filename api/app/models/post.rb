@@ -8,20 +8,20 @@ class Post < ApplicationRecord
 
   validates :content, presence: true
 
-  scope :created_desc , -> { order(created_at: :desc) }
+  default_scope -> { order(created_at: :desc) }
 
   # post
   class << self
     def find_posts
-      where(post_id: 0).created_desc
+      where(post_id: 0)
     end
 
     def find_post_comments(post_id)
-      where(post_id: post_id).created_desc
+      where(post_id: post_id)
     end
 
     def find_user_posts(user_id)
-      where(user_id: user_id, post_id: 0).created_desc
+      where(user_id: user_id, post_id: 0)
     end
 
     def find_user_like_posts(user_likes)
@@ -33,7 +33,7 @@ class Post < ApplicationRecord
     end
 
     def find_user_comments(user_id)
-      where(user_id: user_id).where.not(post_id: 0).created_desc
+      where(user_id: user_id).where.not(post_id: 0)
     end
   end
 

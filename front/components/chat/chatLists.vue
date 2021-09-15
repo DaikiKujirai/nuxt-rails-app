@@ -10,7 +10,7 @@
     >
       <chat-list
         :room="room"
-        @sortChatRooms="chatRooms = $event"
+        @fetchContents="fetchContents"
       />
     </v-card>
   </div>
@@ -32,14 +32,9 @@ export default {
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      isSort: 'chat/isSort'
+      isUpdate: 'chat/isUpdate'
     })
   },
-  // watch: {
-  //   isSort () {
-  //     this.setIsSort(false)
-  //   }
-  // },
   created () {
     setTimeout(() => {
       this.fetchContents()
@@ -47,8 +42,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      setIsSort: 'chat/setIsSort'
-    }, 500),
+      setIsUpdate: 'chat/setIsUpdate'
+    }),
     async fetchContents () {
       const url = `/api/v1/chat_rooms/${this.currentUser.id}`
       await this.$axios.get(url, {

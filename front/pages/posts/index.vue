@@ -72,8 +72,8 @@ export default {
     })
   },
   watch: {
-    isPost (val) {
-      if (val) {
+    isPost (bool) {
+      if (bool) {
         this.fetchContents()
         this.setIsPost(false)
       }
