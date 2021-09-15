@@ -5,11 +5,19 @@
         <v-card
           v-for="notification in notifications"
           :key="notification.id"
+          style="cursor: pointer;"
           class="mb-4"
         >
-          <card-template
-            :notification="notification"
-          />
+          <template v-if="notification.action !== 'follow' ">
+            <card-template
+              :notification="notification"
+            />
+          </template>
+          <template v-else>
+            <follow-card-template
+              :notification="notification"
+            />
+          </template>
         </v-card>
       </v-col>
     </v-row>
@@ -26,13 +34,15 @@
 import { mapGetters } from 'vuex'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import CardTemplate from '../../components/notification/cardTemplate.vue'
+import FollowCardTemplate from '../../components/notification/followCardTemplate.vue'
 import InfiniteScroll from '../../components/ui/infiniteScroll.vue'
 
 export default {
   components: {
     layoutMain,
     CardTemplate,
-    InfiniteScroll
+    InfiniteScroll,
+    FollowCardTemplate
   },
   data () {
     return {

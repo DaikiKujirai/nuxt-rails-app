@@ -96,7 +96,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import PageIdCommentForm from '../../components/comment/pageIdCommentForm.vue'
 import Comments from '../../components/comment/comments.vue'
@@ -130,12 +130,16 @@ export default {
     this.fetchContents()
   },
   methods: {
+    ...mapActions({
+      setUser: 'user/setUser'
+    }),
     async fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
           this.post = res.data.post
           this.user = res.data.user
+          this.setUser(res.data.user)
           this.avatar = res.data.user.avatar.url
           this.time = this.$my.format(this.post.created_at)
           this.fetchComments()

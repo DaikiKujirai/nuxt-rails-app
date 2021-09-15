@@ -1,7 +1,10 @@
 class Api::V1::RelationshipsController < ApplicationController
   include Pagination
   def create
-    if Relationship.create(user_id: params[:id], follow_id: params[:user_id])
+    current_user = User.find(params[:id])
+    other_user   = User.find(params[:user_id])
+    if Relationship.create(user_id: current_user.id, follow_id: other_user.id)
+      other_user.create_notification_follow!(current_user)
       render json: { success_message: 'フォローしました' }
     else
       render json: { errors_message: '失敗しました' }

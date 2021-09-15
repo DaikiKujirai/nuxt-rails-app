@@ -1,6 +1,6 @@
 <template>
   <v-row
-    @click="toShow('posts', post.id)"
+    @click="toShow('users', user.id)"
   >
     <v-col
       cols="1"
@@ -30,12 +30,7 @@
         >
           {{ user.name }}
         </span>
-        さんがあなたの投稿に {{ action }} しました
-      </v-card-text>
-      <v-card-text
-        class="text--disabled mt-0 pt-0"
-      >
-        {{ post.content }}
+        さんがあなたを {{ action }} しました
       </v-card-text>
     </v-col>
   </v-row>
@@ -53,29 +48,9 @@ export default {
     return {
       user: {},
       userAvatar: '',
-      content: '',
       action: `${$my.action('actions.' + this.notification.action)}`,
-      post: {}
-    }
-  },
-  computed: {
-    icon () {
-      if (this.action === 'コメント') {
-        return 'mdi-chat-processing-outline'
-      } else if (this.action === 'いいね') {
-        return 'mdi-heart'
-      } else {
-        return 'mdi-acount'
-      }
-    },
-    color () {
-      if (this.action === 'コメント') {
-        return '#1c9cef'
-      } else if (this.action === 'いいね') {
-        return '#fa187f'
-      } else {
-        return '#02b97c'
-      }
+      icon: 'mdi-account',
+      color: '#02b97c'
     }
   },
   mounted () {
@@ -88,18 +63,6 @@ export default {
         .then((res) => {
           this.user = res.data
           this.userAvatar = res.data.avatar.url
-          this.fetchPost()
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
-    async fetchPost () {
-      const url = `/api/v1/posts/${this.notification.post_id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.post = res.data.post
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

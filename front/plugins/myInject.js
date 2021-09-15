@@ -17,11 +17,11 @@ class MyInject {
   pageTitle (routeName) {
     const jsonPath = `pages.${routeName.replace(/-/g, '.')}`
     const title = this.app.i18n.t(jsonPath)
-    return (typeof (title) === 'object') ? title.index : title
+    return title
+    // return (typeof (title) === 'object') ? title.index : title
   }
 
   action (action) {
-    console.log(this.app.i18n.t('actions.comment'))
     return this.app.i18n.t(action)
   }
 }

@@ -1,6 +1,8 @@
 <template>
   <layout-chat #layout-chat> <!--eslint-disable-line-->
-    チャットを選択してください
+    <overline>
+      チャットを選択してください
+    </overline>
   </layout-chat>
 </template>
 

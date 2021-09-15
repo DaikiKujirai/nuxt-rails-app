@@ -16,16 +16,16 @@
       "settings" : "アカウント設定",
       "password" : "パスワード変更"
     },
-    "posts"        : "ホーム"    ,
-    "posts-id"     : "投稿"     ,
-    "search"       : "投稿を検索",
-    "notification" : "通知"     ,
-    "chats-id"     : "チャット"  ,
-    "follow"       : "フォロー"  ,
-    "follower"     : "フォロワー"
+    "posts"           : "ホーム"   ,
+    "posts-id"        : "投稿"     ,
+    "search"          : "投稿を検索",
+    "notifications-id": "通知"     ,
+    "chats"           : "チャット"  ,
+    "relationships-id": "フォロー"
   },
   "actions": {
     "comment": "コメント",
-    "like"   : "いいね"
+    "like"   : "いいね"  ,
+    "follow" : "フォロー"
   }
 }
