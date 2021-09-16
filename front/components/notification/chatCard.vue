@@ -14,7 +14,7 @@
     </v-col>
     <v-col>
       <v-img
-        :src="userAvatar"
+        :src="user.avatar.url"
         max-height="50"
         max-width="50"
         contain
@@ -42,33 +42,20 @@ export default {
     notification: {
       type: Object,
       required: true
+    },
+    user: {
+      type: Object,
+      required: true
     }
   },
   data ({ $my }) {
     return {
-      user: {},
-      userAvatar: '',
       action: `${$my.action('actions.' + this.notification.action)}`,
       icon: 'mdi-wechat',
       color: '#ffa500'
     }
   },
-  mounted () {
-    this.fetchContents()
-  },
   methods: {
-    async fetchContents () {
-      const url = `/api/v1/users/${this.notification.visitor_id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.user = res.data
-          this.userAvatar = res.data.avatar.url
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
     toShow (url, id) {
       this.$router.push(`/${url}/${id}`)
     }

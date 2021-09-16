@@ -14,7 +14,7 @@
     </v-col>
     <v-col>
       <v-img
-        :src="userAvatar"
+        :src="user.avatar.url"
         max-height="50"
         max-width="50"
         contain
@@ -47,65 +47,38 @@ export default {
     notification: {
       type: Object,
       required: true
+    },
+    user: {
+      type: Object,
+      required: true
+    },
+    post: {
+      type: Object,
+      required: true
     }
   },
   data ({ $my }) {
     return {
-      user: {},
-      userAvatar: '',
-      content: '',
-      action: `${$my.action('actions.' + this.notification.action)}`,
-      post: {}
+      action: `${$my.action('actions.' + this.notification.action)}`
     }
   },
   computed: {
     icon () {
       if (this.action === 'コメント') {
         return 'mdi-chat-processing-outline'
-      } else if (this.action === 'いいね') {
-        return 'mdi-heart'
       } else {
-        return 'mdi-acount'
+        return 'mdi-heart'
       }
     },
     color () {
       if (this.action === 'コメント') {
         return '#1c9cef'
-      } else if (this.action === 'いいね') {
-        return '#fa187f'
       } else {
-        return '#02b97c'
+        return '#fa187f'
       }
     }
   },
-  mounted () {
-    this.fetchContents()
-  },
   methods: {
-    async fetchContents () {
-      const url = `/api/v1/users/${this.notification.visitor_id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.user = res.data
-          this.userAvatar = res.data.avatar.url
-          this.fetchPost()
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
-    async fetchPost () {
-      const url = `/api/v1/posts/${this.notification.post_id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.post = res.data.post
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
     toShow (url, id) {
       this.$router.push(`/${url}/${id}`)
     }

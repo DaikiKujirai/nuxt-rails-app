@@ -15,7 +15,7 @@
           hover
           style="border-radius: 50%;"
           class="ml-3 img"
-          @click.prevent.stop="toShow('users', post.user_id)"
+          @click.prevent.stop="toShow('users', postContainerForEdit.user_id)"
         />
         <v-card-text>
           {{ user.name }}
@@ -27,11 +27,11 @@
             size="16"
             v-text="'mdi-update'"
           />
-          {{ $my.format(post.created_at) }}
+          {{ $my.format(postContainerForEdit.created_at) }}
         </v-card-text>
       </v-col>
     </v-row>
-    <template v-if="post.post_id !== 0">
+    <template v-if="postContainerForEdit.post_id !== 0">
       <v-row>
         <v-col class="py-0">
           <span class="pt-2 pl-2">
@@ -54,11 +54,11 @@
         <v-card-title
           class="mx-3 pa-0"
         >
-          {{ post.content }}
+          {{ postContainerForEdit.content }}
         </v-card-title>
-        <template v-if="post.image">
+        <template v-if="postContainerForEdit.image">
           <v-img
-            :src="post.image.url"
+            :src="postContainerForEdit.image.url"
             max-height="300"
             max-width="300"
             contain
@@ -71,6 +71,8 @@
 </template>
 
 <script>
+import { mapGetters, mapActions } from 'vuex'
+
 export default {
   props: {
     post: {
@@ -88,15 +90,33 @@ export default {
   },
   data () {
     return {
+      postContainerForEdit: {},
       replyUser: {}
     }
   },
+  computed: {
+    ...mapGetters({
+      updatePost: 'post/updatePost'
+    })
+  },
+  watch: {
+    async updatePost (val) {
+      if (val.bool && val.post.id === this.post.id) {
+        this.postContainerForEdit = await val.post
+        this.setUpdatePost = await { bool: false, post: {} }
+      }
+    }
+  },
   created () {
+    this.postContainerForEdit = this.post
     this.$route.name === 'users-id' && this.post.post_id !== 0
       ? (this.fetchReplyToUser())
       : (this.replyUser = this.repUser)
   },
   methods: {
+    ...mapActions({
+      setUpdatePost: 'post/setUpdatePost'
+    }),
     async fetchReplyToUser () {
       const url = `/api/v1/posts/${this.post.post_id}`
       await this.$axios.get(url)

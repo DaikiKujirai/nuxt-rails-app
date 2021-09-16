@@ -125,15 +125,25 @@ export default {
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       commentsCountPagePostId: 'post/commentsCountPagePostId',
-      likesCountPagePostId: 'like/likesCountPagePostId'
+      likesCountPagePostId: 'like/likesCountPagePostId',
+      updatePost: 'post/updatePost'
     })
+  },
+  watch: {
+    async updatePost (val) {
+      if (val.bool && val.post.id === this.post.id) {
+        this.postContainerForEdit = await val.post
+        this.setUpdatePost = await { bool: false, post: {} }
+      }
+    }
   },
   created () {
     this.setUser(this.post.user)
   },
   methods: {
     ...mapActions({
-      setUser: 'user/setUser'
+      setUser: 'user/setUser',
+      setUpdatePost: 'post/setUpdatePost'
     }),
     async fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`

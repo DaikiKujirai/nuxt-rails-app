@@ -44,8 +44,8 @@ export default {
   },
   methods: {
     async fetchContents () {
-      const url = `/api/v1/find_followers/${this.$route.params.id}`
-      await this.$axios.get(url)
+      // const url = `/api/v1/find_followers/${this.$route.params.id}`
+      await this.$axios.get(this.url)
         .then((res) => {
           this.users = res.data.followers
         })

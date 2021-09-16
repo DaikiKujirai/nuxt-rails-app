@@ -1,6 +1,7 @@
 export const state = () => ({
   isPost: false,
-  commentsCountPagePostId: 0
+  commentsCountPagePostId: 0,
+  updatePost: { bool: false, post: {} }
 })
 
 export const getters = {
@@ -9,6 +10,9 @@ export const getters = {
   },
   commentsCountPagePostId (state) {
     return state.commentsCountPagePostId
+  },
+  updatePost (state) {
+    return state.updatePost
   }
 }
 
@@ -24,6 +28,9 @@ export const mutations = {
   },
   commentsCountPagePostIdDecrement (state) {
     state.commentsCountPagePostId--
+  },
+  setUpdatePost (state, payload) {
+    state.updatePost = payload
   }
 }
 
@@ -39,5 +46,8 @@ export const actions = {
   },
   commentsCountPagePostIdDecrement ({ commit }) {
     commit('commentsCountPagePostIdDecrement')
+  },
+  setUpdatePost ({ commit }, { bool, post }) {
+    commit('setUpdatePost', { bool, post })
   }
 }
