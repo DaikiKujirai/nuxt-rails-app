@@ -6,8 +6,8 @@ class Api::V1::UsersController < ApplicationController
   # end
 
   def show
-    user = User.find(params[:id])
-    render json: user
+    user = User.includes(:followings, :followers).find(params[:id])
+    render json: user.as_json(include: [:followings, :followers])
   end
 
   def create
@@ -44,9 +44,16 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def show_user_posts
-    user_posts = Post.find_user_posts(params[:id]).page(params[:page]).per(5)
+    user_posts = Post.find_user_posts(params[:id]).includes(:likes).page(params[:page]).per(5)
     pagination = resources_with_pagination(user_posts)
-    object     = { user_posts: user_posts, kaminari: pagination }
+    object     = { user_posts: user_posts.as_json(include: :likes), kaminari: pagination }
+    render json: object
+  end
+
+  def show_user_comments
+    user_comments = Post.find_user_comments(params[:id]).includes(:likes).page(params[:page]).per(5)
+    pagination    = resources_with_pagination(user_comments)
+    object        = { user_comments: user_comments.as_json(include: :likes), kaminari: pagination }
     render json: object
   end
 
@@ -54,14 +61,7 @@ class Api::V1::UsersController < ApplicationController
     user_likes      = Like.find_user_likes(params[:id]).page(params[:page]).per(5)
     user_like_posts = Post.find_user_like_posts(user_likes)
     pagination      = resources_with_pagination(user_likes)
-    object          = { user_like_posts: user_like_posts, kaminari: pagination }
-    render json: object
-  end
-
-  def show_user_comments
-    user_comments = Post.find_user_comments(params[:id]).page(params[:page]).per(5)
-    pagination    = resources_with_pagination(user_comments)
-    object        = { user_comments: user_comments, kaminari: pagination }
+    object          = { user_like_posts: user_like_posts.as_json(include: [:user, :likes]), kaminari: pagination }
     render json: object
   end
 

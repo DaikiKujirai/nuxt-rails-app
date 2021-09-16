@@ -5,6 +5,7 @@
         <btn-new-comment
           ref="child"
           :post="post"
+          :user="user"
           :is-list="isList"
           @rollBackPage="rollBackPage"
           @fetchContents="fetchContents"
@@ -18,6 +19,7 @@
         </template>
         <btn-like
           :post="post"
+          :likes="likes"
           :is-list="isList"
           @likesCountIncrement="likesCountIncrement"
           @likesCountDecrement="likesCountDecrement"
@@ -58,6 +60,14 @@ export default {
   props: {
     post: {
       type: Object,
+      required: true
+    },
+    user: {
+      type: Object,
+      required: true
+    },
+    likes: {
+      type: Array,
       required: true
     },
     isList: {

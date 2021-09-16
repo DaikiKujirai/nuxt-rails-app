@@ -16,29 +16,24 @@
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
+  props: {
+    user: {
+      type: Object,
+      required: true
+    }
+  },
   computed: {
     ...mapGetters({
       followerCountPageUserId: 'relationship/followerCountPageUserId'
     })
   },
-  mounted () {
-    this.fetchContents()
+  created () {
+    this.setFollowerCountPageUserId(this.user.followers.length)
   },
   methods: {
     ...mapActions({
       setFollowerCountPageUserId: 'relationship/setFollowerCountPageUserId'
     }),
-    async fetchContents () {
-      const url = `/api/v1/find_followers/${this.$route.params.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.setFollowerCountPageUserId(res.data.kaminari.pagination.count)
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
     toShow (page, id, tab) {
       this.$router.push(`/${page}/${id}?tab=${tab}`)
     }

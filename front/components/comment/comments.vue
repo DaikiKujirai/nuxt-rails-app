@@ -11,10 +11,14 @@
         >
           <post-card
             :post="comment"
+            :user="comment.user"
+            :rep-user="post.user"
           />
           <template v-if="isAuthenticated">
             <actions
               :post="comment"
+              :user="comment.user"
+              :likes="comment.likes"
               :is-list="isList"
               @rollBackPage="rollBackPage"
               @fetchContents="fetchContents"
@@ -55,8 +59,7 @@ export default {
       comments: [],
       isList: true,
       page: 1,
-      url: `/api/v1/find_comments/${this.$route.params.id}`,
-      src: 'https://picsum.photos/500/500'
+      url: `/api/v1/find_comments/${this.$route.params.id}`
     }
   },
   computed: {
@@ -64,6 +67,9 @@ export default {
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated'
     })
+  },
+  created () {
+    this.fetchComments()
   },
   methods: {
     async fetchComments () {

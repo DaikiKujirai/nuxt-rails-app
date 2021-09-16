@@ -31,7 +31,7 @@
         </div>
         <div class="d-flex">
           <v-img
-            :src="userAvatar"
+            :src="user.avatar.url"
             max-height="60"
             max-width="60"
             contain
@@ -119,6 +119,10 @@ export default {
       type: Object,
       required: true
     },
+    user: {
+      type: Object,
+      required: true
+    },
     isList: {
       type: Boolean,
       required: true
@@ -130,8 +134,6 @@ export default {
       isValid: false,
       loading: false,
       comments: [],
-      user: {},
-      userAvatar: '',
       commentsCount: 0,
       content: '',
       image: '',
@@ -146,9 +148,7 @@ export default {
     })
   },
   mounted () {
-    setTimeout(() => {
-      this.fetchComments()
-    }, 500)
+    this.fetchComments()
   },
   methods: {
     ...mapActions({
@@ -166,19 +166,6 @@ export default {
           if (this.$route.name === 'posts-id' && this.post.id === Number(this.$route.params.id)) {
             this.setCommentsCountPagePostId(this.commentsCount)
           }
-          this.fetchCommentUser()
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
-    async fetchCommentUser () {
-      const url = `/api/v1/users/${this.post.user_id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.user = res.data
-          this.userAvatar = res.data.avatar.url
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

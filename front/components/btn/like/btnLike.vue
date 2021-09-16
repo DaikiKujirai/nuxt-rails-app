@@ -40,6 +40,10 @@ export default {
       type: Object,
       required: true
     },
+    likes: {
+      type: Array,
+      required: true
+    },
     isList: {
       type: Boolean,
       required: true
@@ -47,7 +51,7 @@ export default {
   },
   data () {
     return {
-      likesCount: 0,
+      likesCount: this.likes.length,
       newLike: {},
       isLike: false
     }
@@ -57,11 +61,10 @@ export default {
       currentUser: 'auth/data'
     })
   },
-  mounted () {
+  created () {
+    this.fetchIsLike()
     if (this.$route.name === 'posts-id' && !this.isList) {
-      this.fetchContents(this.$route.params.id)
-    } else {
-      this.fetchContents(this.post.id)
+      this.setLikesCountPagePostId(this.likes.length)
     }
   },
   methods: {
@@ -77,11 +80,9 @@ export default {
       const url = '/api/v1/likes'
       await this.$axios.post(url, this.newLike)
         .then(() => {
-          if (this.$route.name === 'posts-id' && !this.isList) {
-            this.likesCountPagePostIdIncrement()
-          } else {
-            this.likesCountIncrement()
-          }
+          this.$route.name === 'posts-id' && !this.isList
+            ? (this.likesCountPagePostIdIncrement())
+            : (this.likesCountIncrement())
           this.isLike = true
           this.flashMessage({ message: 'いいねしました', type: 'success', status: true })
         })
@@ -99,11 +100,9 @@ export default {
         }
       })
         .then(() => {
-          if (this.$route.name === 'posts-id' && !this.isList) {
-            this.likesCountPagePostIdDecrement()
-          } else {
-            this.likesCountDecrement()
-          }
+          this.$route.name === 'posts-id' && !this.isList
+            ? (this.likesCountPagePostIdDecrement())
+            : (this.likesCountDecrement())
           this.isLike = false
           this.flashMessage({ message: 'いいねを取り消しました', type: 'error', status: true })
         })
@@ -112,24 +111,12 @@ export default {
           console.error(err)
         })
     },
-    async fetchContents (id) {
-      const url = `/api/v1/render_is_like_and_likes_count/${id}`
-      await this.$axios.get(url, {
-        params: {
-          user_id: this.currentUser.id
+    fetchIsLike () {
+      this.likes.forEach((like) => {
+        if (like.user_id === this.currentUser.id) {
+          this.isLike = true
         }
       })
-        .then((res) => {
-          this.isLike = res.data.is_like
-          this.likesCount = res.data.likes_count
-          if (this.$route.name === 'posts-id' && !this.isList) {
-            this.setLikesCountPagePostId(res.data.likes_count)
-          }
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
     },
     likesCountIncrement () {
       this.likesCount++

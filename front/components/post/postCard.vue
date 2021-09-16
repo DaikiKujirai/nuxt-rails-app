@@ -8,7 +8,7 @@
         class="d-flex"
       >
         <v-img
-          :src="avatar"
+          :src="user.avatar.url"
           max-height="70"
           max-width="70"
           contain
@@ -39,9 +39,9 @@
           </span>
           <u
             style="cursor: pointer;"
-            @click.prevent.stop="toShow('users', replyToUser.id)"
+            @click.prevent.stop="toShow('users', replyUser.id)"
           >
-            {{ replyToUser.name }}
+            {{ replyUser.name }}
           </u>
           <span>
             さん
@@ -76,28 +76,36 @@ export default {
     post: {
       type: Object,
       required: true
+    },
+    user: {
+      type: Object,
+      required: true
+    },
+    repUser: {
+      type: Object,
+      default: () => {}
     }
   },
   data () {
     return {
-      user: {},
-      replyToUser: {},
-      avatar: ''
+      replyUser: {}
     }
   },
   created () {
-    this.$nextTick(() => {
-      this.fetchContents()
-    })
+    this.$route.name === 'users-id' && this.post.post_id !== 0
+      ? (this.fetchReplyToUser())
+      : (this.replyUser = this.repUser)
   },
   methods: {
-    fetchContents () {
-      const url = `/api/v1/posts/${this.post.id}`
-      this.$axios.get(url)
+    async fetchReplyToUser () {
+      const url = `/api/v1/posts/${this.post.post_id}`
+      await this.$axios.get(url)
         .then((res) => {
-          this.user = res.data.user
-          this.replyToUser = res.data.reply_to_user
-          this.avatar = res.data.user.avatar.url
+          this.replyUser = res.data.user
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(err)
         })
     },
     toShow (page, id) {
