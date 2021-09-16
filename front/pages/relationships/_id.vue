@@ -16,9 +16,7 @@
             </v-tab>
           </v-tabs>
         </v-card>
-        <v-tabs-items
-          v-model="tab"
-        >
+        <v-tabs-items v-model="tab">
           <tab-followers />
           <tab-following />
         </v-tabs-items>

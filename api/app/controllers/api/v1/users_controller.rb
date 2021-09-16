@@ -57,6 +57,13 @@ class Api::V1::UsersController < ApplicationController
     render json: object
   end
 
+  def show_user_posts_have_image
+    user_posts = Post.find_user_posts_have_image(params[:id]).includes(:user, :likes).page(params[:page]).per(5)
+    pagination = resources_with_pagination(user_posts)
+    object     = { user_posts: user_posts.as_json(include: [:user, :likes], kaminari: pagination) }
+    render json: object
+  end
+
   def show_user_like_posts
     user_likes      = Like.find_user_likes(params[:id]).page(params[:page]).per(5)
     user_like_posts = Post.find_user_like_posts(user_likes)
@@ -77,15 +84,15 @@ class Api::V1::UsersController < ApplicationController
 
   def user_params
     params.require(:user).permit(
-                                :name        ,
-                                :email       ,
-                                :uid         ,
-                                :avatar      ,
-                                :cover_image ,
-                                :introduction,
-                                :is_active   ,
-                                :admin
-                              )
+                                  :name        ,
+                                  :email       ,
+                                  :uid         ,
+                                  :avatar      ,
+                                  :cover_image ,
+                                  :introduction,
+                                  :is_active   ,
+                                  :admin
+                                )
   end
 
 end
