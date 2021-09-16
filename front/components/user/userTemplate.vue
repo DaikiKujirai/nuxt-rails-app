@@ -1,36 +1,38 @@
 <template>
-  <v-col>
-    <v-divider class="mb-2" />
+  <div>
+    <v-divider />
     <v-row>
       <v-col
-        class="d-flex"
+        cols="2"
       >
         <v-img
           :src="user.avatar.url"
           max-height="70"
           max-width="70"
           contain
+          class="ma-2"
           style="border-radius: 50%;"
-          class="ml-3"
         />
-        <v-card-title>
+      </v-col>
+      <v-col class="d-flex justify-space-between pt-0">
+        <v-card-title class="pa-0">
           {{ user.name }}
         </v-card-title>
-        <template v-if="user.id !== currentUser.id">
+        <template
+          v-if="user.id !== currentUser.id"
+          class="text-right"
+        >
           <btn-follow
             :user="user"
+            class="ma-5"
           />
         </template>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col>
-        <v-card-title>
-          {{ user.introduction }}
-        </v-card-title>
-      </v-col>
-    </v-row>
-  </v-col>
+    <v-col class="text-left">
+      {{ user.introduction }}
+    </v-col>
+  </div>
 </template>
 
 <script>
@@ -45,11 +47,6 @@ export default {
     user: {
       type: Object,
       required: true
-    }
-  },
-  data () {
-    return {
-      src: 'https://picsum.photos/200/200'
     }
   },
   computed: {

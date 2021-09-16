@@ -10,23 +10,24 @@ Rails.application.routes.draw do
       resources :chat_rooms   , only: %i[show update]
       resources :notifications, only: %i[show create]
       # user
-      get  'find_login_user/:uid'     => 'users#find_login_user'
-      get  'show_user_posts/:id'      => 'users#show_user_posts'
-      get  'show_user_like_posts/:id' => 'users#show_user_like_posts'
-      get  'show_user_comments/:id'   => 'users#show_user_comments'
-      put  'update_account/:id'       => 'users#update_account'
+      get  'find_login_user/:uid'               => 'users#find_login_user'
+      get  'show_user_posts/:id'                => 'users#show_user_posts'
+      get  'show_user_like_posts/:id'           => 'users#show_user_like_posts'
+      get  'show_user_comments/:id'             => 'users#show_user_comments'
+      get  'show_user_posts_have_image/:id'     => 'users#show_user_posts_have_image'
+      put  'update_account/:id'                 => 'users#update_account'
       # post
-      post 'create_comment'           => 'posts#create_comment'
-      get  'find_comments/:id'        => 'posts#find_comments'
+      post 'create_comment'                     => 'posts#create_comment'
+      get  'find_comments/:id'                  => 'posts#find_comments'
       # like
       get  'render_is_like_and_likes_count/:id' => 'likes#render_is_like_and_likes_count'
       # relationship
-      get  'find_following/:id'       => 'relationships#find_following'
-      get  'find_followers/:id'       => 'relationships#find_followers'
+      get  'find_following/:id'                 => 'relationships#find_following'
+      get  'find_followers/:id'                 => 'relationships#find_followers'
       # ActionCable
       # mount ActionCable.server       => '/cable'
       # notification
-      get 'find_notifications_count/:id' => 'notifications#find_notifications_count'
+      get 'find_notifications_count/:id'        => 'notifications#find_notifications_count'
     end
   end
 end

@@ -28,9 +28,9 @@
         <tab-comments
           :user="user"
         />
-        <v-tab-item>
-          メディア
-        </v-tab-item>
+        <tab-image
+          :user="user"
+        />
         <tab-likes
           :user="user"
         />
@@ -43,12 +43,14 @@
 import TabPosts from './tabs/tabPosts.vue'
 import TabComments from './tabs/tabComments.vue'
 import TabLikes from './tabs/tabLikes.vue'
+import TabImage from './tabs/tabImage.vue'
 
 export default {
   components: {
     TabPosts,
     TabComments,
-    TabLikes
+    TabLikes,
+    TabImage
   },
   props: {
     user: {

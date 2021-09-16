@@ -1,14 +1,18 @@
 <template>
-  <v-tab-item class="mb-2">
+  <v-tab-item
+    class="pt-0"
+  >
     <v-row
       v-for="user in users"
       :key="user.id"
       style="cursor: pointer;"
       @click="toShow('users', user.id)"
     >
-      <user-template
-        :user="user"
-      />
+      <v-col>
+        <user-template
+          :user="user"
+        />
+      </v-col>
     </v-row>
     <infinite-scroll
       :page="page"
@@ -32,8 +36,7 @@ export default {
     return {
       users: [],
       page: 1,
-      url: `/api/v1/find_following/${this.$route.params.id}`,
-      src: 'https://picsum.photos/200/200'
+      url: `/api/v1/find_following/${this.$route.params.id}`
     }
   },
   created () {
