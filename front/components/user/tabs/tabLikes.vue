@@ -9,10 +9,13 @@
       <v-col>
         <post-card
           :post="post"
+          :user="user"
         />
         <template v-if="isAuthenticated">
           <actions
             :post="post"
+            :user="user"
+            :likes="post.likes"
             :is-list="isList"
             @rollBackPage="rollBackPage"
             @fetchContents="fetchContents"
@@ -52,8 +55,7 @@ export default {
       posts: [],
       page: 1,
       isList: true,
-      url: `/api/v1/show_user_like_posts/${this.$route.params.id}`,
-      src: 'https://picsum.photos/500/500'
+      url: `/api/v1/show_user_like_posts/${this.$route.params.id}`
     }
   },
   computed: {

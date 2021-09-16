@@ -8,10 +8,13 @@
       <v-col>
         <post-card
           :post="comment"
+          :user="user"
         />
         <template v-if="isAuthenticated">
           <actions
             :post="comment"
+            :user="user"
+            :likes="comment.likes"
             :is-list="isList"
             @rollBackPage="rollBackPage"
             @fetchContents="fetchContents"
@@ -50,17 +53,17 @@ export default {
     return {
       comments: [],
       page: 1,
-      url: `/api/v1/show_user_comments/${this.$route.params.id}`,
-      isList: true,
-      src: 'https://picsum.photos/500/500'
+      url: `/api/v1/show_user_comments/${this.user.id}`,
+      isList: true
     }
   },
   computed: {
     ...mapGetters({
-      isAuthenticated: 'auth/isAuthenticated',
-      currentUser: 'auth/data',
-      btnColor: 'btn/color'
+      isAuthenticated: 'auth/isAuthenticated'
     })
+  },
+  created () {
+    this.fetchContents()
   },
   methods: {
     async fetchContents () {

@@ -18,10 +18,13 @@
           >
             <post-card
               :post="post"
+              :user="post.user"
             />
             <template v-if="isAuthenticated">
               <actions
                 :post="post"
+                :user="post.user"
+                :likes="post.likes"
                 :is-list="isList"
                 @fetchContents="fetchContents"
                 @rollBackPage="rollBackPage"
@@ -56,9 +59,12 @@ export default {
     PostCard,
     InfiniteScroll
   },
+  async asyncData ({ $axios }) {
+    const res = await $axios.get('/api/v1/posts')
+    return { posts: res.data.posts }
+  },
   data () {
     return {
-      posts: [],
       page: 1,
       url: '/api/v1/posts',
       isList: true
@@ -78,9 +84,6 @@ export default {
         this.setIsPost(false)
       }
     }
-  },
-  mounted () {
-    this.fetchContents()
   },
   methods: {
     ...mapActions({

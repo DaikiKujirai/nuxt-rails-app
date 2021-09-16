@@ -1,6 +1,7 @@
 class Api::V1::LikesController < ApplicationController
   include Pagination
   def show
+    byebug
     likes = Like.where(post_id: params[:id])
     render json: likes
   end

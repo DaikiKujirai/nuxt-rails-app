@@ -9,10 +9,13 @@
       <v-col>
         <post-card
           :post="post"
+          :user="user"
         />
         <template v-if="isAuthenticated">
           <actions
             :post="post"
+            :user="user"
+            :likes="post.likes"
             :is-list="isList"
             @rollBackPage="rollBackPage"
             @fetchContents="fetchContents"
@@ -51,8 +54,7 @@ export default {
     return {
       posts: [],
       page: 1,
-      url: `/api/v1/show_user_posts/${this.$route.params.id}`,
-      src: 'https://picsum.photos/200/200',
+      url: `/api/v1/show_user_posts/${this.user.id}`,
       isList: true
     }
   },
@@ -62,6 +64,9 @@ export default {
       currentUser: 'auth/data',
       btnColor: 'btn/color'
     })
+  },
+  created () {
+    this.fetchContents()
   },
   methods: {
     async fetchContents () {

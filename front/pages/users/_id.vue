@@ -6,7 +6,7 @@
           <v-row>
             <v-col>
               <v-img
-                :src="coverImage"
+                :src="user.cover_image.url"
                 height="250"
               />
             </v-col>
@@ -16,7 +16,7 @@
               class="d-flex"
             >
               <v-img
-                :src="avatar"
+                :src="user.avatar.url"
                 max-height="70"
                 max-width="70"
                 contain
@@ -58,16 +58,18 @@
               <v-col>
                 <v-card-actions>
                   <btn-to-follow
+                    :user="user"
                     class="mr-2"
                   />
-                  <btn-to-follower />
+                  <btn-to-follower
+                    :user="user"
+                  />
                 </v-card-actions>
               </v-col>
             </v-row>
           </template>
         </v-card>
         <page-id-user-tab
-          ref="pageIdUserTab"
           class="mt-1"
           :user="user"
         />
@@ -94,12 +96,9 @@ export default {
     BtnToFollower,
     BtnToChat
   },
-  data () {
-    return {
-      user: {},
-      avatar: '',
-      coverImage: ''
-    }
+  async asyncData ({ $axios, params }) {
+    const res = await $axios.get(`/api/v1/users/${params.id}`)
+    return { user: res.data }
   },
   computed: {
     ...mapGetters({
@@ -108,31 +107,12 @@ export default {
     })
   },
   created () {
-    this.fetchContents()
+    this.setUser(this.user)
   },
   methods: {
     ...mapActions({
       setUser: 'user/setUser'
-    }),
-    async fetchContents () {
-      const url = `/api/v1/users/${this.$route.params.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.user = res.data
-          this.avatar = res.data.avatar.url
-          this.coverImage = res.data.cover_image.url
-          this.setUser(res.data)
-          setTimeout(() => {
-            this.fetchShowUser()
-          }, 400)
-        })
-        .catch((err) => {
-          console.error(err) // eslint-disable-line
-        })
-    },
-    fetchShowUser () {
-      this.$refs.pageIdUserTab.fetchContents()
-    }
+    })
   }
 }
 </script>

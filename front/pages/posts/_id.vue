@@ -8,7 +8,7 @@
               class="d-flex"
             >
               <v-img
-                :src="avatar"
+                :src="post.user.avatar.url"
                 max-height="70"
                 max-width="70"
                 contain
@@ -20,7 +20,7 @@
                 style="cursor: pointer;"
                 @click.prevent.stop="toShow('users', post.user_id)"
               >
-                {{ user.name }}
+                {{ post.user.name }}
               </v-card-title>
             </v-col>
           </v-row>
@@ -52,7 +52,7 @@
                   size="16"
                   v-text="'mdi-update'"
                 />
-                {{ time }}
+                {{ $my.format(post.created_at) }}
               </v-card-text>
             </v-col>
           </v-row>
@@ -74,6 +74,8 @@
           <template v-if="isAuthenticated">
             <actions
               :post="post"
+              :user="post.user"
+              :likes="post.likes"
               :is-list="isList"
               @rollBackPage="rollBackPage"
               @fetchContents="fetchContents"
@@ -109,12 +111,12 @@ export default {
     Comments,
     Actions
   },
+  async asyncData ({ $axios, params }) {
+    const res = await $axios.get(`/api/v1/posts/${params.id}`)
+    return { post: res.data }
+  },
   data () {
     return {
-      post: {},
-      user: {},
-      avatar: '',
-      time: '',
       isList: false
     }
   },
@@ -127,7 +129,7 @@ export default {
     })
   },
   created () {
-    this.fetchContents()
+    this.setUser(this.post.user)
   },
   methods: {
     ...mapActions({
@@ -137,11 +139,9 @@ export default {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.post = res.data.post
+          this.post = res.data
           this.user = res.data.user
           this.setUser(res.data.user)
-          this.avatar = res.data.user.avatar.url
-          this.time = this.$my.format(this.post.created_at)
           this.fetchComments()
         })
     },
