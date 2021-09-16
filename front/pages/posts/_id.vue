@@ -60,10 +60,10 @@
           <v-row>
             <v-col class="d-flex text-center pa-0">
               <v-card-text>
-                0 件のリツイート
+                {{ commentsCountPagePostId }} 件のコメント
               </v-card-text>
               <v-card-text>
-                {{ commentsCountPagePostId }} 件のコメント
+                0 件のリツイート
               </v-card-text>
               <v-card-text>
                 {{ likesCountPagePostId }} 件のいいね

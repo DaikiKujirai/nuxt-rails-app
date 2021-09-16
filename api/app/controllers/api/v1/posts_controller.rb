@@ -3,7 +3,7 @@ class Api::V1::PostsController < ApplicationController
   def index
     posts      = Post.find_posts.page(params[:page]).per(10)
     pagination = resources_with_pagination(posts)
-    object     = { posts: posts, kaminari: pagination }
+    object     = { posts: posts.as_json(include: :user), kaminari: pagination }
     render json: object
   end
 
@@ -31,11 +31,8 @@ class Api::V1::PostsController < ApplicationController
     post         = Post.find(params[:post][:post_id])
     current_user = User.find(params[:post][:user_id])
 
-    if post.user_id != current_user.id
-      post.create_notification_comment!(current_user, comment.id)
-    end
-
     if comment.save
+      post.create_notification_comment!(current_user, comment.id) if post.user_id != current_user.id
       render json: comment
     else
       render json: post.errors.messages

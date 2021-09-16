@@ -20,33 +20,15 @@
         :key="i"
       >
         <template v-if="msg.userId != currentUser.uid">
-          <v-col class="pl-0">
-            <div class="balloon_l">
-              <div class="face_icon">
-                <v-avatar
-                  size="60"
-                >
-                  <img
-                    :src="userAvatar"
-                    contain
-                  >
-                </v-avatar>
-              </div>
-              <p class="says">
-                {{ msg.message }}
-              </p>
-            </div>
-          </v-col>
+          <balloon-l
+            :user-avatar="userAvatar"
+            :msg="msg"
+          />
         </template>
         <template v-else>
-          <v-col class="pr-5">
-            <div class="balloon_r">
-              <p class="says-current">
-                {{ msg.message }}
-                <!-- {{ msg.createdAt }} -->
-              </p>
-            </div>
-          </v-col>
+          <balloon-r
+            :msg="msg"
+          />
         </template>
       </v-list-item>
     </v-list>
@@ -71,18 +53,21 @@
         送信
       </v-btn>
     </v-form>
-    {{ isUpdate }}
   </v-card>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import chatMessageForm from './chatMessageForm.vue'
+import BalloonL from './balloonL.vue'
+import BalloonR from './balloonR.vue'
 import firebase from '~/plugins/firebase'
 
 export default {
   components: {
-    chatMessageForm
+    chatMessageForm,
+    BalloonL,
+    BalloonR
   },
   data () {
     return {
@@ -93,6 +78,7 @@ export default {
       user: {},
       message: '',
       userAvatar: ''
+      // date: `${$my(this.msg.createdAt.toDate())}`
     }
   },
   computed: {
@@ -206,7 +192,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 #chat-display {
   overflow: hidden;
 }
