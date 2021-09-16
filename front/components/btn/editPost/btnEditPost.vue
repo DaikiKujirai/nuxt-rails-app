@@ -110,25 +110,21 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      setUpdatePost: 'post/setUpdatePost'
     }),
     async updatePost () {
       this.loading = true
       const formData = new FormData()
+      formData.append('post[id]', this.post.id)
       formData.append('post[user_id]', this.post.user_id)
-      formData.append('post[post_id]', this.post.id)
       formData.append('post[content]', this.editPost.content)
       if (this.image) {
         formData.append('post[image]', this.image)
       }
       await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, formData)
-        .then(() => {
-          this.rollBackPage()
-          if (this.$route.name === 'posts-id' && !this.isList) {
-            this.fetchContents()
-          } else {
-            this.$router.push(`/posts/${this.post.id}`)
-          }
+        .then((res) => {
+          this.setUpdatePost({ bool: true, post: res })
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
@@ -139,12 +135,6 @@ export default {
           this.flashMessage({ message: '更新に失敗しました', type: 'error', status: true })
           this.loading = false
         })
-    },
-    fetchContents () {
-      this.$emit('fetchContents')
-    },
-    rollBackPage () {
-      this.$emit('rollBackPage')
     }
   }
 }

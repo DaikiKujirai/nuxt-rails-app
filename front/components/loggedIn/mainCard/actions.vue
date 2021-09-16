@@ -28,8 +28,6 @@
           <btn-edit-post
             :post="post"
             :is-list="isList"
-            @rollBackPage="rollBackPage"
-            @fetchContents="fetchContents"
           />
           <btn-delete-post
             :post="post"

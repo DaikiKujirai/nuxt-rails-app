@@ -35,10 +35,8 @@ export default {
       isUpdate: 'chat/isUpdate'
     })
   },
-  created () {
-    setTimeout(() => {
-      this.fetchContents()
-    }, 500)
+  mounted () {
+    this.fetchContents()
   },
   methods: {
     ...mapActions({

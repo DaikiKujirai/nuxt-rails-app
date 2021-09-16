@@ -7,7 +7,7 @@ class Api::V1::NotificationsController < ApplicationController
       notification.update_attributes(checked: true)
     end
     pagination    = resources_with_pagination(notifications)
-    object        = { notifications: notifications, kaminari: pagination }
+    object        = { notifications: notifications.as_json(include: [:post, :visitor]), kaminari: pagination }
     render json: object
   end
 

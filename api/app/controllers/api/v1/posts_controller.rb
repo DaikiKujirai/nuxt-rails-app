@@ -1,7 +1,7 @@
 class Api::V1::PostsController < ApplicationController
   include Pagination
   def index
-    posts      = Post.find_posts.includes(:user, :likes).page(params[:page]).per(10)
+    posts      = Post.find_posts.includes(:user, :likes).page(params[:page]).per(5)
     pagination = resources_with_pagination(posts)
     object     = {
                   posts:    posts.as_json(include: [:user, :likes]),
@@ -38,9 +38,9 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def update
-    post = Post.find(params[:id])
+    post = Post.includes(:user, :likes).find(params[:post][:id])
     if post.update(post_params)
-      render json: post
+      render json: post.as_json(include: [:user, :likes])
     else
       render json: post.errors.messages
     end

@@ -11,16 +11,20 @@
           <template v-if="notification.action === 'follow'">
             <follow-card
               :notification="notification"
+              :user="notification.visitor"
             />
           </template>
           <template v-else-if="notification.action === 'chat'">
             <chat-card
               :notification="notification"
+              :user="notification.visitor"
             />
           </template>
           <template v-else>
             <like-comment-card
               :notification="notification"
+              :user="notification.visitor"
+              :post="notification.post"
             />
           </template>
         </v-card>
@@ -28,7 +32,7 @@
     </v-row>
     <infinite-scroll
       :page="page"
-      :url="`/api/v1/notifications/${currentUser.id}`"
+      :url="`/api/v1/notifications/${$route.params.id}`"
       @pushContents="pushContents"
       @pageIncrement="pageIncrement"
     />
@@ -51,9 +55,12 @@ export default {
     FollowCard,
     ChatCard
   },
+  async asyncData ({ $axios, params }) {
+    const res = await $axios.get(`/api/v1/notifications/${params.id}`)
+    return { notifications: res.data.notifications }
+  },
   data () {
     return {
-      notifications: [],
       page: 1
     }
   },
@@ -62,23 +69,7 @@ export default {
       currentUser: 'auth/data'
     })
   },
-  mounted () {
-    setTimeout(() => {
-      this.fetchContents()
-    })
-  },
   methods: {
-    async fetchContents () {
-      const url = `/api/v1/notifications/${this.currentUser.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.notifications = res.data.notifications
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
     rollBackPage () {
       this.page = 1
     },
