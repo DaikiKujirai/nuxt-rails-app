@@ -77,7 +77,6 @@
               :user="post.user"
               :likes="post.likes"
               :is-list="isList"
-              @rollBackPage="rollBackPage"
               @fetchContents="fetchContents"
             />
             <v-divider class="mx-3 mt-1" />
@@ -132,7 +131,7 @@ export default {
   watch: {
     async updatePost (val) {
       if (val.bool && val.post.id === this.post.id) {
-        this.postContainerForEdit = await val.post
+        this.post = await val.post
         this.setUpdatePost = await { bool: false, post: {} }
       }
     }
@@ -157,9 +156,6 @@ export default {
     },
     fetchComments () {
       this.$refs.child.fetchComments()
-    },
-    rollBackPage () {
-      this.$refs.child.rollBackPage()
     },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)

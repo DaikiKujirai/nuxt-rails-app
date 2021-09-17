@@ -16,8 +16,6 @@
             :user="user"
             :likes="comment.likes"
             :is-list="isList"
-            @rollBackPage="rollBackPage"
-            @fetchContents="fetchContents"
           />
         </template>
       </v-col>
@@ -32,7 +30,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import Actions from '../../loggedIn/mainCard/actions.vue'
 import PostCard from '../../post/postCard.vue'
 import InfiniteScroll from '../../ui/infiniteScroll.vue'
@@ -47,6 +45,10 @@ export default {
     user: {
       type: Object,
       required: true
+    },
+    currentTab: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -59,13 +61,26 @@ export default {
   },
   computed: {
     ...mapGetters({
-      isAuthenticated: 'auth/isAuthenticated'
+      isAuthenticated: 'auth/isAuthenticated',
+      deletePost: 'post/deletePost'
     })
+  },
+  watch: {
+    deletePost (val) {
+      if (val.bool && this.currentTab === 'comments') {
+        const comments = this.comments.filter(comment => comment.id !== val.post.id)
+        this.comments = comments
+        this.setDeletePost({ bool: false, post: {} })
+      }
+    }
   },
   created () {
     this.fetchContents()
   },
   methods: {
+    ...mapActions({
+      setDeletePost: 'post/setDeletePost'
+    }),
     async fetchContents () {
       const url = `/api/v1/show_user_comments/${this.user.id}`
       await this.$axios.get(url)
@@ -75,9 +90,6 @@ export default {
     },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)
-    },
-    rollBackPage () {
-      this.page = 1
     },
     pageIncrement () {
       this.page++

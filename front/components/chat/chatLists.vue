@@ -35,7 +35,7 @@ export default {
       isUpdate: 'chat/isUpdate'
     })
   },
-  mounted () {
+  created () {
     this.fetchContents()
   },
   methods: {

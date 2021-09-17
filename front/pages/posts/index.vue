@@ -74,21 +74,30 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
-      isPost: 'post/isPost'
+      isNewPost: 'post/isNewPost',
+      deletePost: 'post/deletePost'
     })
   },
   watch: {
-    isPost (bool) {
+    isNewPost (bool) {
       if (bool) {
         this.fetchContents()
-        this.setIsPost(false)
+        this.setIsNewPost(false)
+      }
+    },
+    deletePost (val) {
+      if (val.bool) {
+        const posts = this.posts.filter(post => post.id !== val.post.id)
+        this.posts = posts
+        this.setDeletePost({ bool: false, post: {} })
       }
     }
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setIsPost: 'post/setIsPost'
+      setIsNewPost: 'post/setIsNewPost',
+      setDeletePost: 'post/setDeletePost'
     }),
     async fetchContents () {
       await this.$axios.get(this.url)

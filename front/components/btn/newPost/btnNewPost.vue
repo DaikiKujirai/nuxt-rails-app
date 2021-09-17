@@ -32,8 +32,23 @@
             v-model="isValid"
           >
             <new-post-form-content
-              :content.sync="post.content"
+              :content.sync="content"
             />
+            <v-row>
+              <v-col class="d-flex">
+                <input-file-form
+                  @setImageInPostImage="image = $event"
+                  @setImageInPreview="preview = $event"
+                />
+                <v-img
+                  :src="preview"
+                  height="80px"
+                  width="80px"
+                  contain
+                  class="mb-3"
+                />
+              </v-col>
+            </v-row>
             <v-btn
               :disabled="!isValid || loading"
               :loading="loading"
@@ -52,18 +67,22 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import InputFileForm from '../../post/InputFileForm.vue'
 import newPostFormContent from './newPostFormContent.vue'
 
 export default {
   components: {
-    newPostFormContent
+    newPostFormContent,
+    InputFileForm
   },
   data () {
     return {
       dialog: false,
       isValid: false,
       loading: false,
-      post: { content: '' }
+      content: '',
+      image: '',
+      preview: ''
     }
   },
   computed: {
@@ -74,16 +93,21 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setIsPost: 'post/setIsPost'
+      setIsNewPost: 'post/setIsNewPost'
     }),
     async submitPost () {
       this.loading = true
-      this.post.user_id = this.currentUser.id
-      await this.$axios.$post('/api/v1/posts', this.post)
+      const formData = new FormData()
+      formData.append('post[user_id]', this.currentUser.id)
+      formData.append('post[content]', this.content)
+      if (this.image) {
+        formData.append('post[image]', this.image)
+      }
+      await this.$axios.$post('/api/v1/posts', formData)
         .then(() => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
           if (this.$route.name === 'posts') {
-            this.setIsPost(true)
+            this.setIsNewPost(true)
           } else {
             this.$router.push('/posts')
           }
@@ -95,9 +119,6 @@ export default {
           this.flashMessage({ message: '失敗しました', type: 'error', status: true })
           this.loading = false
         })
-    },
-    fetchContents () {
-      this.$emit('fetchContents')
     }
   }
 }

@@ -1,5 +1,5 @@
 <template>
-  <layout-chat #layout-chat> <!--eslint-disable-line-->
+  <layout-chat #layout-chat > <!--eslint-disable-line-->
     <chat-message />
   </layout-chat>
 </template>
