@@ -116,7 +116,8 @@ export default {
   },
   data () {
     return {
-      isList: false
+      isList: false,
+      breadcrumbs: 'の投稿'
     }
   },
   computed: {
@@ -138,11 +139,13 @@ export default {
   },
   created () {
     this.setUser(this.post.user)
+    this.setBreadcrumbs(this.breadcrumbs)
   },
   methods: {
     ...mapActions({
       setUser: 'user/setUser',
-      setUpdatePost: 'post/setUpdatePost'
+      setUpdatePost: 'post/setUpdatePost',
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
     }),
     async fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`

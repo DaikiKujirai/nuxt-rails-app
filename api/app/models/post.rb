@@ -16,6 +16,10 @@ class Post < ApplicationRecord
       where(post_id: 0)
     end
 
+    def find_home_posts(current_user)
+      where(user_id: [current_user.id, *current_user.following_ids]).where(post_id: 0)
+    end
+
     def find_post_comments(post_id)
       where(post_id: post_id)
     end

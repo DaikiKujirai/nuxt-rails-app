@@ -6,14 +6,14 @@
     <v-list-item
       two-line
       class="justify-center"
-      @click="goHome"
+      @click="toIndex"
     >
       <v-icon
         size="28"
         class="mr-5"
-        v-text="'mdi-home'"
+        v-text="'mdi-note-text-outline'"
       />
-      ホーム
+      全ての投稿
     </v-list-item>
   </v-list>
 </template>
@@ -22,8 +22,8 @@
 
 export default {
   methods: {
-    goHome () {
-      this.$router.push('/')
+    toIndex () {
+      this.$router.push('/posts')
     }
   }
 }

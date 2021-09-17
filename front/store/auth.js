@@ -52,11 +52,12 @@ export const actions = {
     commit('setData', user)
   },
 
-  logout ({ commit }) {
+  logout ({ commit, $route }) {
     firebase.auth().signOut()
       .then(() => {
         commit('setUser', null)
         commit('setData', null)
+        $route.replace('/posts')
       })
   }
 }

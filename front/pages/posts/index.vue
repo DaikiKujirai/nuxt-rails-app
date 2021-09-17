@@ -67,7 +67,8 @@ export default {
     return {
       page: 1,
       url: '/api/v1/posts',
-      isList: true
+      isList: true,
+      breadcrumbs: '全ての投稿'
     }
   },
   computed: {
@@ -93,11 +94,15 @@ export default {
       }
     }
   },
+  created () {
+    this.setBreadcrumbs(this.breadcrumbs)
+  },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setIsNewPost: 'post/setIsNewPost',
-      setDeletePost: 'post/setDeletePost'
+      setDeletePost: 'post/setDeletePost',
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
     }),
     async fetchContents () {
       await this.$axios.get(this.url)

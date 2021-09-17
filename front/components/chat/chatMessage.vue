@@ -1,58 +1,65 @@
 <template>
   <v-card>
-    <v-app-bar
-      dense
-      flat
-      color="white"
-    >
-      <v-toolbar-title>
-        {{ user.name }}
-      </v-toolbar-title>
-    </v-app-bar>
-    <v-list
-      id="chat-display"
-      class="overflow-y-auto overflow-x-0"
-      color="info"
-      height="600"
-    >
-      <v-list-item
-        v-for="(msg, i) in chats"
-        :key="i"
+    <template v-if="isMyChatRoom">
+      <h1>
+        チャットを選択してください
+      </h1>
+    </template>
+    <template v-else>
+      <v-app-bar
+        dense
+        flat
+        color="white"
       >
-        <template v-if="msg.userId != currentUser.uid">
-          <balloon-l
-            :user-avatar="userAvatar"
-            :msg="msg"
-          />
-        </template>
-        <template v-else>
-          <balloon-r
-            :msg="msg"
-          />
-        </template>
-      </v-list-item>
-    </v-list>
-    <v-divider
-      id="scroll-inner"
-    />
-    <v-form
-      ref="form"
-      v-model="isValid"
-      class="d-flex align-start mx-2 pt-2"
-    >
-      <chat-message-form
-        :message.sync="message"
-        class="mr-2"
+        <v-toolbar-title>
+          {{ user.name }}
+        </v-toolbar-title>
+      </v-app-bar>
+      <v-list
+        id="chat-display"
+        class="overflow-y-auto overflow-x-0"
+        color="info"
+        height="600"
+      >
+        <v-list-item
+          v-for="(msg, i) in chats"
+          :key="i"
+        >
+          <template v-if="msg.userId != currentUser.uid">
+            <balloon-l
+              :user-avatar="userAvatar"
+              :msg="msg"
+            />
+          </template>
+          <template v-else>
+            <balloon-r
+              :msg="msg"
+            />
+          </template>
+        </v-list-item>
+      </v-list>
+      <v-divider
+        id="scroll-inner"
       />
-      <v-btn
-        :disabled="!isValid"
-        rounded
-        color="success"
-        @click="sendMessage"
+      <v-form
+        ref="form"
+        v-model="isValid"
+        class="d-flex align-start mx-2 pt-2"
       >
-        送信
-      </v-btn>
-    </v-form>
+        <chat-message-form
+          :message.sync="message"
+          class="mr-2"
+        />
+        <v-btn
+          :disabled="!isValid"
+          rounded
+          color="success"
+          @click="sendMessage"
+        >
+          送信
+        </v-btn>
+      </v-form>
+    </template>
   </v-card>
 </template>
 
@@ -85,7 +92,10 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       isUpdate: 'chat/isUpdate'
-    })
+    }),
+    isMyChatRoom () {
+      return this.currentUser.id === this.$route.params.id
+    }
   },
   created () {
     this.fetchContents()

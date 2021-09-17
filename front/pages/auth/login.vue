@@ -71,7 +71,7 @@ export default {
           this.login(res.user)
           setTimeout(() => {
             this.flashMessage({ message: 'ログインしました', type: 'success', status: true })
-            this.$router.push('/posts')
+            this.$router.push('/')
             this.loading = false
           }, 1500)
         })

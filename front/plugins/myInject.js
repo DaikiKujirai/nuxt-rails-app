@@ -15,10 +15,8 @@ class MyInject {
   }
 
   pageTitle (routeName) {
-    const jsonPath = `pages.${routeName.replace(/-/g, '.')}`
-    const title = this.app.i18n.t(jsonPath)
-    return title
-    // return (typeof (title) === 'object') ? title.index : title
+    const title = this.app.i18n(routeName)
+    return (typeof (title) === 'object') ? title.index : title
   }
 
   action (action) {

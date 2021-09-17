@@ -1,7 +1,7 @@
 class ChatRoom < ApplicationRecord
   belongs_to :user
 
-  has_many :notifications, dependent: :destroy
+  has_many :notifications
 
   scope :updated_desc , -> { order(updated_at: :desc) }
 
@@ -12,10 +12,6 @@ class ChatRoom < ApplicationRecord
       else
         return other_user_uid + '-' + current_user_uid
       end
-    end
-
-    def find_my_chat_rooms(current_user)
-      current_user.chat_rooms.where(user_id: current_user.id).updated_desc
     end
   end
 
