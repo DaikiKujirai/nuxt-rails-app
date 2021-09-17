@@ -7,16 +7,24 @@
           centered
           fixed-tabs
         >
-          <v-tab>
+          <v-tab
+            @click="currentTab = 'posts'"
+          >
             投稿
           </v-tab>
-          <v-tab>
-            投稿と返信
+          <v-tab
+            @click="currentTab = 'comments'"
+          >
+            コメント
           </v-tab>
-          <v-tab>
+          <v-tab
+            @click="currentTab = 'images'"
+          >
             メディア
           </v-tab>
-          <v-tab>
+          <v-tab
+            @click="currentTab = 'likes'"
+          >
             いいね
           </v-tab>
         </v-tabs>
@@ -24,15 +32,19 @@
       <v-tabs-items v-model="tab">
         <tab-posts
           :user="user"
+          :current-tab="currentTab"
         />
         <tab-comments
           :user="user"
+          :current-tab="currentTab"
         />
         <tab-image
           :user="user"
+          :current-tab="currentTab"
         />
         <tab-likes
           :user="user"
+          :current-tab="currentTab"
         />
       </v-tabs-items>
     </v-col>
@@ -43,7 +55,7 @@
 import TabPosts from './tabs/tabPosts.vue'
 import TabComments from './tabs/tabComments.vue'
 import TabLikes from './tabs/tabLikes.vue'
-import TabImage from './tabs/tabImage.vue'
+import TabImage from './tabs/tabImages.vue'
 
 export default {
   components: {
@@ -60,7 +72,8 @@ export default {
   },
   data () {
     return {
-      tab: null
+      tab: null,
+      currentTab: 'posts'
     }
   }
 }

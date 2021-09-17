@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import TabFollowers from '../../components/user/tabs/tabFollowers.vue'
 import TabFollowing from '../../components/user/tabs/tabFollowing.vue'
@@ -38,13 +39,18 @@ export default {
   },
   data () {
     return {
-      tab: 0
+      tab: 0,
+      breadcrumbs: ''
     }
   },
   created () {
     this.fetchContents()
+    this.setBreadcrumbs(this.breadcrumbs)
   },
   methods: {
+    ...mapActions({
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+    }),
     fetchContents () {
       if (this.$route.query.tab === 'following') {
         this.tab = 1

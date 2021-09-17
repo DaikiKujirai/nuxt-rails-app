@@ -1,5 +1,17 @@
 class Api::V1::PostsController < ApplicationController
   include Pagination
+
+  def home
+    current_user = User.find(params[:user_id])
+    posts        = Post.find_home_posts(current_user).includes(:user, :likes).page(params[:page]).per(5)
+    pagination   = resources_with_pagination(posts)
+    object       = {
+                    posts:    posts.as_json(include: [:user, :likes]),
+                    kaminari: pagination
+                   }
+    render json: object
+  end
+
   def index
     posts      = Post.find_posts.includes(:user, :likes).page(params[:page]).per(5)
     pagination = resources_with_pagination(posts)

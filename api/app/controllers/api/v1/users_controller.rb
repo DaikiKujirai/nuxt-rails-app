@@ -60,7 +60,7 @@ class Api::V1::UsersController < ApplicationController
   def show_user_posts_have_image
     user_posts = Post.find_user_posts_have_image(params[:id]).includes(:user, :likes).page(params[:page]).per(5)
     pagination = resources_with_pagination(user_posts)
-    object     = { user_posts: user_posts.as_json(include: [:user, :likes], kaminari: pagination) }
+    object     = { user_posts: user_posts.as_json(include: [:user, :likes]), kaminari: pagination }
     render json: object
   end
 

@@ -4,9 +4,10 @@
       cols="3"
       class="list"
     >
-      <link-home />
+      <link-index />
       <link-search />
       <template v-if="isAuthenticated">
+        <link-home />
         <link-notification />
         <link-chat />
         <link-following />
@@ -31,6 +32,7 @@ import LinkNotification from './linkNotification.vue'
 import LinkChat from './linkChat.vue'
 import LinkFollowing from './linkFollowing.vue'
 import LinkFollower from './linkFollower.vue'
+import LinkIndex from './linkIndex.vue'
 import BtnNewPost from '~/components/btn/newPost/btnNewPost.vue'
 
 export default {
@@ -41,14 +43,13 @@ export default {
     LinkNotification,
     LinkChat,
     LinkFollowing,
-    LinkFollower
+    LinkFollower,
+    LinkIndex
   },
   computed: {
     ...mapGetters({
       isAuthenticated: 'auth/isAuthenticated'
     })
-  },
-  methods: {
   }
 }
 </script>

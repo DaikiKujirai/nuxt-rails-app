@@ -14,10 +14,11 @@
             cols="6"
           >
             <v-card class="d-flex align-center">
-              <template v-if="$route.name !== 'posts'">
+              <template v-if="$route.name !== 'index'">
                 <v-btn
                   icon
                   class="ml-3"
+                  style="z-index: 1;"
                   @click="pageBack"
                 >
                   <v-icon

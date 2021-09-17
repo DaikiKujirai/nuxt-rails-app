@@ -75,20 +75,18 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      commentsCountPagePostIdDecrement: 'commentsCountPagePostIdDecrement'
+      commentsCountPagePostIdDecrement: 'post/commentsCountPagePostIdDecrement',
+      setDeletePost: 'post/setDeletePost'
     }),
     async clickOK () {
-      await this.$axios.$delete(`/api/v1/posts/${this.post.id}`)
+      await this.$axios.delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
-          this.rollBackPage()
           if (this.$route.name === 'posts-id' && this.isList) {
-            this.fetchContents()
             this.commentsCountPagePostIdDecrement()
-          } else if (this.$route.name === 'posts-id' && !this.isList) {
-            this.$router.replace('/posts')
-          } else {
-            this.fetchContents()
           }
+          this.$route.name === 'posts-id' && !this.isList
+            ? (this.$router.replace('/posts'))
+            : (this.setDeletePost({ bool: true, post: this.post }))
           this.dialog = false
           this.flashMessage({ message: '削除しました', type: 'primary', status: true })
         })
@@ -96,15 +94,6 @@ export default {
           // eslint-disable-next-line no-console
           console.log('投稿の削除に失敗', err)
         })
-    },
-    fetchContents () {
-      this.$emit('fetchContents')
-    },
-    commentsCountDecrement () {
-      this.$emit('commentsCountDecrement')
-    },
-    rollBackPage () {
-      this.$emit('rollBackPage')
     }
   }
 }

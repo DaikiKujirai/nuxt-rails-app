@@ -53,6 +53,16 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data'
     })
+  },
+  mounted () {
+    if (this.user.introduction.length > 80) {
+      this.sliceIntroduction(this.user)
+    }
+  },
+  methods: {
+    sliceIntroduction (user) {
+      user.introduction = user.introduction.substr(0, 80) + '...'
+    }
   }
 }
 </script>

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
       get  'show_user_posts_have_image/:id'     => 'users#show_user_posts_have_image'
       put  'update_account/:id'                 => 'users#update_account'
       # post
+      root 'posts#home'
       post 'create_comment'                     => 'posts#create_comment'
       get  'find_comments/:id'                  => 'posts#find_comments'
       # like

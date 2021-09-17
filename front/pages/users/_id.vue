@@ -100,6 +100,11 @@ export default {
     const res = await $axios.get(`/api/v1/users/${params.id}`)
     return { user: res.data }
   },
+  data () {
+    return {
+      breadcrumbs: ''
+    }
+  },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
@@ -108,10 +113,12 @@ export default {
   },
   created () {
     this.setUser(this.user)
+    this.setBreadcrumbs(this.breadcrumbs)
   },
   methods: {
     ...mapActions({
-      setUser: 'user/setUser'
+      setUser: 'user/setUser',
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
     })
   }
 }

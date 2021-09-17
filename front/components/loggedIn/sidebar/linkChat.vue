@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     toChat () {
-      this.$router.push('/chats')
+      this.$router.push(`/chatRooms/${this.currentUser.id}`)
     }
   }
 }

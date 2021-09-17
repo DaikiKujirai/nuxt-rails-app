@@ -48,6 +48,10 @@ export default {
     user: {
       type: Object,
       required: true
+    },
+    currentTab: {
+      type: String,
+      required: true
     }
   },
   data () {
@@ -61,8 +65,18 @@ export default {
   computed: {
     ...mapGetters({
       isAuthenticated: 'auth/isAuthenticated',
-      currentUser: 'auth/data'
+      currentUser: 'auth/data',
+      deletePost: 'post/deletePost'
     })
+  },
+  watch: {
+    deletePost (val) {
+      if (val.bool && this.currentTab === 'likes') {
+        const posts = this.posts.filter(post => post.id !== val.post.id)
+        this.posts = posts
+        this.setDeletePost({ bool: false, post: {} })
+      }
+    }
   },
   methods: {
     async fetchContents () {

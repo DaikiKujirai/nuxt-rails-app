@@ -67,28 +67,42 @@ export default {
     return {
       page: 1,
       url: '/api/v1/posts',
-      isList: true
+      isList: true,
+      breadcrumbs: '全ての投稿'
     }
   },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
-      isPost: 'post/isPost'
+      isNewPost: 'post/isNewPost',
+      deletePost: 'post/deletePost'
     })
   },
   watch: {
-    isPost (bool) {
+    isNewPost (bool) {
       if (bool) {
         this.fetchContents()
-        this.setIsPost(false)
+        this.setIsNewPost(false)
+      }
+    },
+    deletePost (val) {
+      if (val.bool) {
+        const posts = this.posts.filter(post => post.id !== val.post.id)
+        this.posts = posts
+        this.setDeletePost({ bool: false, post: {} })
       }
     }
+  },
+  created () {
+    this.setBreadcrumbs(this.breadcrumbs)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setIsPost: 'post/setIsPost'
+      setIsNewPost: 'post/setIsNewPost',
+      setDeletePost: 'post/setDeletePost',
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
     }),
     async fetchContents () {
       await this.$axios.get(this.url)

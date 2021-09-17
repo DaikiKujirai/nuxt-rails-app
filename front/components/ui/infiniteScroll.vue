@@ -26,13 +26,27 @@ export default {
     url: {
       type: String,
       required: true
+    },
+    userId: {
+      type: Number,
+      default: 0
+    },
+    currentUserId: {
+      type: Number,
+      default: 0
     }
   },
   methods: {
     infiniteHandler () {
       this.pageIncrement()
       setTimeout(() => {
-        this.$axios.get(this.url, { params: { page: this.page } })
+        this.$axios.get(this.url, {
+          params: {
+            page: this.page,
+            user_id: this.userId,
+            current_user_id: this.currentUserId
+          }
+        })
           .then((res) => {
             setTimeout(() => {
               if (this.page <= res.data.kaminari.pagination.pages) {

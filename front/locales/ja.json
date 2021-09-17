@@ -16,11 +16,12 @@
       "settings" : "アカウント設定",
       "password" : "パスワード変更"
     },
-    "posts"           : "ホーム"   ,
+    "index"           : "ホーム"    ,
+    "posts"           : "全ての投稿",
     "posts-id"        : "投稿"     ,
+    "chats"           : "チャット",
     "search"          : "投稿を検索",
     "notifications-id": "通知"     ,
-    "chats"           : "チャット"  ,
     "relationships-id": "フォロー"
   },
   "actions": {
