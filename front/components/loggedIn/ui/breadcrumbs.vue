@@ -1,6 +1,6 @@
 <template>
   <h4
-    class="ma-5"
+    class="ma-3"
   >
     <template v-if="$route.params.id">
       {{ user.name }}

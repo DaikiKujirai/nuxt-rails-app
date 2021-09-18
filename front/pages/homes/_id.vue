@@ -2,7 +2,6 @@
   <layout-main #layout-main> <!--eslint-disable-line-->
     <template v-if="isAuthenticated">
       <home-new-post
-        @rollBackPage="rollBackPage"
         @fetchContents="fetchContents"
       />
     </template>
@@ -27,7 +26,6 @@
                 :likes="post.likes"
                 :is-list="isList"
                 @fetchContents="fetchContents"
-                @rollBackPage="rollBackPage"
               />
             </template>
           </v-card>
@@ -36,6 +34,7 @@
       <infinite-scroll
         :page="page"
         :url="url"
+        :user-id="Number($route.params.id)"
         @pushContents="pushContents"
         @pageIncrement="pageIncrement"
       />
@@ -46,8 +45,8 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
-import HomeNewPost from '../../components/post/homeNewPost.vue'
 import Actions from '../../components/loggedIn/mainCard/actions.vue'
+import HomeNewPost from '../../components/post/homeNewPost.vue'
 import PostCard from '../../components/post/postCard.vue'
 import InfiniteScroll from '../../components/ui/infiniteScroll.vue'
 
@@ -55,20 +54,25 @@ export default {
   components: {
     LayoutMain,
     HomeNewPost,
+    InfiniteScroll,
     Actions,
-    PostCard,
-    InfiniteScroll
+    PostCard
   },
-  async asyncData ({ $axios }) {
-    const res = await $axios.get('/api/v1/posts')
+  async asyncData ({ $axios, params }) {
+    const res = await $axios.get('/api/v1', {
+      params: {
+        user_id: params.id
+      }
+    })
     return { posts: res.data.posts }
   },
   data () {
     return {
+      posts: [],
       page: 1,
-      url: '/api/v1/posts',
+      url: '/api/v1/',
       isList: true,
-      breadcrumbs: '全ての投稿'
+      breadcrumbs: 'ホーム'
     }
   },
   computed: {
@@ -101,18 +105,26 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.setBreadcrumbs(this.breadcrumbs)
+    setTimeout(() => {
+      this.setUser(this.currentUser)
+    }, 0)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setIsNewPost: 'post/setIsNewPost',
       setDeletePost: 'post/setDeletePost',
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setUser: 'user/setUser'
     }),
     async fetchContents () {
-      await this.$axios.get(this.url)
+      await this.$axios.get(this.url, {
+        params: {
+          user_id: this.currentUser.id
+        }
+      })
         .then((res) => {
           this.posts = res.data.posts
         })

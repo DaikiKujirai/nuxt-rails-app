@@ -26,6 +26,7 @@
       >
         登録する
       </v-btn>
+      <guest-login />
     </v-form>
   </bef-login-form-card>
 </template>
@@ -37,13 +38,15 @@ import befLoginFormCard from '../../components/layout/befLogin/befLoginFormCard.
 import userFormEmail from '../../components/user/userFormEmail.vue'
 import userFormName from '../../components/user/userFormName.vue'
 import userFormPassword from '../../components/user/userFormPassword.vue'
+import GuestLogin from '../../components/beforeLogin/guestLogin.vue'
 
 export default {
   components: {
     befLoginFormCard,
     userFormName,
     userFormEmail,
-    userFormPassword
+    userFormPassword,
+    GuestLogin
   },
   layout: 'beforeLogin',
   // middleware: 'authenticated.js',
@@ -85,8 +88,8 @@ export default {
         .then(() => {
           this.login(res.user)
           setTimeout(() => {
+            this.$router.replace('/posts')
             this.flashMessage({ message: '登録に成功しました', type: 'success', status: true })
-            this.$router.push('/posts')
             this.loading = false
           }, 500)
         })

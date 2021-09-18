@@ -30,10 +30,6 @@ export default {
     userId: {
       type: Number,
       default: 0
-    },
-    currentUserId: {
-      type: Number,
-      default: 0
     }
   },
   methods: {
@@ -43,8 +39,7 @@ export default {
         this.$axios.get(this.url, {
           params: {
             page: this.page,
-            user_id: this.userId,
-            current_user_id: this.currentUserId
+            user_id: this.userId
           }
         })
           .then((res) => {

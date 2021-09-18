@@ -106,10 +106,10 @@ export default {
       await this.$axios.$post('/api/v1/posts', formData)
         .then(() => {
           this.flashMessage({ message: '投稿しました', type: 'primary', status: true })
-          if (this.$route.name === 'posts') {
+          if (this.$route.name === 'posts' || this.$route.name === 'homes-id') {
             this.setIsNewPost(true)
           } else {
-            this.$router.push('/posts')
+            this.$router.push('/home')
           }
           this.loading = false
           this.dialog = false

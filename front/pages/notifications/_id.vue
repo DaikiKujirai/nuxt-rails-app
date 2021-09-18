@@ -75,10 +75,12 @@ export default {
   },
   methods: {
     ...mapActions({
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setIsActive: 'notification/setIsActive'
     }),
-    pushContents (res) {
-      this.notifications.push(...res.data.notifications)
+    async pushContents (res) {
+      await this.notifications.push(...res.data.notifications)
+      await this.setIsActive(true)
     },
     pageIncrement () {
       this.page++

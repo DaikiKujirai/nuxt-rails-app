@@ -2,7 +2,6 @@
   <layout-main #layout-main> <!--eslint-disable-line-->
     <template v-if="isAuthenticated">
       <home-new-post
-        @rollBackPage="rollBackPage"
         @fetchContents="fetchContents"
       />
     </template>
@@ -27,7 +26,6 @@
                 :likes="post.likes"
                 :is-list="isList"
                 @fetchContents="fetchContents"
-                @rollBackPage="rollBackPage"
               />
             </template>
           </v-card>
@@ -36,7 +34,6 @@
       <infinite-scroll
         :page="page"
         :url="url"
-        :user-id="currentUser.id"
         @pushContents="pushContents"
         @pageIncrement="pageIncrement"
       />
@@ -60,22 +57,29 @@ export default {
     Actions,
     InfiniteScroll
   },
-  async asyncData ({ $axios, store }) {
-    const res = await $axios.get('/api/v1/', {
-      params: {
-        user_id: store.state.auth.data.id
-      }
-    })
+  async asyncData ({ $axios, params }) {
+    console.log(params.id)
+    const res = await $axios.get(`/api/v1/home/${params.id}`)
     return { posts: res.data.posts }
   },
   data () {
     return {
+      posts: [],
       page: 1,
       url: '/api/v1/',
       isList: true,
       breadcrumbs: 'ホーム'
     }
   },
+  // async fetch ({ $axios, store }) {
+  //   // console.log(context)
+  //   const res = await $axios.get('/api/v1/', {
+  //     params: {
+  //       user_id: store.state.auth.data.id
+  //     }
+  //   })
+  //   return { posts: res.data.posts }
+  // },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
@@ -99,8 +103,9 @@ export default {
       }
     }
   },
-  created () {
+  mounted () {
     this.setBreadcrumbs(this.breadcrumbs)
+    this.fetchContents()
   },
   methods: {
     ...mapActions({
@@ -124,9 +129,6 @@ export default {
     },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)
-    },
-    rollBackPage () {
-      this.page = 1
     },
     pageIncrement () {
       this.page++

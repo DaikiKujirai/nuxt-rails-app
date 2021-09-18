@@ -2,10 +2,11 @@ class Api::V1::NotificationsController < ApplicationController
   include Pagination
   def show
     current_user  = User.find(params[:id])
-    notifications = current_user.passive_notifications.page(params[:page]).per(10)
+    notifications = current_user.passive_notifications.includes(:post, :visitor).page(params[:page]).per(10)
     notifications.where(checked: false).each do |notification|
       notification.update_attributes(checked: true)
     end
+
     pagination    = resources_with_pagination(notifications)
     object        = { notifications: notifications.as_json(include: [:post, :visitor]), kaminari: pagination }
     render json: object

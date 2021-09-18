@@ -41,10 +41,14 @@ export default {
   },
   methods: {
     ...mapActions({
-      logout: 'auth/logout'
+      logout: 'auth/logout',
+      flashMessage: 'flash/flashMessage'
     }),
     signout () {
       this.logout()
+        .then(() => {
+          this.flashMessage({ message: 'ログアウトしました', type: 'primary', status: true })
+        })
     }
   }
 

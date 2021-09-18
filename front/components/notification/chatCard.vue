@@ -1,6 +1,6 @@
 <template>
   <v-row
-    @click="toShow('chats', user.id)"
+    @click="toShow('chatRooms', user.id)"
   >
     <v-col
       cols="1"

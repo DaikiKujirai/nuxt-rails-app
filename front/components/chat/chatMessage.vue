@@ -65,6 +65,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import ActionCable from 'actioncable'
 import chatMessageForm from './chatMessageForm.vue'
 import BalloonL from './balloonL.vue'
 import BalloonR from './balloonR.vue'
@@ -84,7 +85,8 @@ export default {
       roomId: '',
       user: {},
       message: '',
-      userAvatar: ''
+      userAvatar: '',
+      isMyChatRoom: false
       // date: `${$my(this.msg.createdAt.toDate())}`
     }
   },
@@ -92,13 +94,24 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       isUpdate: 'chat/isUpdate'
-    }),
-    isMyChatRoom () {
-      return this.currentUser.id === this.$route.params.id
-    }
+    })
   },
   created () {
-    this.fetchContents()
+    const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+
+    this.messageChannel = cable.subscriptions.create('RoomChannel', {
+      receiced: (data) => {
+        console.log(data)
+        this.createNotification()
+      }
+    })
+  },
+  mounted () {
+    setTimeout(() => {
+      this.currentUser.id === Number(this.$route.params.id)
+        ? (this.isMyChatRoom = true)
+        : (this.fetchContents())
+    }, 0)
   },
   destroyed () {
     this.chats = []
@@ -108,6 +121,12 @@ export default {
       flashMessage: 'flash/flashMessage',
       setIsUpdate: 'chat/setIsUpdate'
     }),
+    // click () {
+    //   this.messageChannel.perfrom('post', {
+    //     message: this.message
+    //   })
+    //   this.message = ''
+    // },
     async fetchContents () {
       const url = `/api/v1/users/${this.$route.params.id}`
       await this.$axios.get(url)
@@ -168,6 +187,9 @@ export default {
         .collection('chats')
         .add(chat)
         .then(() => {
+          this.messageChannel.perform('post', {
+            message: this.message
+          })
           this.$refs.form.reset()
           this.createNotification()
           setTimeout(() => {

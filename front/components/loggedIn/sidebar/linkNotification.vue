@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -36,29 +36,33 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentUser: 'auth/data'
+      currentUser: 'auth/data',
+      isActive: 'notification/isActive'
     })
   },
   watch: {
-    isActive (val) {
-      if (val) {
-        this.fetchContents()
-        this.setIsActive(false)
+    async isActive (bool) {
+      if (bool) {
+        await this.fetchContents()
+        await this.setIsActive(false)
       }
     }
   },
   mounted () {
     setTimeout(() => {
       this.fetchContents()
-    }, 500)
+    }, 0)
   },
   methods: {
+    ...mapActions({
+      setIsActive: 'notification/setIsActive'
+    }),
     toNotification () {
       this.$router.push(`/notifications/${this.currentUser.id}`)
     },
-    fetchContents () {
+    async fetchContents () {
       const url = `api/v1/find_notifications_count/${this.currentUser.id}`
-      this.$axios.get(url)
+      await this.$axios.get(url)
         .then((res) => {
           this.count = res.data
         })

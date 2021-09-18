@@ -69,7 +69,8 @@ export default {
       tab: null,
       name: '',
       coverImage: '',
-      avatar: ''
+      avatar: '',
+      breadcrumbs: 'アカウント設定'
     }
   },
   computed: {
@@ -89,7 +90,8 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      updateCurrentUser: 'auth/updateCurrentUser'
+      updateCurrentUser: 'auth/updateCurrentUser',
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
     })
   }
 }
