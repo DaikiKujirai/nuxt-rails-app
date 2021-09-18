@@ -5,7 +5,6 @@
       class="list"
     >
       <link-index />
-      <link-search />
       <template v-if="isAuthenticated">
         <link-home />
         <link-notification />
@@ -27,7 +26,6 @@
 <script>
 import { mapGetters } from 'vuex'
 import LinkHome from './linkHome.vue'
-import LinkSearch from './linkSearch.vue'
 import LinkNotification from './linkNotification.vue'
 import LinkChat from './linkChat.vue'
 import LinkFollowing from './linkFollowing.vue'
@@ -39,7 +37,6 @@ export default {
   components: {
     BtnNewPost,
     LinkHome,
-    LinkSearch,
     LinkNotification,
     LinkChat,
     LinkFollowing,

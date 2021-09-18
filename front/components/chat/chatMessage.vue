@@ -44,11 +44,12 @@
       <v-form
         ref="form"
         v-model="isValid"
-        class="d-flex align-start mx-2 pt-2"
+        class="d-flex align-start mx-2 pa-2"
       >
         <chat-message-form
           :message.sync="message"
           class="mr-2"
+          @sendMessage="sendMessage"
         />
         <v-btn
           :disabled="!isValid"
@@ -65,7 +66,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ActionCable from 'actioncable'
+// import ActionCable from 'actioncable'
 import chatMessageForm from './chatMessageForm.vue'
 import BalloonL from './balloonL.vue'
 import BalloonR from './balloonR.vue'
@@ -87,6 +88,7 @@ export default {
       message: '',
       userAvatar: '',
       isMyChatRoom: false
+      // messageChannel: ''
       // date: `${$my(this.msg.createdAt.toDate())}`
     }
   },
@@ -96,16 +98,16 @@ export default {
       isUpdate: 'chat/isUpdate'
     })
   },
-  created () {
-    const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+  // created () {
+  //   const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
 
-    this.messageChannel = cable.subscriptions.create('RoomChannel', {
-      receiced: (data) => {
-        console.log(data)
-        this.createNotification()
-      }
-    })
-  },
+  //   this.messageChannel = cable.subscriptions.create('room_channel', {
+  //     receiced: (data) => {
+  //       console.log(data)
+  //       this.createNotification()
+  //     }
+  //   })
+  // },
   mounted () {
     setTimeout(() => {
       this.currentUser.id === Number(this.$route.params.id)
@@ -122,7 +124,7 @@ export default {
       setIsUpdate: 'chat/setIsUpdate'
     }),
     // click () {
-    //   this.messageChannel.perfrom('post', {
+    //   this.messageChannel.perform('post', {
     //     message: this.message
     //   })
     //   this.message = ''
@@ -187,9 +189,9 @@ export default {
         .collection('chats')
         .add(chat)
         .then(() => {
-          this.messageChannel.perform('post', {
-            message: this.message
-          })
+          // this.messageChannel.perform('post', {
+          //   message: this.message
+          // })
           this.$refs.form.reset()
           this.createNotification()
           setTimeout(() => {

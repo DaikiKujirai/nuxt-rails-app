@@ -2,9 +2,10 @@
   <v-textarea
     v-model="setContent"
     label="いまなにしてる？"
-    auto-grow
     :rules="rules"
+    auto-grow
     class="mx-3"
+    @keypress.enter.shift.exact="submitPost"
   />
 </template>
 
@@ -31,6 +32,11 @@ export default {
     setContent: {
       get () { return this.content },
       set (newVal) { return this.$emit('update:content', newVal) }
+    }
+  },
+  methods: {
+    submitPost () {
+      this.$emit('submitPost')
     }
   }
 }

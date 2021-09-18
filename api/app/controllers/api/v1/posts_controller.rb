@@ -1,6 +1,5 @@
 class Api::V1::PostsController < ApplicationController
   include Pagination
-
   def home
     current_user = User.find(params[:user_id])
     posts        = Post.find_home_posts(current_user).includes(:user, :likes).page(params[:page]).per(5)
@@ -74,6 +73,14 @@ class Api::V1::PostsController < ApplicationController
     pagination = resources_with_pagination(comments)
     object     = { comments: comments.as_json(include: [:user, :likes]), kaminari: pagination }
     render json: object
+  end
+
+  def search
+    q          = Post.ransack(params[:q])
+    posts      = q.result(distinct: true)
+    byebug
+    pagination = resources_with_pagination(posts)
+    render json: posts.as_json(include: [:user, :likes])
   end
 
   private

@@ -51,6 +51,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-i18n',
     '@nuxtjs/dotenv',
+    // '@nuxtjs/google-adsense',
     [
       '@nuxtjs/firebase',
       {
