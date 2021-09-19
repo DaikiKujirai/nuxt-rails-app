@@ -2,7 +2,6 @@
   <div>
     <v-text-field
       v-model="content"
-      clearable
       dense
       prepend-inner-icon="mdi-magnify"
       placeholder="検索"
@@ -12,7 +11,6 @@
       class="mx-15"
       @keypress.enter.exact="toSearch"
     />
-    {{ content }}
   </div>
 </template>
 

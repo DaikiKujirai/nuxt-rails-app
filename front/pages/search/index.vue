@@ -45,6 +45,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import Qs from 'qs'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import HomeNewPost from '../../components/post/homeNewPost.vue'
 import Actions from '../../components/loggedIn/mainCard/actions.vue'
@@ -59,16 +60,16 @@ export default {
     PostCard,
     InfiniteScroll
   },
-  async asyncData ({ $axios }) {
-    const res = await $axios.get('/api/v1/posts')
-    return { posts: res.data.posts }
-  },
   data () {
     return {
+      posts: [],
       page: 1,
-      url: '/api/v1/posts',
+      url: '/api/v1/search',
       isList: true,
-      breadcrumbs: '全ての投稿'
+      breadcrumbs: 'で検索',
+      query: {
+        content_cont: this.searchWord
+      }
     }
   },
   computed: {
@@ -76,7 +77,8 @@ export default {
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       isNewPost: 'post/isNewPost',
-      deletePost: 'post/deletePost'
+      deletePost: 'post/deletePost',
+      searchWord: 'search/searchWord'
     })
   },
   watch: {
@@ -104,16 +106,33 @@ export default {
   created () {
     this.setBreadcrumbs(this.breadcrumbs)
   },
+  mounted () {
+    setTimeout(() => {
+      this.fetchContents()
+    }, 0)
+  },
+  destroyed () {
+    this.setSearchWord('')
+  },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setIsNewPost: 'post/setIsNewPost',
       setDeletePost: 'post/setDeletePost',
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setSearchWord: 'search/setSearchWord'
     }),
     async fetchContents () {
-      await this.$axios.get(this.url)
+      await this.$axios.get(this.url, {
+        params: {
+          q: this.query
+        },
+        paramsSerializer (params) {
+          return Qs.stringify(params, { arrayFormat: 'brackets' })
+        }
+      })
         .then((res) => {
+          console.log(res)
           this.posts = res.data.posts
         })
         .catch((err) => {

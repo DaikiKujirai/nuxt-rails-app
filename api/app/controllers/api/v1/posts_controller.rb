@@ -76,16 +76,21 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def search
-    q          = Post.ransack(params[:q])
-    posts      = q.result(distinct: true)
     byebug
+    q          = Post.ransack(search_params)
+    posts      = q.result(distinct: true).includes(:user, :likes).page(params[:page]).per(5)
     pagination = resources_with_pagination(posts)
-    render json: posts.as_json(include: [:user, :likes])
+    object     = { posts: posts.as_json(include: [:user, :likes]), kaminari: pagination }
+    render json: object
   end
 
   private
 
   def post_params
     params.require(:post).permit(:user_id, :post_id, :content, :image)
+  end
+
+  def search_params
+    params.require(:q).permit(:content_cont)
   end
 end

@@ -7,6 +7,9 @@
       <template v-if="$route.params.id">
         {{ user.name }}
       </template>
+      <template v-else-if="$route.name === 'search'">
+        "{{ searchWord }}"
+      </template>
       {{ breadcrumbs }}
     </h4>
     <search-form />
@@ -24,7 +27,8 @@ export default {
   computed: {
     ...mapGetters({
       user: 'user/user',
-      breadcrumbs: 'breadcrumbs/breadcrumbs'
+      breadcrumbs: 'breadcrumbs/breadcrumbs',
+      searchWord: 'search/searchWord'
     })
   }
 }

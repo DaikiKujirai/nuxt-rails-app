@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     page: {
@@ -32,6 +34,11 @@ export default {
       default: 0
     }
   },
+  computed: {
+    ...mapGetters({
+      searchWord: 'search/searchWord'
+    })
+  },
   methods: {
     infiniteHandler () {
       this.pageIncrement()
@@ -39,7 +46,8 @@ export default {
         this.$axios.get(this.url, {
           params: {
             page: this.page,
-            user_id: this.userId
+            user_id: this.userId,
+            q: this.searchWord
           }
         })
           .then((res) => {
