@@ -60,8 +60,6 @@ export default {
   created () {
     this.fetchContents()
   },
-  updated () {
-  },
   methods: {
     ...mapActions({
       setIsUpdate: 'chat/setIsUpdate'
@@ -93,7 +91,7 @@ export default {
               id: snapshot.doc.id,
               ...docData
             }
-            if (chat.message.length > 15) {
+            if (!!chat.message && chat.message.length > 15) {
               this.sliceMessage(chat)
             }
             this.lastChat = chat

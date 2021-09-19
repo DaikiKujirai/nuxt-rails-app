@@ -25,11 +25,18 @@ export default {
   },
   methods: {
     ...mapActions({
-      setSearchWord: 'search/setSearchWord'
+      setSearchWord: 'search/setSearchWord',
+      setFetchSearchContents: 'search/setFetchSearchContents',
+      setSearchPageName: 'search/setSearchPageName'
     }),
     toSearch () {
       this.setSearchWord(this.content)
-      this.$router.push('/search')
+      if (this.$route.name === 'search') {
+        this.setFetchSearchContents(true)
+      } else {
+        this.setSearchPageName(this.$route.name)
+        this.$router.push('/search')
+      }
     }
   }
 }
