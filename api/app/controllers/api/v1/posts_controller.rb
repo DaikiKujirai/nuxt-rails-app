@@ -76,11 +76,15 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def search
-    byebug
-    q          = Post.ransack(search_params)
-    posts      = q.result(distinct: true).includes(:user, :likes).page(params[:page]).per(5)
-    pagination = resources_with_pagination(posts)
-    object     = { posts: posts.as_json(include: [:user, :likes]), kaminari: pagination }
+    if params[:page_name] === 'homes-id'
+      current_user = User.find(params[:user_id])
+      q           = Post.find_home_posts(current_user).ransack(content_cont: params[:q])
+    else
+      q             = Post.find_posts.ransack(content_cont: params[:q])
+    end
+    posts         = q.result(distinct: true).includes(:user, :likes).page(params[:page]).per(5)
+    pagination    = resources_with_pagination(posts)
+    object        = { posts: posts.as_json(include: [:user, :likes]), kaminari: pagination }
     render json: object
   end
 
@@ -90,7 +94,7 @@ class Api::V1::PostsController < ApplicationController
     params.require(:post).permit(:user_id, :post_id, :content, :image)
   end
 
-  def search_params
-    params.require(:q).permit(:content_cont)
-  end
+  # def search_params
+  #   params.require(:q).permit
+  # end
 end

@@ -2,6 +2,7 @@
   <infinite-loading
     ref="infiniteLoading"
     spinner="bubbles"
+    :identifier="identifier"
     @infinite="infiniteHandler"
   >
     <div
@@ -34,20 +35,27 @@ export default {
       default: 0
     }
   },
+  data () {
+    return {
+      identifier: 1
+    }
+  },
   computed: {
     ...mapGetters({
-      searchWord: 'search/searchWord'
+      searchWord: 'search/searchWord',
+      searchPageName: 'search/searchPageName'
     })
   },
   methods: {
-    infiniteHandler () {
-      this.pageIncrement()
-      setTimeout(() => {
+    async infiniteHandler () {
+      await this.pageIncrement()
+      await setTimeout(() => {
         this.$axios.get(this.url, {
           params: {
             page: this.page,
             user_id: this.userId,
-            q: this.searchWord
+            q: this.searchWord,
+            page_name: this.searchPageName
           }
         })
           .then((res) => {
@@ -70,6 +78,9 @@ export default {
     },
     pushContents (res) {
       this.$emit('pushContents', res)
+    },
+    identifierIncrement () {
+      this.identifier++
     }
   }
 }

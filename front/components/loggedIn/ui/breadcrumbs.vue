@@ -12,7 +12,9 @@
       </template>
       {{ breadcrumbs }}
     </h4>
-    <search-form />
+    <template v-if="route === 'search' || route === 'posts' || route === 'homes-id'">
+      <search-form />
+    </template>
   </div>
 </template>
 
@@ -23,6 +25,11 @@ import searchForm from './searchForm.vue'
 export default {
   components: {
     searchForm
+  },
+  data () {
+    return {
+      route: this.$route.name
+    }
   },
   computed: {
     ...mapGetters({

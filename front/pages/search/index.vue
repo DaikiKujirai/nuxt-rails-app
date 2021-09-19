@@ -34,8 +34,10 @@
         </v-col>
       </v-row>
       <infinite-scroll
+        ref="infinite"
         :page="page"
         :url="url"
+        :user-id="currentUser.id"
         @pushContents="pushContents"
         @pageIncrement="pageIncrement"
       />
@@ -45,7 +47,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import Qs from 'qs'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import HomeNewPost from '../../components/post/homeNewPost.vue'
 import Actions from '../../components/loggedIn/mainCard/actions.vue'
@@ -67,9 +68,7 @@ export default {
       url: '/api/v1/search',
       isList: true,
       breadcrumbs: 'で検索',
-      query: {
-        content_cont: this.searchWord
-      }
+      q: this.searchWord
     }
   },
   computed: {
@@ -78,7 +77,9 @@ export default {
       isAuthenticated: 'auth/isAuthenticated',
       isNewPost: 'post/isNewPost',
       deletePost: 'post/deletePost',
-      searchWord: 'search/searchWord'
+      searchWord: 'search/searchWord',
+      fetchSearchContents: 'search/fetchSearchContents',
+      searchPageName: 'search/searchPageName'
     })
   },
   watch: {
@@ -101,6 +102,20 @@ export default {
         this.posts = posts
         this.setDeletePost({ bool: false, post: {} })
       }
+    },
+    async fetchSearchContents (bool) {
+      if (bool) {
+        await window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        })
+        await setTimeout(() => {
+          this.rollBackPage()
+          this.fetchContents()
+          this.identifierIncrement()
+          this.setSearchContents(false)
+        }, 1000)
+      }
     }
   },
   created () {
@@ -113,6 +128,7 @@ export default {
   },
   destroyed () {
     this.setSearchWord('')
+    this.setSearchPageName('')
   },
   methods: {
     ...mapActions({
@@ -120,19 +136,19 @@ export default {
       setIsNewPost: 'post/setIsNewPost',
       setDeletePost: 'post/setDeletePost',
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
-      setSearchWord: 'search/setSearchWord'
+      setSearchWord: 'search/setSearchWord',
+      setSearchContents: 'search/setFetchSearchContents',
+      setSearchPageName: 'search/setSearchPageName'
     }),
     async fetchContents () {
       await this.$axios.get(this.url, {
         params: {
-          q: this.query
-        },
-        paramsSerializer (params) {
-          return Qs.stringify(params, { arrayFormat: 'brackets' })
+          q: this.searchWord,
+          page_name: this.searchPageName,
+          user_id: this.currentUser.id
         }
       })
         .then((res) => {
-          console.log(res)
           this.posts = res.data.posts
         })
         .catch((err) => {
@@ -150,6 +166,9 @@ export default {
     },
     pushContents (res) {
       this.posts.push(...res.data.posts)
+    },
+    identifierIncrement () {
+      this.$refs.infinite.identifierIncrement()
     }
   }
 }
