@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       resources :posts        , only: %i[index show create update destroy]
       resources :likes        , only: %i[create destroy]
       resources :chat_rooms   , only: %i[show update]
-      resources :notifications, only: %i[show create]
+      resources :notifications, only: %i[show create update]
       # user
       get  'find_login_user/:uid'               => 'users#find_login_user'
       get  'show_user_posts/:id'                => 'users#show_user_posts'
@@ -20,13 +20,14 @@ Rails.application.routes.draw do
       root 'posts#home'
       post 'create_comment'                     => 'posts#create_comment'
       get  'find_comments/:id'                  => 'posts#find_comments'
+      get  'search'                             => 'posts#search'
       # like
       get  'render_is_like_and_likes_count/:id' => 'likes#render_is_like_and_likes_count'
       # relationship
       get  'find_following/:id'                 => 'relationships#find_following'
       get  'find_followers/:id'                 => 'relationships#find_followers'
       # ActionCable
-      # mount ActionCable.server       => '/cable'
+      mount ActionCable.server                  => '/cable'
       # notification
       get 'find_notifications_count/:id'        => 'notifications#find_notifications_count'
     end

@@ -29,20 +29,10 @@ export default {
     signupLink,
     loginLink
   },
-  props: {
-    imgHeight: {
-      type: Number,
-      default: 0
-    }
-  },
-  data ({ $store }) {
+  data () {
     return {
       dialog: false
     }
-  },
-  mounted () {
-  },
-  beforeDestroy () {
   },
   methods: {
     goTo (id) {

@@ -112,11 +112,9 @@ export default {
         })
     },
     fetchIsLike () {
-      this.likes.forEach((like) => {
-        if (like.user_id === this.currentUser.id) {
-          this.isLike = true
-        }
-      })
+      if (this.likes.find(like => like.user_id === this.currentUser.id)) {
+        this.isLike = true
+      }
     },
     likesCountIncrement () {
       this.likesCount++

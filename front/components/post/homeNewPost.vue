@@ -19,6 +19,7 @@
               />
               <home-new-post-form-content
                 :content.sync="content"
+                @submitPost="submitPost"
               />
             </v-col>
           </v-row>

@@ -33,6 +33,7 @@
         >
           ログインする
         </v-btn>
+        <guest-login />
       </v-card-text>
     </v-form>
   </bef-login-form-card>
@@ -43,13 +44,15 @@ import { mapActions } from 'vuex'
 import befLoginFormCard from '../../components/layout/befLogin/befLoginFormCard.vue'
 import userFormEmail from '../../components/user/userFormEmail.vue'
 import userFormPassword from '../../components/user/userFormPassword.vue'
+import GuestLogin from '../../components/beforeLogin/guestLogin.vue'
 import firebase from '~/plugins/firebase'
 
 export default {
   components: {
     userFormEmail,
     userFormPassword,
-    befLoginFormCard
+    befLoginFormCard,
+    GuestLogin
   },
   layout: 'beforeLogin',
   data () {
@@ -70,8 +73,8 @@ export default {
         .then((res) => {
           this.login(res.user)
           setTimeout(() => {
+            this.$router.replace('/posts')
             this.flashMessage({ message: 'ログインしました', type: 'success', status: true })
-            this.$router.push('/')
             this.loading = false
           }, 1500)
         })

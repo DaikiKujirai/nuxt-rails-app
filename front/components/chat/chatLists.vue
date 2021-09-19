@@ -16,7 +16,6 @@
     <infinite-scroll
       :page="page"
       :url="url"
-      :current-user-id="Number(currentUser.id)"
       :user-id="Number($route.params.id)"
       @pushContents="pushContents"
       @pageIncrement="pageIncrement"
@@ -48,11 +47,15 @@ export default {
     })
   },
   mounted () {
-    this.fetchContents()
+    setTimeout(() => {
+      this.fetchContents()
+      this.setUser(this.currentUser)
+    }, 0)
   },
   methods: {
     ...mapActions({
-      setIsUpdate: 'chat/setIsUpdate'
+      setIsUpdate: 'chat/setIsUpdate',
+      setUser: 'user/setUser'
     }),
     async fetchContents () {
       const url = `/api/v1/chat_rooms/${this.currentUser.id}`
@@ -77,7 +80,6 @@ export default {
       this.page++
     },
     pushContents (res) {
-      console.log(res)
       this.chatRooms.push(...res.data.chat_rooms)
     }
   }

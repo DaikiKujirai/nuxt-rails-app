@@ -99,7 +99,8 @@ export default {
       coverImage: '',
       avatar: '',
       editAvatar: '',
-      editCoverImage: ''
+      editCoverImage: '',
+      breadcrumbs: 'プロフィール編集'
     }
   },
   computed: {
@@ -108,17 +109,19 @@ export default {
     })
   },
   mounted () {
-    this.$nextTick(() => {
+    this.setBreadcrumbs(this.breadcrumbs)
+    setTimeout(() => {
       this.name = this.currentUser.name
       this.introduction = this.currentUser.introduction
       this.coverImage = this.currentUser.cover_image.url
       this.avatar = this.currentUser.avatar.url
-    }, 500)
+    }, 0)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      updateCurrentUser: 'auth/updateCurrentUser'
+      updateCurrentUser: 'auth/updateCurrentUser',
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
     }),
     async submitEdit () {
       this.loading = true

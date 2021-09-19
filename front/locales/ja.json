@@ -11,6 +11,7 @@
   "pages": {
     "auth-signup": "会員登録"     ,
     "auth-login" : "ログイン"     ,
+    "guest"      : "ゲストログイン",
     "logout"     : "ログアウト"   ,
     "account"    : {
       "settings" : "アカウント設定",

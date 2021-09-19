@@ -52,12 +52,16 @@ export const actions = {
     commit('setData', user)
   },
 
-  logout ({ commit, $route }) {
+  logout ({ commit }) {
     firebase.auth().signOut()
       .then(() => {
+        this.$router.push('/posts')
         commit('setUser', null)
         commit('setData', null)
-        $route.replace('/posts')
+      })
+      .catch((err) => {
+        // eslint-disable-next-line no-console
+        console.error(err)
       })
   }
 }

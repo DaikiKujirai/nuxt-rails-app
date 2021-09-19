@@ -23,7 +23,7 @@
 export default {
   methods: {
     goHome () {
-      this.$router.push('/')
+      this.$router.push(`/homes/${this.$store.state.auth.data.id}`)
     }
   }
 }

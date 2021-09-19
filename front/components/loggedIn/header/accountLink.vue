@@ -44,6 +44,19 @@
         </v-list-item-title>
       </v-list-item>
       <v-list-item
+        to="/users/edit"
+      >
+        <v-list-item-icon class="mr-2">
+          <v-icon
+            size="22"
+            v-text="'mdi-account-edit'"
+          />
+        </v-list-item-icon>
+        <v-list-item-title>
+          プロフィール編集
+        </v-list-item-title>
+      </v-list-item>
+      <v-list-item
         to="/account/settings"
       >
         <v-list-item-icon class="mr-2">
@@ -91,7 +104,6 @@ export default {
     logoutUser () {
       this.logout()
         .then(() => {
-          this.$router.push('/')
           this.flashMessage({ message: 'ログアウトしました', type: 'success', status: true })
         })
         .catch((err) => {

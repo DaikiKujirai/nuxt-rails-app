@@ -26,12 +26,10 @@ export default {
   },
   created () {
     this.setBreadcrumbs(this.breadcrumbs)
-    this.setUser(this.currentUser)
   },
   methods: {
     ...mapActions({
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
-      setUser: 'user/setUser'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
     })
   }
 }

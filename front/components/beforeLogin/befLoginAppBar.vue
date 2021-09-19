@@ -30,10 +30,6 @@ export default {
     appTitle,
     signupLink,
     loginLink
-  },
-  data ({ $store }) {
-    return {
-    }
   }
 }
 </script>

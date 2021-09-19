@@ -17,6 +17,8 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
+
 export default {
   props: {
     page: {
@@ -30,11 +32,12 @@ export default {
     userId: {
       type: Number,
       default: 0
-    },
-    currentUserId: {
-      type: Number,
-      default: 0
     }
+  },
+  computed: {
+    ...mapGetters({
+      searchWord: 'search/searchWord'
+    })
   },
   methods: {
     infiniteHandler () {
@@ -44,7 +47,7 @@ export default {
           params: {
             page: this.page,
             user_id: this.userId,
-            current_user_id: this.currentUserId
+            q: this.searchWord
           }
         })
           .then((res) => {
