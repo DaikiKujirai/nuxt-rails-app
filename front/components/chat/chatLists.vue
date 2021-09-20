@@ -14,6 +14,7 @@
       />
     </v-card>
     <infinite-scroll
+      ref="infinite"
       :page="page"
       :url="url"
       :user-id="Number($route.params.id)"
@@ -66,7 +67,9 @@ export default {
         }
       })
         .then((res) => {
+          this.rollBackPage()
           this.chatRooms = res.data.chat_rooms
+          this.identifierIncrement()
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -79,8 +82,14 @@ export default {
     pageIncrement () {
       this.page++
     },
+    rollBackPage () {
+      this.page = 1
+    },
     pushContents (res) {
       this.chatRooms.push(...res.data.chat_rooms)
+    },
+    identifierIncrement () {
+      this.$refs.infinite.identifierIncrement()
     }
   }
 }

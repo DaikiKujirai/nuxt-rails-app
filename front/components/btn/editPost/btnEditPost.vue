@@ -42,11 +42,11 @@
             <v-row>
               <v-col class="d-flex">
                 <input-file-form
-                  @setImageInPostImage="image = $event"
-                  @setImageInPreview="preview = $event"
+                  @setImageInPreview="image = $event"
+                  @setImageInPostImage="editImage = $event"
                 />
                 <v-img
-                  :src="preview"
+                  :src="image"
                   height="80px"
                   width="80px"
                   contain
@@ -101,7 +101,7 @@ export default {
       loading: false,
       editPost: { content: '' },
       image: '',
-      preview: ''
+      editImage: ''
     }
   },
   mounted () {
@@ -119,8 +119,8 @@ export default {
       formData.append('post[id]', this.post.id)
       formData.append('post[user_id]', this.post.user_id)
       formData.append('post[content]', this.editPost.content)
-      if (this.image) {
-        formData.append('post[image]', this.image)
+      if (this.editImage) {
+        formData.append('post[image]', this.editImage)
       }
       await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, formData)
         .then((res) => {
