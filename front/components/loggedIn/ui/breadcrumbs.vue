@@ -1,6 +1,6 @@
 <template>
   <div
-    class="ma-2 d-flex justify-space-between"
+    class="ma-3 d-flex justify-space-between"
     style="width: 100%;"
   >
     <h4 class="ma-auto">

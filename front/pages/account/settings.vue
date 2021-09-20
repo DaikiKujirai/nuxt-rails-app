@@ -85,7 +85,8 @@ export default {
       this.password = this.currentUser.password
       this.coverImage = this.currentUser.cover_image.url
       this.avatar = this.currentUser.avatar.url
-    }, 500)
+      this.setBreadcrumbs(this.breadcrumbs)
+    }, 0)
   },
   methods: {
     ...mapActions({

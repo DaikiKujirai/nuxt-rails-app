@@ -34,6 +34,7 @@
         </v-col>
       </v-row>
       <infinite-scroll
+        ref="infinite"
         :page="page"
         :url="url"
         @pushContents="pushContents"
@@ -87,7 +88,6 @@ export default {
           behavior: 'smooth'
         })
         await setTimeout(() => {
-          this.rollBackPage()
           this.fetchContents()
           this.setIsNewPost(false)
         }, 1000)
@@ -114,7 +114,9 @@ export default {
     async fetchContents () {
       await this.$axios.get(this.url)
         .then((res) => {
+          this.rollBackPage()
           this.posts = res.data.posts
+          this.identifierIncrement()
         })
         .catch((err) => {
           this.flashMessage({ message: err.errors.messages, type: 'error', status: true })
@@ -131,6 +133,9 @@ export default {
     },
     pushContents (res) {
       this.posts.push(...res.data.posts)
+    },
+    identifierIncrement () {
+      this.$refs.infinite.identifierIncrement()
     }
   }
 }

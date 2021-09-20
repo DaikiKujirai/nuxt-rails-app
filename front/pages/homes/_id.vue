@@ -32,6 +32,7 @@
         </v-col>
       </v-row>
       <infinite-scroll
+        ref="infinite"
         :page="page"
         :url="url"
         :user-id="Number($route.params.id)"
@@ -68,7 +69,6 @@ export default {
   },
   data () {
     return {
-      posts: [],
       page: 1,
       url: '/api/v1/',
       isList: true,
@@ -91,7 +91,6 @@ export default {
           behavior: 'smooth'
         })
         await setTimeout(() => {
-          this.rollBackPage()
           this.fetchContents()
           this.setIsNewPost(false)
         }, 1000)
@@ -126,7 +125,9 @@ export default {
         }
       })
         .then((res) => {
+          this.rollBackPage()
           this.posts = res.data.posts
+          this.identifierIncrement()
         })
         .catch((err) => {
           this.flashMessage({ message: err.errors.messages, type: 'error', status: true })
@@ -143,6 +144,9 @@ export default {
     },
     pushContents (res) {
       this.posts.push(...res.data.posts)
+    },
+    identifierIncrement () {
+      this.$refs.infinite.identifierIncrement()
     }
   }
 }

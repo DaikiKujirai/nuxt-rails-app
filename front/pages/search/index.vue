@@ -92,6 +92,7 @@ export default {
         await setTimeout(() => {
           this.rollBackPage()
           this.fetchContents()
+          this.identifierIncrement()
           this.setIsNewPost(false)
         }, 1000)
       }

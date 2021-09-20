@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
-      resources :users do
+      resources :users, only: %i[show create update] do
         resources :relationships, only: %i[create destroy]
         get :is_following
       end
