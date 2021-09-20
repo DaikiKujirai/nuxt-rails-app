@@ -17,7 +17,8 @@ import firebase from '~/plugins/firebase'
 export default {
   data () {
     return {
-      loading: false
+      loading: false,
+      channel: null
     }
   },
   computed: {
@@ -28,7 +29,8 @@ export default {
   methods: {
     ...mapActions({
       login: 'auth/login',
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      setMyChannel: 'actionCable/setMyChannel'
     }),
     async guestLogin () {
       this.loading = true

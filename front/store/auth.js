@@ -40,7 +40,6 @@ export const actions = {
   async loadData ({ commit }, payload) {
     await this.$axios.$get(`/api/v1/find_login_user/${payload}`)
       .then((res) => {
-        console.log(res)
         commit('setData', res)
       })
       .catch((err) => {

@@ -1,5 +1,9 @@
 <template>
-  <v-row class="d-flex align-center">
+  <v-row
+    class="d-flex align-center"
+    style="cursor: pointer;"
+    @click="toChatRoom"
+  >
     <v-col
       cols="2"
       class="pr-0"
@@ -114,6 +118,9 @@ export default {
     },
     fetchChatRooms () {
       this.$emit('fetchContents')
+    },
+    toChatRoom () {
+      this.$router.push(`/chatRooms/${this.room.distination_user_id}?uid=${this.user.uid}`)
     }
   }
 }

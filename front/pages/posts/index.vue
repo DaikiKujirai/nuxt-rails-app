@@ -46,6 +46,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import ActionCable from 'actioncable'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import HomeNewPost from '../../components/post/homeNewPost.vue'
 import Actions from '../../components/loggedIn/mainCard/actions.vue'
@@ -69,7 +70,8 @@ export default {
       page: 1,
       url: '/api/v1/posts',
       isList: true,
-      breadcrumbs: '全ての投稿'
+      breadcrumbs: '全ての投稿',
+      channel: ''
     }
   },
   computed: {
@@ -103,6 +105,25 @@ export default {
   },
   created () {
     this.setBreadcrumbs(this.breadcrumbs)
+  },
+  mounted () {
+    setTimeout(() => {
+      const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+      this.channel = cable.subscriptions.create({
+        channel: 'RoomChannel',
+        uid: this.currentUser.uid
+      }, {
+        connected () {
+          console.log('connected')
+        },
+        disconnected () {
+          console.log('disconnected')
+        },
+        received (data) {
+          console.log('received!!', data)
+        }
+      })
+    }, 0)
   },
   methods: {
     ...mapActions({
