@@ -6,7 +6,6 @@
       v-for="room in chatRooms"
       :key="room.id"
       class="mb-4"
-      @click="toShow('chatRooms', room.distination_user_id)"
     >
       <chat-list
         :room="room"
@@ -76,8 +75,8 @@ export default {
           console.error(err)
         })
     },
-    toShow (url, id) {
-      this.$router.push(`/${url}/${id}`)
+    toChatRoom () {
+      this.$refs.list.toChatRoom()
     },
     pageIncrement () {
       this.page++

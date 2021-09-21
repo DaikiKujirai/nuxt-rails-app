@@ -66,7 +66,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-// import ActionCable from 'actioncable'
+import ActionCable from 'actioncable'
 import chatMessageForm from './chatMessageForm.vue'
 import BalloonL from './balloonL.vue'
 import BalloonR from './balloonR.vue'
@@ -87,8 +87,11 @@ export default {
       user: {},
       message: '',
       userAvatar: '',
-      isMyChatRoom: false
-      // messageChannel: ''
+      isMyChatRoom: false,
+      channel: null,
+      messages: [],
+      cable: {},
+      msgBox: ''
       // date: `${$my(this.msg.createdAt.toDate())}`
     }
   },
@@ -98,16 +101,24 @@ export default {
       isUpdate: 'chat/isUpdate'
     })
   },
-  // created () {
-  //   const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
-
-  //   this.messageChannel = cable.subscriptions.create('room_channel', {
-  //     receiced: (data) => {
-  //       console.log(data)
-  //       this.createNotification()
-  //     }
-  //   })
-  // },
+  created () {
+    console.log(this.$route.query.uid)
+    this.cable = ActionCable.createConsumer('ws://localhost:3000/cable')
+    this.channel = this.cable.subscriptions.create({
+      channel: 'RoomChannel',
+      uid: this.$route.query.uid
+    }, {
+      connected () {
+        console.log('connected')
+      },
+      disconnected () {
+        console.log('disconnected')
+      },
+      received (data) {
+        console.log('received!!', data)
+      }
+    })
+  },
   mounted () {
     setTimeout(() => {
       this.currentUser.id === Number(this.$route.params.id)
@@ -117,18 +128,13 @@ export default {
   },
   destroyed () {
     this.chats = []
+    this.channel = this.cable.subscriptions.remove(this.channel)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setIsUpdate: 'chat/setIsUpdate'
     }),
-    // click () {
-    //   this.messageChannel.perform('post', {
-    //     message: this.message
-    //   })
-    //   this.message = ''
-    // },
     async fetchContents () {
       const url = `/api/v1/users/${this.$route.params.id}`
       await this.$axios.get(url)
@@ -189,9 +195,9 @@ export default {
         .collection('chats')
         .add(chat)
         .then(() => {
-          // this.messageChannel.perform('post', {
-          //   message: this.message
-          // })
+          this.channel.perform('post', {
+            room: this.room
+          })
           this.$refs.form.reset()
           this.createNotification()
           setTimeout(() => {
