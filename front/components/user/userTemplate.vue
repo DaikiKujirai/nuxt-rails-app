@@ -1,36 +1,41 @@
 <template>
   <div>
-    <v-divider />
     <v-row>
       <v-col
-        cols="2"
+        style="width: 500px;"
+        class="d-flex"
       >
-        <v-img
-          :src="user.avatar.url"
-          height="70"
-          max-width="70"
-          class="ma-2"
-          style="border-radius: 50%;"
-        />
-      </v-col>
-      <v-col class="d-flex justify-space-between pt-0">
-        <v-card-title class="pa-0">
-          {{ user.name }}
-        </v-card-title>
-        <template
-          v-if="user.id !== currentUser.id"
-          class="text-right"
-        >
-          <btn-follow
-            :user="user"
-            class="ma-5"
+        <div>
+          <v-img
+            :src="user.avatar.url"
+            height="70"
+            max-width="70"
+            class="ml-3"
+            style="border-radius: 50%;"
           />
-        </template>
+        </div>
+        <div
+          style="width: 100%;"
+          class="d-flex"
+        >
+          <v-card-title>
+            {{ user.name }}
+          </v-card-title>
+          <template
+            v-if="user.id !== currentUser.id"
+          >
+            <v-spacer />
+            <btn-follow
+              :user="user"
+              class="ma-5"
+            />
+          </template>
+        </div>
       </v-col>
     </v-row>
-    <v-col class="text-left">
+    <v-card-title>
       {{ user.introduction }}
-    </v-col>
+    </v-card-title>
   </div>
 </template>
 

@@ -1,23 +1,26 @@
 <template>
-  <v-tab-item>
+  <v-tab-item class="mt-3">
     <v-row
       v-for="comment in comments"
       :key="comment.id"
-      @click="toShow('posts', comment.id)"
     >
       <v-col>
-        <post-card
-          :post="comment"
-          :user="user"
-        />
-        <template v-if="isAuthenticated">
-          <actions
+        <v-card
+          @click="toShow('posts', comment.id)"
+        >
+          <post-card
             :post="comment"
             :user="user"
-            :likes="comment.likes"
-            :is-list="isList"
           />
-        </template>
+          <template v-if="isAuthenticated">
+            <actions
+              :post="comment"
+              :user="user"
+              :likes="comment.likes"
+              :is-list="isList"
+            />
+          </template>
+        </v-card>
       </v-col>
     </v-row>
     <infinite-scroll

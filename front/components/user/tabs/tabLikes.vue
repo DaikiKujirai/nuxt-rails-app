@@ -1,5 +1,5 @@
 <template>
-  <v-tab-item class="mb-2">
+  <v-tab-item class="mt-3">
     <v-row
       v-for="post in posts"
       :key="post.id"
@@ -7,20 +7,22 @@
       @click="toShow('posts', post.id)"
     >
       <v-col>
-        <post-card
-          :post="post"
-          :user="user"
-        />
-        <template v-if="isAuthenticated">
-          <actions
+        <v-card>
+          <post-card
             :post="post"
             :user="user"
-            :likes="post.likes"
-            :is-list="isList"
-            @rollBackPage="rollBackPage"
-            @fetchContents="fetchContents"
           />
-        </template>
+          <template v-if="isAuthenticated">
+            <actions
+              :post="post"
+              :user="user"
+              :likes="post.likes"
+              :is-list="isList"
+              @rollBackPage="rollBackPage"
+              @fetchContents="fetchContents"
+            />
+          </template>
+        </v-card>
       </v-col>
     </v-row>
     <infinite-scroll

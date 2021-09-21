@@ -1,8 +1,5 @@
 <template>
   <div>
-    <template v-if="$route.name === 'users-id'">
-      <v-divider class="mb-2" />
-    </template>
     <v-row>
       <v-col
         class="d-flex"
