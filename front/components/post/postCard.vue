@@ -7,24 +7,25 @@
         <v-img
           :src="user.avatar.url"
           height="70"
-          width="70"
+          max-width="70"
           hover
           style="border-radius: 50%;"
           class="ml-3 img"
           @click.prevent.stop="toShow('users', postContainerForEdit.user_id)"
         />
-        <v-card-text>
+        <v-card-title>
           {{ user.name }}
-        </v-card-text>
-        <v-card-text
-          class="text-right"
+        </v-card-title>
+        <v-spacer />
+        <div
+          class="ma-3"
         >
           <v-icon
             size="16"
             v-text="'mdi-update'"
           />
           {{ $my.format(postContainerForEdit.created_at) }}
-        </v-card-text>
+        </div>
       </v-col>
     </v-row>
     <template v-if="postContainerForEdit.post_id !== 0">

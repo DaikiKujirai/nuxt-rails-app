@@ -12,7 +12,7 @@
       </template>
       {{ breadcrumbs }}
     </h4>
-    <template v-if="route === 'search' || route === 'posts' || route === 'homes-id'">
+    <template v-if="isDisplay && isAuthenticated">
       <search-form />
     </template>
   </div>
@@ -26,17 +26,26 @@ export default {
   components: {
     searchForm
   },
-  data () {
-    return {
-      route: this.$route.name
-    }
-  },
   computed: {
     ...mapGetters({
       user: 'user/user',
       breadcrumbs: 'breadcrumbs/breadcrumbs',
-      searchWord: 'search/searchWord'
-    })
+      searchWord: 'search/searchWord',
+      isAuthenticated: 'auth/isAuthenticated'
+    }),
+    isDisplay () {
+      const route = this.$route.name
+      switch (route) {
+        case 'search':
+          return true
+        case 'posts':
+          return true
+        case 'homes-id':
+          return true
+        default:
+          return false
+      }
+    }
   }
 }
 </script>

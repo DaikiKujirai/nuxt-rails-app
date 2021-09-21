@@ -6,9 +6,7 @@
       v-for="user in users"
       :key="user.id"
     >
-      <v-col
-        class="pa-2"
-      >
+      <v-col class="pa-2">
         <v-card
           @click="toShow('users', user.id)"
         >

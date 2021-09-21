@@ -15,9 +15,8 @@
     <v-col>
       <v-img
         :src="user.avatar.url"
-        max-height="50"
+        height="50"
         max-width="50"
-        contain
         hover
         style="border-radius: 50%; cursor: pointer;"
         class="ml-3 img"

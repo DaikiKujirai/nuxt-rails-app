@@ -114,6 +114,13 @@ export default {
     this.setUser(this.user)
     this.setBreadcrumbs(this.breadcrumbs)
   },
+  mounted () {
+    setTimeout(() => {
+      if (!this.isAuthenticated) {
+        this.$router.push('/auth/login')
+      }
+    })
+  },
   methods: {
     ...mapActions({
       setUser: 'user/setUser',

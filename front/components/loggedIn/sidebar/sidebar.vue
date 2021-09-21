@@ -1,7 +1,8 @@
 <template>
   <v-app>
     <v-col
-      cols="3"
+      sm="3"
+      md="3"
       class="list"
     >
       <link-index />
@@ -11,13 +12,7 @@
         <link-chat />
         <link-following />
         <link-follower />
-        <v-list>
-          <v-list-item
-            class="justify-center"
-          >
-            <btn-new-post />
-          </v-list-item>
-        </v-list>
+        <btn-new-post />
       </template>
     </v-col>
   </v-app>
@@ -25,13 +20,13 @@
 
 <script>
 import { mapGetters } from 'vuex'
+import BtnNewPost from '../../btn/newPost/btnNewPost.vue'
 import LinkHome from './linkHome.vue'
 import LinkNotification from './linkNotification.vue'
 import LinkChat from './linkChat.vue'
 import LinkFollowing from './linkFollowing.vue'
 import LinkFollower from './linkFollower.vue'
 import LinkIndex from './linkIndex.vue'
-import BtnNewPost from '~/components/btn/newPost/btnNewPost.vue'
 
 export default {
   components: {

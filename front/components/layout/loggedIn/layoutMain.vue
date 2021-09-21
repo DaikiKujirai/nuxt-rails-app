@@ -3,15 +3,23 @@
     fluid
   >
     <v-row>
-      <sidebar />
+      <sidebar
+        class="d-none d-md-flex"
+      />
+      <!-- <drawer /> -->
       <v-col
-        cols="6"
-        offset="3"
+        offset-sm="0"
+        offset-md="3"
+        xs="12"
+        sm="12"
+        md="6"
       >
         <v-row>
           <v-col
             class="breadcrumbs"
-            cols="6"
+            xs="12"
+            sm="12"
+            md="6"
           >
             <v-card class="d-flex align-center">
               <template v-if="$route.name !== 'index'">
@@ -39,7 +47,10 @@
           </div>
         </v-main>
       </v-col>
-      <v-col cols="3">
+      <v-col
+        sm="0"
+        md="3"
+      >
         <v-card>
           サイドバー
         </v-card>
@@ -55,6 +66,7 @@
 
 <script>
 import ToTop from '../../btn/toTop.vue'
+// import Drawer from '../../loggedIn/header/drawer.vue'
 import Sidebar from '../../loggedIn/sidebar/sidebar.vue'
 import Breadcrumbs from '../../loggedIn/ui/breadcrumbs.vue'
 
@@ -63,6 +75,7 @@ export default {
     Sidebar,
     Breadcrumbs,
     ToTop
+    // Drawer
   },
   methods: {
     pageBack () {

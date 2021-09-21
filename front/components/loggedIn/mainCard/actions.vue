@@ -10,13 +10,6 @@
           @rollBackPage="rollBackPage"
           @fetchContents="fetchContents"
         />
-        <template v-if="post.user_id !== currentUser.id">
-          <v-btn
-            text
-          >
-            <v-icon v-text="'mdi-repeat-variant'" />
-          </v-btn>
-        </template>
         <btn-like
           :post="post"
           :likes="likes"

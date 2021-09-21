@@ -10,10 +10,11 @@
     >
       <v-icon
         size="28"
-        class="mr-5"
         v-text="'mdi-account-details'"
       />
-      フォロー
+      <div class="ml-5">
+        フォロー
+      </div>
     </v-list-item>
   </v-list>
 </template>

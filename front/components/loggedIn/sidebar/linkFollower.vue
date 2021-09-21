@@ -10,10 +10,11 @@
     >
       <v-icon
         size="28"
-        class="mr-5"
         v-text="'mdi-account-details-outline'"
       />
-      フォロワー
+      <div class="ml-5">
+        フォロワー
+      </div>
     </v-list-item>
   </v-list>
 </template>
