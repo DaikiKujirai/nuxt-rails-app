@@ -10,10 +10,11 @@
     >
       <v-img
         :src="avatar"
-        max-height="60"
+        height="60"
         max-width="60"
-        contain
         style="border-radius: 50%;"
+        class="ml-2 img"
+        @click.prevent.stop="toShow('users', user.id)"
       />
     </v-col>
     <v-col>
@@ -121,6 +122,9 @@ export default {
     },
     toChatRoom () {
       this.$router.push(`/chatRooms/${this.room.distination_user_id}?uid=${this.user.uid}`)
+    },
+    toShow (url, id) {
+      this.$router.push(`/${url}/${id}`)
     }
   }
 }

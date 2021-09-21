@@ -8,9 +8,8 @@
         <v-col class="d-flex">
           <v-img
             :src="currentUser.avatar.url"
-            max-height="70"
+            height="70"
             max-width="70"
-            contain
             style="border-radius: 50%; cursor: pointer;"
             class="img"
             @click.prevent.stop="toShow('users', currentUser.id)"

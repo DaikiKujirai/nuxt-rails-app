@@ -30,22 +30,24 @@
         </v-tabs>
       </v-card>
       <v-tabs-items v-model="tab">
-        <tab-posts
-          :user="user"
-          :current-tab="currentTab"
-        />
-        <tab-comments
-          :user="user"
-          :current-tab="currentTab"
-        />
-        <tab-image
-          :user="user"
-          :current-tab="currentTab"
-        />
-        <tab-likes
-          :user="user"
-          :current-tab="currentTab"
-        />
+        <v-app>
+          <tab-posts
+            :user="user"
+            :current-tab="currentTab"
+          />
+          <tab-comments
+            :user="user"
+            :current-tab="currentTab"
+          />
+          <tab-image
+            :user="user"
+            :current-tab="currentTab"
+          />
+          <tab-likes
+            :user="user"
+            :current-tab="currentTab"
+          />
+        </v-app>
       </v-tabs-items>
     </v-col>
   </v-row>

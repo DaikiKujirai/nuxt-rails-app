@@ -25,9 +25,8 @@
               <v-col class="d-flex pt-0">
                 <v-img
                   :src="avatar"
-                  max-height="120"
+                  height="120"
                   max-width="120"
-                  contain
                   style="border-radius: 50%;"
                   class="ml-10"
                 />

@@ -1,17 +1,13 @@
 <template>
   <div>
-    <template v-if="$route.name === 'users-id'">
-      <v-divider class="mb-2" />
-    </template>
     <v-row>
       <v-col
         class="d-flex"
       >
         <v-img
           :src="user.avatar.url"
-          max-height="70"
-          max-width="70"
-          contain
+          height="70"
+          width="70"
           hover
           style="border-radius: 50%;"
           class="ml-3 img"

@@ -6,41 +6,39 @@
         @fetchContents="fetchContents"
       />
     </template>
-    <template v-if="posts">
-      <v-row
-        v-for="post in posts"
-        :key="post.id"
-        class="pb-1"
-      >
-        <v-col>
-          <v-card
-            @click="toShow('posts', post.id)"
-          >
-            <post-card
+    <v-row
+      v-for="post in posts"
+      :key="post.id"
+      class="pb-1"
+    >
+      <v-col>
+        <v-card
+          @click="toShow('posts', post.id)"
+        >
+          <post-card
+            :post="post"
+            :user="post.user"
+          />
+          <template v-if="isAuthenticated">
+            <actions
               :post="post"
               :user="post.user"
+              :likes="post.likes"
+              :is-list="isList"
+              @fetchContents="fetchContents"
+              @rollBackPage="rollBackPage"
             />
-            <template v-if="isAuthenticated">
-              <actions
-                :post="post"
-                :user="post.user"
-                :likes="post.likes"
-                :is-list="isList"
-                @fetchContents="fetchContents"
-                @rollBackPage="rollBackPage"
-              />
-            </template>
-          </v-card>
-        </v-col>
-      </v-row>
-      <infinite-scroll
-        ref="infinite"
-        :page="page"
-        :url="url"
-        @pushContents="pushContents"
-        @pageIncrement="pageIncrement"
-      />
-    </template>
+          </template>
+        </v-card>
+      </v-col>
+    </v-row>
+    <infinite-scroll
+      ref="infinite"
+      :page="page"
+      :url="url"
+      @pushContents="pushContents"
+      @pageIncrement="pageIncrement"
+    />
   </layout-main>
 </template>
 

@@ -1,17 +1,19 @@
 <template>
   <v-tab-item
-    class="pt-0"
+    class="pt-4"
   >
     <v-row
       v-for="user in users"
       :key="user.id"
-      style="cursor: pointer;"
-      @click="toShow('users', user.id)"
     >
-      <v-col>
-        <user-template
-          :user="user"
-        />
+      <v-col class="pa-2">
+        <v-card
+          @click="toShow('users', user.id)"
+        >
+          <user-template
+            :user="user"
+          />
+        </v-card>
       </v-col>
     </v-row>
     <infinite-scroll
