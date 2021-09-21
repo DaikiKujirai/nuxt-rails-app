@@ -10,10 +10,11 @@
     >
       <v-icon
         size="28"
-        class="mr-5"
         v-text="'mdi-home'"
       />
-      ホーム
+      <div class="ml-5">
+        ホーム
+      </div>
     </v-list-item>
   </v-list>
 </template>

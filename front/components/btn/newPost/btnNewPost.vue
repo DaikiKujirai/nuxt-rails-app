@@ -1,14 +1,20 @@
 <template>
-  <div>
-    <v-btn
-      large
-      rounded
+  <v-list
+    nav
+    rounded
+  >
+    <v-list-item
+      two-line
+      class="justify-center"
       color="info"
-      class="mb-5"
       @click="dialog = true"
     >
+      <v-icon
+        class="mr-5"
+        v-text="'mdi-pencil-plus-outline'"
+      />
       投稿する
-    </v-btn>
+    </v-list-item>
     <v-dialog
       v-model="dialog"
       width="500"
@@ -62,7 +68,7 @@
         </v-container>
       </v-card>
     </v-dialog>
-  </div>
+  </v-list>
 </template>
 
 <script>

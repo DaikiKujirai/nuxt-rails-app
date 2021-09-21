@@ -10,10 +10,11 @@
     >
       <v-icon
         size="28"
-        class="mr-5"
         v-text="'mdi-bell'"
       />
-      通知
+      <div class="ml-5">
+        通知
+      </div>
       <template v-if="count">
         <v-badge
           bordered

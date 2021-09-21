@@ -10,10 +10,13 @@
     >
       <v-icon
         size="28"
-        class="mr-5"
         v-text="'mdi-note-text-outline'"
       />
-      全ての投稿
+      <div
+        class="ml-5"
+      >
+        全ての投稿
+      </div>
     </v-list-item>
   </v-list>
 </template>

@@ -3,6 +3,9 @@
     app
     dark
   >
+    <header-drawer
+      class="d-md-none"
+    />
     <nuxt-link
       to="/posts"
       class="text-decoration-none"
@@ -10,7 +13,7 @@
       <app-logo />
     </nuxt-link>
     <app-title
-      class="hidden-mobile-and-down"
+      class="hidden-ipad-and-down"
     />
     <v-spacer />
     <v-btn
@@ -27,12 +30,14 @@ import { mapActions } from 'vuex'
 import AppLogo from '../../ui/appLogo.vue'
 import AppTitle from '../../ui/appTitle.vue'
 import AccountLink from './accountLink.vue'
+import HeaderDrawer from './headerDrawer.vue'
 
 export default {
   components: {
     AppLogo,
     AppTitle,
-    AccountLink
+    AccountLink,
+    HeaderDrawer
   },
   computed: {
     notTopPage () {
