@@ -7,9 +7,8 @@
       >
         <v-img
           :src="user.avatar.url"
-          max-height="70"
+          height="70"
           max-width="70"
-          contain
           class="ma-2"
           style="border-radius: 50%;"
         />

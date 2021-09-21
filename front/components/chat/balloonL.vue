@@ -2,14 +2,9 @@
   <v-col class="pl-0">
     <div class="balloon_l">
       <div class="face_icon">
-        <v-avatar
-          size="60"
+        <img
+          :src="userAvatar"
         >
-          <img
-            :src="userAvatar"
-            contain
-          >
-        </v-avatar>
       </div>
       <p class="says">
         {{ msg.message }}

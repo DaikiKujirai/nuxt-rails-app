@@ -41,25 +41,11 @@
       <v-divider
         id="scroll-inner"
       />
-      <v-form
-        ref="form"
-        v-model="isValid"
-        class="d-flex align-start mx-2 pa-2"
-      >
-        <chat-message-form
-          :message.sync="message"
-          class="mr-2"
-          @sendMessage="sendMessage"
-        />
-        <v-btn
-          :disabled="!isValid"
-          rounded
-          color="success"
-          @click="sendMessage"
-        >
-          送信
-        </v-btn>
-      </v-form>
+      <form-send-message
+        :user="user"
+        :room-id="roomId"
+        :channel="channel"
+      />
     </template>
   </v-card>
 </template>
@@ -67,25 +53,22 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import ActionCable from 'actioncable'
-import chatMessageForm from './chatMessageForm.vue'
 import BalloonL from './balloonL.vue'
 import BalloonR from './balloonR.vue'
+import FormSendMessage from './formSendMessage.vue'
 import firebase from '~/plugins/firebase'
 
 export default {
   components: {
-    chatMessageForm,
     BalloonL,
-    BalloonR
+    BalloonR,
+    FormSendMessage
   },
   data () {
     return {
-      disabled: false,
-      isValid: false,
       chats: [],
       roomId: '',
       user: {},
-      message: '',
       userAvatar: '',
       isMyChatRoom: false,
       channel: null,
@@ -102,7 +85,6 @@ export default {
     })
   },
   created () {
-    console.log(this.$route.query.uid)
     this.cable = ActionCable.createConsumer('ws://localhost:3000/cable')
     this.channel = this.cable.subscriptions.create({
       channel: 'RoomChannel',
@@ -118,6 +100,7 @@ export default {
         console.log('received!!', data)
       }
     })
+    console.log(this.channel)
   },
   mounted () {
     setTimeout(() => {
@@ -132,8 +115,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage',
-      setIsUpdate: 'chat/setIsUpdate'
+      flashMessage: 'flash/flashMessage'
     }),
     async fetchContents () {
       const url = `/api/v1/users/${this.$route.params.id}`
@@ -143,9 +125,11 @@ export default {
           this.userAvatar = res.data.avatar.url
           this.setRoomId()
           this.fetchChats()
-          setTimeout(() => {
-            this.scrollBottom()
-          }, 100)
+          if (this.$route.name === 'chats-id') {
+            setTimeout(() => {
+              this.scrollBottom()
+            }, 100)
+          }
         })
     },
     async fetchChats () {
@@ -181,52 +165,6 @@ export default {
     scrollBottom () {
       const chatBack = document.getElementById('chat-display')
       chatBack.scrollTop = chatBack.scrollHeight
-    },
-    sendMessage () {
-      const chat = {
-        userId: this.currentUser.uid,
-        name: this.currentUser.name,
-        message: this.message,
-        createdAt: new Date()
-      }
-      firebase.firestore()
-        .collection('rooms')
-        .doc(this.roomId)
-        .collection('chats')
-        .add(chat)
-        .then(() => {
-          this.channel.perform('post', {
-            room: this.room
-          })
-          this.$refs.form.reset()
-          this.createNotification()
-          setTimeout(() => {
-            this.scrollBottom()
-          }, 100)
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.log(err)
-        })
-    },
-    createNotification () {
-      const url = '/api/v1/notifications'
-      this.$axios.post(url, {
-        chat: {
-          id: this.currentUser.id,
-          user_id: this.user.id
-        }
-      })
-        .then(() => {
-          this.setIsUpdate({
-            bool: true,
-            userId: this.user.id
-          })
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
     }
   }
 }
@@ -246,8 +184,9 @@ export default {
   justify-content: flex-end;
 }
 .face_icon img {
-  width: 60px;
-  height: auto;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%
 }
 .balloon_l .face_icon {
   margin-right: 10px;

@@ -9,9 +9,8 @@
       >
         <v-img
           :src="user.avatar.url"
-          max-height="70"
-          max-width="70"
-          contain
+          height="70"
+          width="70"
           hover
           style="border-radius: 50%;"
           class="ml-3 img"
