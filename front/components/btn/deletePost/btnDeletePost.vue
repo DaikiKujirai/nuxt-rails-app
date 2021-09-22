@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 
 export default {
   props: {
@@ -66,11 +66,6 @@ export default {
     return {
       dialog: false
     }
-  },
-  computed: {
-    ...mapGetters({
-      btnColor: 'btn/color'
-    })
   },
   methods: {
     ...mapActions({

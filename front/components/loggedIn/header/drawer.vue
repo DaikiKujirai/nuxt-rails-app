@@ -2,6 +2,8 @@
   <v-navigation-drawer
     v-model="drawer"
     temporary
+    fixed
+    class="mt-14"
   >
     <link-index />
     <template v-if="isAuthenticated">
@@ -10,19 +12,13 @@
       <link-chat />
       <link-following />
       <link-follower />
-      <v-list>
-        <v-list-item
-          class="justify-center"
-        >
-          <btn-new-post />
-        </v-list-item>
-      </v-list>
+      <btn-new-post />
     </template>
   </v-navigation-drawer>
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import BtnNewPost from '../../btn/newPost/btnNewPost.vue'
 import LinkChat from '../sidebar/linkChat.vue'
 import LinkFollower from '../sidebar/linkFollower.vue'
@@ -41,16 +37,20 @@ export default {
     BtnNewPost,
     LinkFollowing
   },
+  data () {
+    return {
+      drawer: false
+    }
+  },
   computed: {
     ...mapGetters({
-      isAuthenticated: 'auth/isAuthenticated',
-      drawer: 'drawer/drawer'
+      isAuthenticated: 'auth/isAuthenticated'
     })
   },
   methods: {
-    ...mapActions({
-      setDrawer: 'drawer/serDrawer'
-    })
+    toggleDrawer () {
+      this.drawer = !this.drawer
+    }
   }
 }
 </script>

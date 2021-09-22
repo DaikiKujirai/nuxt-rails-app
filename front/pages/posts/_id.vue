@@ -62,9 +62,6 @@
                 {{ commentsCountPagePostId }} 件のコメント
               </v-card-text>
               <v-card-text>
-                0 件のリツイート
-              </v-card-text>
-              <v-card-text>
                 {{ likesCountPagePostId }} 件のいいね
               </v-card-text>
             </v-col>
@@ -145,7 +142,7 @@ export default {
       if (!this.isAuthenticated) {
         this.$router.push('/auth/login')
       }
-    })
+    }, 0)
   },
   methods: {
     ...mapActions({

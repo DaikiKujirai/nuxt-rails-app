@@ -37,10 +37,6 @@ export default {
     roomId: {
       type: String,
       required: true
-    },
-    channel: {
-      type: Object,
-      required: true
     }
   },
   data () {
@@ -72,8 +68,12 @@ export default {
         .collection('chats')
         .add(chat)
         .then(() => {
-          this.channel.perform('post', {
-            room: this.room
+          this.$cable.perform({
+            channel: 'RoomChannel',
+            action: 'post',
+            data: {
+              message: this.message
+            }
           })
           this.$refs.form.reset()
           this.createNotification()

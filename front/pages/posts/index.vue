@@ -44,7 +44,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ActionCable from 'actioncable'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import HomeNewPost from '../../components/post/homeNewPost.vue'
 import Actions from '../../components/loggedIn/mainCard/actions.vue'
@@ -85,18 +84,15 @@ export default {
       if (bool) {
         await window.scrollTo({
           top: 0,
-          behavior: 'smooth'
+          behavior: 'auto'
         })
-        await setTimeout(() => {
-          this.fetchContents()
-          this.setIsNewPost(false)
-        }, 1000)
+        await this.fetchContents()
+        await this.setIsNewPost(false)
       }
     },
     deletePost (val) {
       if (val.bool) {
-        const posts = this.posts.filter(post => post.id !== val.post.id)
-        this.posts = posts
+        this.posts = this.posts.filter(post => post.id !== val.post.id)
         this.setDeletePost({ bool: false, post: {} })
       }
     }
@@ -106,21 +102,12 @@ export default {
   },
   mounted () {
     setTimeout(() => {
-      const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
-      this.channel = cable.subscriptions.create({
-        channel: 'RoomChannel',
-        uid: this.currentUser.uid
-      }, {
-        connected () {
-          console.log('connected')
-        },
-        disconnected () {
-          console.log('disconnected')
-        },
-        received (data) {
-          console.log('received!!', data)
-        }
-      })
+      this.subscribe()
+      // this.$cable.subscribe({
+      //   channel: 'RoomChannel',
+      //   room: 'public',
+      //   uid: this.currentUser.uid
+      // }, 'room_channel_public')
     }, 0)
   },
   methods: {
@@ -140,6 +127,10 @@ export default {
         .catch((err) => {
           this.flashMessage({ message: err.errors.messages, type: 'error', status: true })
         })
+    },
+    async subscribe () {
+      await this.$cable.connection.connect(() => 'ws://localhost:3000/cable')
+      await this.$cable.subscribe({ channel: 'RoomChannel' })
     },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)

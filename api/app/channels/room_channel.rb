@@ -1,5 +1,6 @@
 class RoomChannel < ApplicationCable::Channel
   def subscribed
+    # stream_from "room_channel"
     stream_from "room_#{params[:uid]}"
   end
 
@@ -8,6 +9,7 @@ class RoomChannel < ApplicationCable::Channel
   end
 
   def post(data)
+    # RoomChannel.broadcast_to("room_channel", data)
     RoomChannel.broadcast_to("room_#{params[:uid]}", data)
   end
 end

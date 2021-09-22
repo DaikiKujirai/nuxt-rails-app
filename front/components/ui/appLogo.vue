@@ -6,6 +6,7 @@
   >
     <v-icon
       class="white--text text-subtitle-2"
+      @click="toTopPage"
       v-text="'mdi-twitter'"
     />
   </v-avatar>
@@ -13,6 +14,11 @@
 
 <script>
 export default {
+  methods: {
+    toTopPage () {
+      this.$router.push('/posts')
+    }
+  }
 }
 </script>
 

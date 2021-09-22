@@ -6,7 +6,6 @@
       <sidebar
         class="d-none d-md-flex"
       />
-      <!-- <drawer /> -->
       <v-col
         offset-sm="0"
         offset-md="3"
@@ -66,7 +65,6 @@
 
 <script>
 import ToTop from '../../btn/toTop.vue'
-// import Drawer from '../../loggedIn/header/drawer.vue'
 import Sidebar from '../../loggedIn/sidebar/sidebar.vue'
 import Breadcrumbs from '../../loggedIn/ui/breadcrumbs.vue'
 
@@ -75,7 +73,6 @@ export default {
     Sidebar,
     Breadcrumbs,
     ToTop
-    // Drawer
   },
   methods: {
     pageBack () {
