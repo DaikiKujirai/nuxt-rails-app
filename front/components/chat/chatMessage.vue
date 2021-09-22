@@ -44,7 +44,6 @@
       <form-send-message
         :user="user"
         :room-id="roomId"
-        :channel="channel"
       />
     </template>
   </v-card>
@@ -52,7 +51,6 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import ActionCable from 'actioncable'
 import BalloonL from './balloonL.vue'
 import BalloonR from './balloonR.vue'
 import FormSendMessage from './formSendMessage.vue'
@@ -74,35 +72,29 @@ export default {
       channel: null,
       messages: [],
       cable: {},
-      msgBox: ''
+      msgBox: '',
+      disabled: false,
+      isValid: false,
+      message: ''
       // date: `${$my(this.msg.createdAt.toDate())}`
     }
   },
   computed: {
     ...mapGetters({
-      currentUser: 'auth/data',
-      isUpdate: 'chat/isUpdate'
+      currentUser: 'auth/data'
     })
   },
-  created () {
-    this.cable = ActionCable.createConsumer('ws://localhost:3000/cable')
-    this.channel = this.cable.subscriptions.create({
-      channel: 'RoomChannel',
-      uid: this.$route.query.uid
-    }, {
+  channels: {
+    room_channel_public: {
       connected () {
         console.log('connected')
-      },
-      disconnected () {
-        console.log('disconnected')
-      },
-      received (data) {
-        console.log('received!!', data)
       }
-    })
-    console.log(this.channel)
+    }
+  },
+  created () {
   },
   mounted () {
+    this.subscribe()
     setTimeout(() => {
       this.currentUser.id === Number(this.$route.params.id)
         ? (this.isMyChatRoom = true)
@@ -111,12 +103,30 @@ export default {
   },
   destroyed () {
     this.chats = []
-    this.channel = this.cable.subscriptions.remove(this.channel)
+    this.unsubscribe()
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
     }),
+    // subscribe () {
+    //   console.log('route')
+    //   this.$cable.subscribe({
+    //     channel: 'RoomChannel',
+    //     room: 'public',
+    //     uid: this.$route.query.uid
+    //   })
+    // },
+    async subscribe () {
+      await this.$cable.connection.connect(() => 'ws://localhost:3000/cable')
+      await this.$cable.subscribe({ channel: 'RoomChannel' })
+    },
+    unsubscribe () {
+      this.$cable.unsubscribe({
+        channel: 'RoomChannel',
+        uid: this.$route.query.uid
+      })
+    },
     async fetchContents () {
       const url = `/api/v1/users/${this.$route.params.id}`
       await this.$axios.get(url)

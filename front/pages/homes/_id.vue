@@ -88,12 +88,10 @@ export default {
       if (bool) {
         await window.scrollTo({
           top: 0,
-          behavior: 'smooth'
+          behavior: 'auto'
         })
-        await setTimeout(() => {
-          this.fetchContents()
-          this.setIsNewPost(false)
-        }, 1000)
+        await this.fetchContents()
+        await this.setIsNewPost(false)
       }
     },
     deletePost (val) {

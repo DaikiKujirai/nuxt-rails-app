@@ -3,15 +3,11 @@
     app
     dark
   >
-    <header-drawer
+    <drawer-icon
       class="d-md-none"
+      @toggleDrawer="toggleDrawer"
     />
-    <nuxt-link
-      to="/posts"
-      class="text-decoration-none"
-    >
-      <app-logo />
-    </nuxt-link>
+    <app-logo />
     <app-title
       class="hidden-ipad-and-down"
     />
@@ -30,14 +26,19 @@ import { mapActions } from 'vuex'
 import AppLogo from '../../ui/appLogo.vue'
 import AppTitle from '../../ui/appTitle.vue'
 import AccountLink from './accountLink.vue'
-import HeaderDrawer from './headerDrawer.vue'
+import drawerIcon from './drawerIcon.vue'
 
 export default {
   components: {
     AppLogo,
     AppTitle,
     AccountLink,
-    HeaderDrawer
+    drawerIcon
+  },
+  data () {
+    return {
+      drawer: false
+    }
   },
   computed: {
     notTopPage () {
@@ -54,6 +55,9 @@ export default {
         .then(() => {
           this.flashMessage({ message: 'ログアウトしました', type: 'primary', status: true })
         })
+    },
+    toggleDrawer () {
+      this.$emit('toggleDrawer')
     }
   }
 

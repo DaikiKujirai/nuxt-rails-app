@@ -32,7 +32,8 @@ export default {
     '~/plugins/authenticate.js',
     { src: '~plugins/persistedstate.js', ssr: false },
     { src: '~/plugins/infiniteloading', ssr: false },
-    '~plugins/day.js'
+    '~plugins/day.js',
+    { src: '~/plugins/actioncable-vue', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
