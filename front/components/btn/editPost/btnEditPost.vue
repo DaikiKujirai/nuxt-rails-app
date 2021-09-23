@@ -116,22 +116,21 @@ export default {
     async updatePost () {
       this.loading = true
       const formData = new FormData()
-      formData.append('post[id]', this.post.id)
       formData.append('post[user_id]', this.post.user_id)
       formData.append('post[content]', this.editPost.content)
       if (this.editImage) {
         formData.append('post[image]', this.editImage)
       }
-      await this.$axios.$patch(`/api/v1/posts/${this.post.id}`, formData)
+      await this.$axios.patch(`/api/v1/posts/${this.post.id}`, formData)
         .then((res) => {
-          this.setUpdatePost({ bool: true, post: res })
+          this.setUpdatePost({ bool: true, post: res.data })
           this.flashMessage({ message: '更新しました', type: 'primary', status: true })
           this.loading = false
           this.dialog = false
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
-          console.log(err.response)
+          console.error(err)
           this.flashMessage({ message: '更新に失敗しました', type: 'error', status: true })
           this.loading = false
         })

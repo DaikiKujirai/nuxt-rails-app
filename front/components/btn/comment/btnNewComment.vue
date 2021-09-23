@@ -148,7 +148,8 @@ export default {
     })
   },
   mounted () {
-    this.fetchComments()
+    this.commentsCount = this.post.comments.length
+    this.setCommentsCountPagePostId(this.commentsCount)
   },
   methods: {
     ...mapActions({
@@ -157,21 +158,6 @@ export default {
       commentsCountPagePostIdIncrement: 'post/commentsCountPagePostIdIncrement',
       commentsCountPagePostIdDecrement: 'post/commentsCountPagePostIdDecrement'
     }),
-    async fetchComments () {
-      const url = `/api/v1/find_comments/${this.post.id}`
-      await this.$axios.get(url)
-        .then((res) => {
-          this.comments = res.data.comments
-          this.commentsCount = res.data.kaminari.pagination.count
-          if (this.$route.name === 'posts-id' && this.post.id === Number(this.$route.params.id)) {
-            this.setCommentsCountPagePostId(this.commentsCount)
-          }
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
     async submitComment () {
       this.loading = true
       const formData = new FormData()

@@ -4,6 +4,8 @@ class Post < ApplicationRecord
   has_many :likes        , dependent: :destroy
   has_many :notifications, dependent: :destroy
 
+  has_many :comments, class_name: 'Post', foreign_key: 'post_id'
+
   mount_uploader :image, ImageUploader
 
   validates :content, presence: true
@@ -35,14 +37,6 @@ class Post < ApplicationRecord
     def find_user_posts_have_image(user_id)
       where(user_id: user_id).where.not(image: nil)
     end
-
-    def find_user_like_posts(user_likes)
-      user_like_posts = []
-      user_likes.each do |like|
-        user_like_posts.push(Post.find(like.post_id))
-      end
-      return user_like_posts
-    end
   end
 
   # notification
@@ -59,11 +53,6 @@ class Post < ApplicationRecord
       end
     end
   end
-
-  # def create_notification_comment!(current_user, post_id, visited_id)
-  #   post_id_and_user_id = Post.select(:user_id).find(id)
-  #   save_notification_comment!(current_user, post_id, user_id) if post_id_and_user_id.blank?
-  # end
 
   def create_notification_comment!(current_user, visited_id)
     notification = current_user.active_notifications.new(

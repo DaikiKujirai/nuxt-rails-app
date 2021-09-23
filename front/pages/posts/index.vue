@@ -102,7 +102,7 @@ export default {
   },
   mounted () {
     setTimeout(() => {
-      this.subscribe()
+      // this.subscribe()
       // this.$cable.subscribe({
       //   channel: 'RoomChannel',
       //   room: 'public',

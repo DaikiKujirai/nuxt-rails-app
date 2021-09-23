@@ -1,6 +1,6 @@
 <template>
   <div
-    style="height: 600px;"
+    style="height: 600px; overflow-y: auto;"
   >
     <v-card
       v-for="room in chatRooms"
@@ -10,13 +10,15 @@
       <chat-list
         :room="room"
         @fetchContents="fetchContents"
+        @rollBackPage="rollBackPage"
+        @identifierIncrement="identifierIncrement"
       />
     </v-card>
     <infinite-scroll
       ref="infinite"
       :page="page"
       :url="url"
-      :user-id="Number($route.params.id)"
+      :user-id="Number(userId)"
       @pushContents="pushContents"
       @pageIncrement="pageIncrement"
     />
@@ -33,11 +35,12 @@ export default {
     ChatList,
     InfiniteScroll
   },
-  data ({ $route }) {
+  data () {
     return {
       chatRooms: [],
       page: 1,
-      url: `/api/v1/chat_rooms/${$route.params.id}`
+      url: '',
+      userId: 0
     }
   },
   computed: {
@@ -48,6 +51,7 @@ export default {
   },
   mounted () {
     setTimeout(() => {
+      this.fetchUrlAndUserId()
       this.fetchContents()
       this.setUser(this.currentUser)
     }, 0)
@@ -57,18 +61,24 @@ export default {
       setIsUpdate: 'chat/setIsUpdate',
       setUser: 'user/setUser'
     }),
+    fetchUrlAndUserId () {
+      if (this.$route.name === 'chatRooms') {
+        this.userId = this.currentUser.id
+        this.url = `/api/v1/chat_rooms/${this.currentUser.id}`
+      } else {
+        this.userId = this.$route.params.id
+        this.url = `/api/v1/chat_rooms/${this.$route.params.id}`
+      }
+    },
     async fetchContents () {
       const url = `/api/v1/chat_rooms/${this.currentUser.id}`
       await this.$axios.get(url, {
         params: {
-          current_user_id: this.currentUser.id,
-          user_id: this.$route.params.id
+          user_id: this.userId
         }
       })
         .then((res) => {
-          this.rollBackPage()
           this.chatRooms = res.data.chat_rooms
-          this.identifierIncrement()
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

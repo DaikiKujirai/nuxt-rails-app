@@ -2,20 +2,20 @@ class Api::V1::PostsController < ApplicationController
   include Pagination
   def home
     current_user = User.find(params[:user_id])
-    posts        = Post.find_home_posts(current_user).includes(:user, :likes).page(params[:page]).per(5)
+    posts        = Post.find_home_posts(current_user).includes(:user, :likes, :comments).page(params[:page]).per(10)
     pagination   = resources_with_pagination(posts)
     object       = {
-                    posts:    posts.as_json(include: [:user, :likes]),
+                    posts:    posts.as_json(include: [:user, :likes, :comments]),
                     kaminari: pagination
                    }
     render json: object
   end
 
   def index
-    posts      = Post.find_posts.includes(:user, :likes).page(params[:page]).per(5)
+    posts      = Post.find_posts.includes(:user, :likes, :comments).page(params[:page]).per(10)
     pagination = resources_with_pagination(posts)
     object     = {
-                  posts:    posts.as_json(include: [:user, :likes]),
+                  posts:    posts.as_json(include: [:user, :likes, :comments]),
                   kaminari: pagination
                  }
     render json: object
@@ -23,7 +23,7 @@ class Api::V1::PostsController < ApplicationController
 
   def show
     post = Post.find(params[:id])
-    render json: post.as_json(include: [:user, :likes])
+    render json: post.as_json(include: [:user, :likes, :comments])
   end
 
   def create
@@ -49,9 +49,9 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def update
-    post = Post.includes(:user, :likes).find(params[:post][:id])
+    post = Post.includes(:user, :likes, :comments).find(params[:id])
     if post.update(post_params)
-      render json: post.as_json(include: [:user, :likes])
+      render json: post.as_json(include: [:user, :likes, :comments])
     else
       render json: post.errors.messages
     end
@@ -69,9 +69,9 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def find_comments
-    comments   = Post.find_post_comments(params[:id]).includes(:user, :likes).page(params[:page]).per(5)
+    comments   = Post.find_post_comments(params[:id]).includes(:user, :likes, :comments).page(params[:page]).per(10)
     pagination = resources_with_pagination(comments)
-    object     = { comments: comments.as_json(include: [:user, :likes]), kaminari: pagination }
+    object     = { comments: comments.as_json(include: [:user, :likes, :comments]), kaminari: pagination }
     render json: object
   end
 
@@ -82,9 +82,9 @@ class Api::V1::PostsController < ApplicationController
     else
       q            = Post.find_posts.ransack(content_cont: params[:q])
     end
-    posts          = q.result(distinct: true).includes(:user, :likes).page(params[:page]).per(5)
+    posts          = q.result(distinct: true).includes(:user, :likes, :comments).page(params[:page]).per(10)
     pagination     = resources_with_pagination(posts)
-    object         = { posts: posts.as_json(include: [:user, :likes]), kaminari: pagination }
+    object         = { posts: posts.as_json(include: [:user, :likes, :comments]), kaminari: pagination }
     render json: object
   end
 

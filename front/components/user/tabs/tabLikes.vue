@@ -1,22 +1,22 @@
 <template>
   <v-tab-item class="mt-3">
     <v-row
-      v-for="post in posts"
-      :key="post.id"
+      v-for="like in likes"
+      :key="like.post.id"
       style="cursor: pointer;"
-      @click="toShow('posts', post.id)"
+      @click="toShow('posts', like.post.id)"
     >
       <v-col>
         <v-card>
           <post-card
-            :post="post"
+            :post="like.post"
             :user="user"
           />
           <template v-if="isAuthenticated">
             <actions
-              :post="post"
+              :post="like.post"
               :user="user"
-              :likes="post.likes"
+              :likes="like.post.likes"
               :is-list="isList"
               @rollBackPage="rollBackPage"
               @fetchContents="fetchContents"
@@ -58,7 +58,7 @@ export default {
   },
   data () {
     return {
-      posts: [],
+      likes: [],
       page: 1,
       isList: true,
       url: `/api/v1/show_user_like_posts/${this.$route.params.id}`
@@ -80,12 +80,16 @@ export default {
       }
     }
   },
+  created () {
+    this.fetchContents()
+  },
   methods: {
     async fetchContents () {
       const url = `/api/v1/show_user_like_posts/${this.user.id}`
       await this.$axios.get(url)
         .then((res) => {
-          this.posts = res.data.user_like_posts
+          console.log(res)
+          this.likes = res.data.user_likes
         })
     },
     toShow (page, id) {
@@ -98,7 +102,8 @@ export default {
       this.page++
     },
     pushContents (res) {
-      this.posts.push(...res.data.user_like_posts)
+      console.log(res)
+      this.likes.push(...res.data.user_likes)
     }
   }
 }
