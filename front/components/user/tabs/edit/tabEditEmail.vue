@@ -29,15 +29,27 @@
       </v-row>
       <v-row>
         <v-col class="text-center my-10">
-          <v-btn
-            :disabled="!isValid || loading"
-            :loading="loading"
-            rounded
-            color="success"
-            @click="reauthenticateUser"
-          >
-            プロフィールを更新
-          </v-btn>
+          <template v-if="isGuest">
+            <v-btn
+              disabled
+              rounded
+              color="error"
+              @click="showMessage"
+            >
+              ゲストユーザーのため変更できません
+            </v-btn>
+          </template>
+          <template v-else>
+            <v-btn
+              :disabled="!isValid || loading"
+              :loading="loading"
+              rounded
+              color="success"
+              @click="reauthenticateUser"
+            >
+              プロフィールを更新
+            </v-btn>
+          </template>
         </v-col>
       </v-row>
     </v-form>
@@ -55,6 +67,12 @@ export default {
     userFormEmail,
     UserFormPassword
   },
+  props: {
+    isGuest: {
+      type: Boolean,
+      required: true
+    }
+  },
   data () {
     return {
       tab: null,
@@ -68,7 +86,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      currentUser: 'auth/data'
+      currentUser: 'auth/data',
+      user: 'auth/user'
     })
   },
   methods: {
@@ -112,6 +131,9 @@ export default {
           this.flashMessage({ message: '更新に失敗しました', type: 'error', status: true })
           this.loading = false
         })
+    },
+    showMessage () {
+      this.flashMessage({ message: 'ゲストユーザーのため変更できません', type: 'error', status: true })
     }
   }
 }

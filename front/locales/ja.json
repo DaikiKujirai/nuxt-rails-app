@@ -9,13 +9,14 @@
     "follower"    : "フォロワー"
   },
   "pages": {
-    "auth-signup": "会員登録"     ,
-    "auth-login" : "ログイン"     ,
-    "guest"      : "ゲストログイン",
-    "logout"     : "ログアウト"   ,
-    "account"    : {
-      "settings" : "アカウント設定",
-      "password" : "パスワード変更"
+    "auth-signup"        : "会員登録"        ,
+    "auth-login"         : "ログイン"        ,
+    "auth-forgetPassword": "パスワード忘れた？",
+    "guest"              : "ゲストログイン"   ,
+    "logout"             : "ログアウト"      ,
+    "account"            : {
+      "settings"         : "アカウント設定"   ,
+      "password"         : "パスワード変更"
     },
     "index"           : "ホーム"    ,
     "posts"           : "全ての投稿",
