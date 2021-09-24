@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-row>
-      <v-col class="text-center mb-5">
+      <v-col class="text-center my-5">
         <v-btn
           text
           color="error"

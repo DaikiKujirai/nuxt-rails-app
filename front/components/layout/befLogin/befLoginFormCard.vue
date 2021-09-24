@@ -8,9 +8,17 @@
         cols="12"
         class="my-8 text-center"
       >
-        <h1 class="text-h5 font-weight-bold">
-          {{ appName }}に{{ pageTitle }}
-        </h1>
+        <template v-if="isForget">
+          <h3 class="text-h5 font-weight-bold">
+            パスワードをお忘れですか？<br>
+            確認メールを送信します
+          </h3>
+        </template>
+        <template v-else>
+          <h1 class="text-h5 font-weight-bold">
+            {{ appName }}に{{ pageTitle }}
+          </h1>
+        </template>
       </v-col>
       <v-card
         flat
@@ -30,6 +38,11 @@ export default {
     return {
       appName,
       pageTitle: this.$t(`pages.${$route.name}`)
+    }
+  },
+  computed: {
+    isForget () {
+      return this.$route.name === 'auth-forgetPassword'
     }
   }
 }

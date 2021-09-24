@@ -61,6 +61,7 @@
                   <v-btn
                     disabled
                     rounded
+                    color="error"
                     @click="toHome"
                   >
                     ゲストユーザーのため変更できません
@@ -98,7 +99,7 @@ export default {
     UserFormName,
     UserFormIntroduction
   },
-  data ({ store }) {
+  data () {
     return {
       isValid: false,
       loading: false,

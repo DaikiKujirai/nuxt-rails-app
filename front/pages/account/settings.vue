@@ -40,9 +40,11 @@
           </v-tabs>
           <v-tabs-items v-model="tab">
             <tab-edit-email
+              :is-guest="isGuest"
               class="mt-10"
             />
             <tab-edit-password
+              :is-guest="isGuest"
               class="mt-10"
             />
           </v-tabs-items>
@@ -70,7 +72,9 @@ export default {
       name: '',
       coverImage: '',
       avatar: '',
-      breadcrumbs: 'アカウント設定'
+      breadcrumbs: 'アカウント設定',
+      guest: process.env.GUEST_EMAIL,
+      isGuest: false
     }
   },
   computed: {
@@ -86,6 +90,7 @@ export default {
       this.coverImage = this.currentUser.cover_image.url
       this.avatar = this.currentUser.avatar.url
       this.setBreadcrumbs(this.breadcrumbs)
+      this.isGuest = this.guest === this.currentUser.email
     }, 0)
   },
   methods: {
