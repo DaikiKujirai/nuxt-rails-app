@@ -57,15 +57,26 @@
             </v-row>
             <v-row>
               <v-col class="text-center mb-3">
-                <v-btn
-                  :disabled="!isValid || loading"
-                  :loading="loading"
-                  rounded
-                  color="success"
-                  @click="submitEdit"
-                >
-                  プロフィールを更新
-                </v-btn>
+                <template v-if="isGuest">
+                  <v-btn
+                    disabled
+                    rounded
+                    @click="toHome"
+                  >
+                    ゲストユーザーのため変更できません
+                  </v-btn>
+                </template>
+                <template v-else>
+                  <v-btn
+                    :disabled="!isValid || loading"
+                    :loading="loading"
+                    rounded
+                    color="success"
+                    @click="submitEdit"
+                  >
+                    プロフィールを更新
+                  </v-btn>
+                </template>
               </v-col>
             </v-row>
           </v-card>
@@ -87,7 +98,7 @@ export default {
     UserFormName,
     UserFormIntroduction
   },
-  data () {
+  data ({ store }) {
     return {
       isValid: false,
       loading: false,
@@ -99,13 +110,18 @@ export default {
       avatar: '',
       editAvatar: '',
       editCoverImage: '',
-      breadcrumbs: 'プロフィール編集'
+      breadcrumbs: 'プロフィール編集',
+      guest: process.env.GUEST_EMAIL
     }
   },
   computed: {
     ...mapGetters({
-      currentUser: 'auth/data'
-    })
+      currentUser: 'auth/data',
+      user: 'auth/user'
+    }),
+    isGuest () {
+      return this.guest === this.user.email
+    }
   },
   mounted () {
     this.setBreadcrumbs(this.breadcrumbs)
@@ -125,7 +141,6 @@ export default {
     async submitEdit () {
       this.loading = true
       const formData = new FormData()
-      formData.append('user[id]', this.currentUser.id)
       formData.append('user[name]', this.name)
       formData.append('user[introduction]', this.introduction)
       if (this.editAvatar) {
@@ -141,10 +156,14 @@ export default {
           this.$router.push(`/users/${this.currentUser.id}`)
           this.loading = false
         })
-        .catch(() => {
-          this.flashMessage({ message: '失敗しました', type: 'error', status: true })
+        .catch((err) => {
+          this.flashMessage({ message: err, type: 'error', status: true })
           this.loading = false
         })
+    },
+    toHome () {
+      this.flashMessage({ message: 'ゲストユーザーのため変更できません', type: 'success', status: true })
+      this.$router.push(`/homes/${this.currentUser.id}`)
     }
   }
 }

@@ -1,51 +1,44 @@
 <template>
   <v-card>
-    <template v-if="isMyChatRoom">
-      <h1>
-        チャットを選択してください
-      </h1>
-    </template>
-    <template v-else>
-      <v-app-bar
-        dense
-        flat
-        color="white"
+    <v-app-bar
+      dense
+      flat
+      color="white"
+    >
+      <v-toolbar-title>
+        {{ user.name }}
+      </v-toolbar-title>
+    </v-app-bar>
+    <v-list
+      id="chat-display"
+      class="overflow-y-auto overflow-x-0"
+      color="info"
+      height="600"
+    >
+      <v-list-item
+        v-for="(msg, i) in chats"
+        :key="i"
       >
-        <v-toolbar-title>
-          {{ user.name }}
-        </v-toolbar-title>
-      </v-app-bar>
-      <v-list
-        id="chat-display"
-        class="overflow-y-auto overflow-x-0"
-        color="info"
-        height="600"
-      >
-        <v-list-item
-          v-for="(msg, i) in chats"
-          :key="i"
-        >
-          <template v-if="msg.userId != currentUser.uid">
-            <balloon-l
-              :user-avatar="userAvatar"
-              :msg="msg"
-            />
-          </template>
-          <template v-else>
-            <balloon-r
-              :msg="msg"
-            />
-          </template>
-        </v-list-item>
-      </v-list>
-      <v-divider
-        id="scroll-inner"
-      />
-      <form-send-message
-        :user="user"
-        :room-id="roomId"
-      />
-    </template>
+        <template v-if="msg.userId != currentUser.uid">
+          <balloon-l
+            :user-avatar="userAvatar"
+            :msg="msg"
+          />
+        </template>
+        <template v-else>
+          <balloon-r
+            :msg="msg"
+          />
+        </template>
+      </v-list-item>
+    </v-list>
+    <v-divider
+      id="scroll-inner"
+    />
+    <form-send-message
+      :user="user"
+      :room-id="roomId"
+    />
   </v-card>
 </template>
 
@@ -96,9 +89,7 @@ export default {
   mounted () {
     this.subscribe()
     setTimeout(() => {
-      this.currentUser.id === Number(this.$route.params.id)
-        ? (this.isMyChatRoom = true)
-        : (this.fetchContents())
+      (this.fetchContents())
     }, 0)
   },
   destroyed () {
@@ -119,7 +110,10 @@ export default {
     // },
     async subscribe () {
       await this.$cable.connection.connect(() => 'ws://localhost:3000/cable')
-      await this.$cable.subscribe({ channel: 'RoomChannel' })
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        uid: this.$route.query.uid
+      })
     },
     unsubscribe () {
       this.$cable.unsubscribe({

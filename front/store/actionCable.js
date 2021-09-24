@@ -10,7 +10,6 @@ export const getters = {
 
 export const mutations = {
   setMyChannel (state, payload) {
-    console.log('mutations')
     state.myChannel = payload
   }
 }

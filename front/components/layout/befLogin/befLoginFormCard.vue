@@ -15,7 +15,7 @@
       <v-card
         flat
         width="80%"
-        max-width="320"
+        max-width="330"
         color="transparent"
       >
         <slot name="form-card-content" />

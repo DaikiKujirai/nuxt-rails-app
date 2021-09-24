@@ -9,17 +9,17 @@
       class="pr-0"
     >
       <v-img
-        :src="avatar"
+        :src="room.distination_user.avatar.url"
         height="60"
         max-width="60"
         style="border-radius: 50%;"
         class="ml-2 img"
-        @click.prevent.stop="toShow('users', user.id)"
+        @click.prevent.stop="toShow('users', room.distination_user.id)"
       />
     </v-col>
     <v-col>
       <v-card-title class="pt-0 pl-0">
-        {{ user.name }}
+        {{ room.distination_user.name }}
       </v-card-title>
       <v-card-subtitle class="pa-0">
         {{ lastChat.message }}
@@ -52,10 +52,10 @@ export default {
     })
   },
   watch: {
-    isUpdate (val) {
-      if (val.bool && val.userId === this.user.id) {
-        this.updateChatRooms()
-        this.setIsUpdate({
+    async isUpdate (val) {
+      if (val.bool && val.userId === this.room.distination_user.id) {
+        await this.updateChatRooms()
+        await this.setIsUpdate({
           bool: false,
           userId: 0
         })
@@ -63,25 +63,12 @@ export default {
     }
   },
   created () {
-    this.fetchContents()
+    this.fetchChatLastMessage()
   },
   methods: {
     ...mapActions({
       setIsUpdate: 'chat/setIsUpdate'
     }),
-    fetchContents () {
-      const url = `/api/v1/users/${this.room.distination_user_id}`
-      this.$axios.get(url)
-        .then((res) => {
-          this.user = res.data
-          this.avatar = res.data.avatar.url
-          this.fetchChatLastMessage()
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
     fetchChatLastMessage () {
       firebase.firestore()
         .collection('rooms')
@@ -107,7 +94,9 @@ export default {
       const url = `/api/v1/chat_rooms/${this.user.id}`
       this.$axios.patch(url, this.room)
         .then(() => {
-          this.fetchChatRooms()
+          this.rollBackPage()
+          this.fetchContents()
+          this.identifierIncrement()
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -117,7 +106,7 @@ export default {
     sliceMessage (chat) {
       chat.message = chat.message.substr(0, 15) + '...'
     },
-    fetchChatRooms () {
+    fetchContents () {
       this.$emit('fetchContents')
     },
     toChatRoom () {
@@ -125,6 +114,12 @@ export default {
     },
     toShow (url, id) {
       this.$router.push(`/${url}/${id}`)
+    },
+    rollBackPage () {
+      this.$emit('rollBackPage')
+    },
+    identifierIncrement () {
+      this.$emit('identifierIncrement')
     }
   }
 }

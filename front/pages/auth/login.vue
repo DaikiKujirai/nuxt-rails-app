@@ -27,6 +27,7 @@
           :disabled="!isValid || loading"
           :loading="loading"
           block
+          rounded
           color="success"
           class="white--text"
           @click="loginUser"
@@ -65,15 +66,13 @@ export default {
   methods: {
     ...mapActions({
       login: 'auth/login',
-      flashMessage: 'flash/flashMessage',
-      setMyChannel: 'actionCable/setMyChannel'
+      flashMessage: 'flash/flashMessage'
     }),
     loginUser () {
       this.loading = true
       firebase.auth().signInWithEmailAndPassword(this.user.email, this.user.password)
         .then((res) => {
           this.login(res.user)
-          this.setMyChannel(res.user.uid)
           setTimeout(() => {
             this.$router.replace('/posts')
             this.flashMessage({ message: 'ログインしました', type: 'success', status: true })

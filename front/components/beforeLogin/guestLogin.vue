@@ -2,6 +2,7 @@
   <v-btn
     :loading="loading"
     block
+    rounded
     color="info"
     class="white--text mt-3"
     @click="guestLogin"
@@ -34,7 +35,7 @@ export default {
     }),
     async guestLogin () {
       this.loading = true
-      const email = 'guest@example.com'
+      const email = process.env.GUEST_EMAIL
       const password = 'password'
       await firebase.auth().signInWithEmailAndPassword(email, password)
         .then((res) => {

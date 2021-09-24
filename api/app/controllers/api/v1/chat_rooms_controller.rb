@@ -13,9 +13,9 @@ class Api::V1::ChatRoomsController < ApplicationController
       end
     end
 
-    chat_rooms = current_user.chat_rooms.updated_desc.page(params[:page]).per(15)
+    chat_rooms = current_user.chat_rooms.includes(:distination_user).updated_desc.page(params[:page]).per(15)
     pagination = resources_with_pagination(chat_rooms)
-    object     = { chat_rooms: chat_rooms, kaminari: pagination }
+    object     = { chat_rooms: chat_rooms.as_json(include: :distination_user), kaminari: pagination }
     render json: object
   end
 
