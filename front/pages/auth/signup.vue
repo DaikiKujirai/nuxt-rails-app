@@ -20,6 +20,7 @@
         :disabled="!isValid || loading"
         :loading="loading"
         block
+        rounded
         color="primary"
         class="white--text"
         @click="signup"
@@ -49,7 +50,6 @@ export default {
     GuestLogin
   },
   layout: 'beforeLogin',
-  // middleware: 'authenticated.js',
   data () {
     return {
       isValid: false,

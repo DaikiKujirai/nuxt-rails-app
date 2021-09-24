@@ -88,7 +88,6 @@ export default {
       const url = `/api/v1/show_user_like_posts/${this.user.id}`
       await this.$axios.get(url)
         .then((res) => {
-          console.log(res)
           this.likes = res.data.user_likes
         })
     },
@@ -102,7 +101,6 @@ export default {
       this.page++
     },
     pushContents (res) {
-      console.log(res)
       this.likes.push(...res.data.user_likes)
     }
   }

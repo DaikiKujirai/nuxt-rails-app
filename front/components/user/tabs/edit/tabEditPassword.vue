@@ -27,8 +27,6 @@
         </v-col>
       </v-row>
       <v-row>
-        {{ password }}
-        {{ newPassword }}
         <v-col class="text-center my-10">
           <v-btn
             :disabled="!isValid || loading"
@@ -42,17 +40,20 @@
         </v-col>
       </v-row>
     </v-form>
+    <btn-disable-account />
   </v-tab-item>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import UserFormPassword from '../../userFormPassword.vue'
+import BtnDisableAccount from './btnDisableAccount.vue'
 import firebase from '~/plugins/firebase'
 
 export default {
   components: {
-    UserFormPassword
+    UserFormPassword,
+    BtnDisableAccount
   },
   data () {
     return {

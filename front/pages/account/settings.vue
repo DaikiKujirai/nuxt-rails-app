@@ -35,7 +35,7 @@
               メールアドレス変更
             </v-tab>
             <v-tab>
-              パスワード変更
+              パスワード変更・退会
             </v-tab>
           </v-tabs>
           <v-tabs-items v-model="tab">
