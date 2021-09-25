@@ -74,13 +74,11 @@ export default {
   channels: {
     RoomChannel: {
       connected () {
-        console.log('connected', this)
+        // eslint-disable-next-line no-console
+        console.log('connected')
       },
-      rejected () {
-        console.log('rejected')
-      },
-      received (data) {
-        console.log('received', data)
+      received () {
+        this.setIsActive(true)
       },
       disconnected () {
         console.log('disconnected')
@@ -117,16 +115,19 @@ export default {
     this.setBreadcrumbs(this.breadcrumbs)
   },
   mounted () {
-    setTimeout(() => {
-      this.subscribe()
-    }, 0)
+    if (this.isAuthenticated) {
+      setTimeout(() => {
+        this.subscribe()
+      }, 0)
+    }
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setIsNewPost: 'post/setIsNewPost',
       setDeletePost: 'post/setDeletePost',
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setIsActive: 'notification/setIsActive'
     }),
     async fetchContents () {
       await this.$axios.get(this.url)
@@ -142,7 +143,6 @@ export default {
     async subscribe () {
       await this.$cable.subscribe({
         channel: 'RoomChannel',
-        // room: 'room_channel',
         room: this.currentUser.uid,
         uid: `${this.currentUser.uid}`
       })

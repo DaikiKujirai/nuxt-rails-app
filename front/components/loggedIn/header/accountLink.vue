@@ -10,9 +10,9 @@
         icon
         v-on="on"
       >
-        <v-icon>
-          mdi-account-circle
-        </v-icon>
+        <v-icon
+          v-text="'mdi-account-circle'"
+        />
       </v-btn>
     </template>
     <v-list>

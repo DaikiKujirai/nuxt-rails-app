@@ -67,6 +67,21 @@ export default {
     })
     return { posts: res.data.posts }
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+        // eslint-disable-next-line no-console
+        console.log('connected')
+      },
+      received () {
+        this.setIsActive(true)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   data () {
     return {
       page: 1,
@@ -106,6 +121,7 @@ export default {
     this.setBreadcrumbs(this.breadcrumbs)
     setTimeout(() => {
       this.setUser(this.currentUser)
+      this.subscribe()
     }, 0)
   },
   methods: {
@@ -114,8 +130,16 @@ export default {
       setIsNewPost: 'post/setIsNewPost',
       setDeletePost: 'post/setDeletePost',
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
-      setUser: 'user/setUser'
+      setUser: 'user/setUser',
+      setIsActive: 'notification/setIsActive'
     }),
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
+    },
     async fetchContents () {
       await this.$axios.get(this.url, {
         params: {

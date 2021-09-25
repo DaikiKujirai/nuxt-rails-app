@@ -15,24 +15,11 @@ export const mutations = {
 }
 
 export const actions = {
-  setMyChannel ({ commit }, channel) {
-    // console.log(currentUserUid)
-    // const cable = ActionCable.createConsumer('ws://localhost:3000/cable')
-    // const channel = cable.subscriptions.create({
-    //   channel: 'RoomChannel',
-    //   uid: currentUserUid
-    // }, {
-    //   connected () {
-    //     console.log('connected')
-    //   },
-    //   disconnected () {
-    //     console.log('disconnected')
-    //   },
-    //   received (data) {
-    //     console.log('received!!')
-    //   }
-    // })
-    // console.log(channel)
-    commit('setMyChannel', channel)
+  async subscribe (userUid) {
+    await this.$cable.subscribe({
+      channel: 'RoomChannel',
+      room: userUid,
+      uid: userUid
+    })
   }
 }

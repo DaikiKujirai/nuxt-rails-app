@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import TabFollowers from '../../components/user/tabs/tabFollowers.vue'
 import TabFollowing from '../../components/user/tabs/tabFollowing.vue'
@@ -41,20 +41,53 @@ export default {
     TabFollowers,
     TabFollowing
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+        // eslint-disable-next-line no-console
+        console.log('connected')
+      },
+      received () {
+        this.setIsActive(true)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   data () {
     return {
       tab: 0,
       breadcrumbs: ''
     }
   },
+  computed: {
+    ...mapGetters({
+      currentUser: 'auth/data'
+    })
+  },
   created () {
     this.fetchContents()
     this.setBreadcrumbs(this.breadcrumbs)
   },
+  mounted () {
+    setTimeout(() => {
+      this.subscribe()
+    }, 0)
+  },
   methods: {
     ...mapActions({
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setIsActive: 'notification/setIsActive'
     }),
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
+    },
     fetchContents () {
       if (this.$route.query.tab === 'following') {
         this.tab = 1

@@ -114,6 +114,21 @@ export default {
     const res = await $axios.get(`/api/v1/posts/${params.id}`)
     return { post: res.data }
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+        // eslint-disable-next-line no-console
+        console.log('connected')
+      },
+      received () {
+        this.setIsActive(true)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   data () {
     return {
       isList: false,
@@ -146,14 +161,23 @@ export default {
       if (!this.isAuthenticated) {
         this.$router.push('/auth/login')
       }
+      this.subscribe()
     }, 0)
   },
   methods: {
     ...mapActions({
       setUser: 'user/setUser',
       setUpdatePost: 'post/setUpdatePost',
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setIsActive: 'notification/setIsActive'
     }),
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
+    },
     async fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)

@@ -17,6 +17,7 @@
     >
       logout
     </v-btn>
+    <btn-change-theme />
     <account-link />
   </v-app-bar>
 </template>
@@ -26,6 +27,7 @@ import { mapActions } from 'vuex'
 import AppLogo from '../../ui/appLogo.vue'
 import AppTitle from '../../ui/appTitle.vue'
 import AccountLink from './accountLink.vue'
+import BtnChangeTheme from './btnChangeTheme.vue'
 import drawerIcon from './drawerIcon.vue'
 
 export default {
@@ -33,7 +35,8 @@ export default {
     AppLogo,
     AppTitle,
     AccountLink,
-    drawerIcon
+    drawerIcon,
+    BtnChangeTheme
   },
   data () {
     return {
