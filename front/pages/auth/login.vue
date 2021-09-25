@@ -41,7 +41,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import befLoginFormCard from '../../components/layout/befLogin/befLoginFormCard.vue'
 import userFormEmail from '../../components/user/userFormEmail.vue'
 import userFormPassword from '../../components/user/userFormPassword.vue'
@@ -63,6 +63,11 @@ export default {
       user: { email: '', password: '' }
     }
   },
+  computed: {
+    ...mapGetters({
+      currentUser: 'auth/data'
+    })
+  },
   methods: {
     ...mapActions({
       login: 'auth/login',
@@ -74,7 +79,7 @@ export default {
         .then((res) => {
           this.login(res.user)
           setTimeout(() => {
-            this.$router.replace('/posts')
+            this.$router.replace(`/homes/${this.currentUser.id}`)
             this.flashMessage({ message: 'ログインしました', type: 'success', status: true })
             this.loading = false
           }, 1500)

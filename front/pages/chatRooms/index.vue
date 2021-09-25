@@ -18,7 +18,8 @@ export default {
   },
   data () {
     return {
-      breadcrumbs: 'チャット'
+      breadcrumbs: 'チャット',
+      userId: 0
     }
   },
   computed: {

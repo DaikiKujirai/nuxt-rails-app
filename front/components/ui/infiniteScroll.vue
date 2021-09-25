@@ -12,7 +12,6 @@
       <v-divider
         class="mb-2 mx-3"
       />
-      データはありません
     </div>
   </infinite-loading>
 </template>
@@ -49,27 +48,29 @@ export default {
   methods: {
     async infiniteHandler () {
       await this.pageIncrement()
-      await this.$axios.get(this.url, {
-        params: {
-          page: this.page,
-          user_id: this.userId,
-          q: this.searchWord,
-          page_name: this.searchPageName
-        }
-      })
-        .then((res) => {
-          setTimeout(() => {
-            if (this.page <= res.data.kaminari.pagination.pages) {
-              this.pushContents(res)
-              this.$refs.infiniteLoading.stateChanger.loaded()
-            } else {
-              this.$refs.infiniteLoading.stateChanger.complete()
-            }
-          }, 500)
+      setTimeout(() => {
+        this.$axios.get(this.url, {
+          params: {
+            page: this.page,
+            user_id: this.userId,
+            q: this.searchWord,
+            page_name: this.searchPageName
+          }
         })
-        .catch(() => {
-          this.$refs.infiniteLoading.stateChanger.complete()
-        })
+          .then((res) => {
+            setTimeout(() => {
+              if (this.page <= res.data.kaminari.pagination.pages) {
+                this.pushContents(res)
+                this.$refs.infiniteLoading.stateChanger.loaded()
+              } else {
+                this.$refs.infiniteLoading.stateChanger.complete()
+              }
+            }, 500)
+          })
+          .catch(() => {
+            this.$refs.infiniteLoading.stateChanger.complete()
+          })
+      }, 200)
     },
     pageIncrement () {
       this.$emit('pageIncrement')

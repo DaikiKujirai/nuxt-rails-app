@@ -62,10 +62,7 @@ export default {
       user: {},
       userAvatar: '',
       isMyChatRoom: false,
-      channel: null,
       messages: [],
-      cable: {},
-      msgBox: '',
       disabled: false,
       isValid: false,
       message: ''
@@ -78,18 +75,25 @@ export default {
     })
   },
   channels: {
-    room_channel_public: {
+    RoomChannel: {
       connected () {
-        console.log('connected')
+        console.log('connected', this)
+      },
+      rejected () {
+        console.log('rejected')
+      },
+      received (data) {
+        console.log('received', data)
+      },
+      disconnected () {
+        console.log('disconnected')
       }
     }
-  },
-  created () {
   },
   mounted () {
     this.subscribe()
     setTimeout(() => {
-      (this.fetchContents())
+      this.fetchContents()
     }, 0)
   },
   destroyed () {
@@ -100,18 +104,11 @@ export default {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
     }),
-    // subscribe () {
-    //   console.log('route')
-    //   this.$cable.subscribe({
-    //     channel: 'RoomChannel',
-    //     room: 'public',
-    //     uid: this.$route.query.uid
-    //   })
-    // },
-    async subscribe () {
-      await this.$cable.connection.connect(() => 'ws://localhost:3000/cable')
-      await this.$cable.subscribe({
+    subscribe () {
+      this.$cable.subscribe({
         channel: 'RoomChannel',
+        room: this.$route.query.uid,
+        // room: `room_${this.$route.query.uid}`,
         uid: this.$route.query.uid
       })
     },
@@ -129,7 +126,7 @@ export default {
           this.userAvatar = res.data.avatar.url
           this.setRoomId()
           this.fetchChats()
-          if (this.$route.name === 'chats-id') {
+          if (this.$route.name === 'chatRooms-id') {
             setTimeout(() => {
               this.scrollBottom()
             }, 100)

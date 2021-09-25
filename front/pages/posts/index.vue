@@ -71,6 +71,22 @@ export default {
       channel: ''
     }
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+        console.log('connected', this)
+      },
+      rejected () {
+        console.log('rejected')
+      },
+      received (data) {
+        console.log('received', data)
+      },
+      disconnected () {
+        console.log('disconnected')
+      }
+    }
+  },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
@@ -102,12 +118,7 @@ export default {
   },
   mounted () {
     setTimeout(() => {
-      // this.subscribe()
-      // this.$cable.subscribe({
-      //   channel: 'RoomChannel',
-      //   room: 'public',
-      //   uid: this.currentUser.uid
-      // }, 'room_channel_public')
+      this.subscribe()
     }, 0)
   },
   methods: {
@@ -129,8 +140,12 @@ export default {
         })
     },
     async subscribe () {
-      await this.$cable.connection.connect(() => 'ws://localhost:3000/cable')
-      await this.$cable.subscribe({ channel: 'RoomChannel' })
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        // room: 'room_channel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
     },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)

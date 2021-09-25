@@ -1,6 +1,6 @@
 <template>
   <div
-    style="height: 600px; overflow-y: auto;"
+    style="height: 550px; overflow-y: auto; overflow-x: hidden;"
   >
     <v-card
       v-for="room in chatRooms"

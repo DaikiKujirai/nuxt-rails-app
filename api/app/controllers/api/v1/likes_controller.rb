@@ -1,5 +1,13 @@
 class Api::V1::LikesController < ApplicationController
   include Pagination
+  def show
+    likes      = Like.includes(:user).where(post_id: params[:id]).page(params[:page]).per(15)
+    pagination = resources_with_pagination(likes)
+    object     = { likes: likes.as_json(include: :user), kaminari: pagination }
+    
+    render json: object
+  end
+
   def create
     like = Like.new(like_params)
     if like.save

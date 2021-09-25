@@ -149,12 +149,10 @@ export default {
   },
   mounted () {
     this.commentsCount = this.post.comments.length
-    this.setCommentsCountPagePostId(this.commentsCount)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setCommentsCountPagePostId: 'post/setCommentsCountPagePostId',
       commentsCountPagePostIdIncrement: 'post/commentsCountPagePostIdIncrement',
       commentsCountPagePostIdDecrement: 'post/commentsCountPagePostIdDecrement'
     }),

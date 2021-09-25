@@ -57,8 +57,10 @@ export default {
       currentUser: 'auth/data'
     })
   },
-  created () {
-    this.fetchContents()
+  mounted () {
+    setTimeout(() => {
+      this.fetchContents()
+    }, 0)
   },
   methods: {
     ...mapActions({

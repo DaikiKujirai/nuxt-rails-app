@@ -41,7 +41,6 @@ export default {
   },
   data () {
     return {
-      user: {},
       avatar: '',
       lastChat: ''
     }
@@ -91,7 +90,7 @@ export default {
         })
     },
     updateChatRooms () {
-      const url = `/api/v1/chat_rooms/${this.user.id}`
+      const url = `/api/v1/chat_rooms/${this.room.distination_user.id}`
       this.$axios.patch(url, this.room)
         .then(() => {
           this.rollBackPage()
@@ -110,7 +109,7 @@ export default {
       this.$emit('fetchContents')
     },
     toChatRoom () {
-      this.$router.push(`/chatRooms/${this.room.distination_user_id}?uid=${this.user.uid}`)
+      this.$router.push(`/chatRooms/${this.room.distination_user_id}?uid=${this.room.distination_user.uid}`)
     },
     toShow (url, id) {
       this.$router.push(`/${url}/${id}`)

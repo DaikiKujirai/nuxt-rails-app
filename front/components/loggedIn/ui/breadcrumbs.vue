@@ -4,7 +4,7 @@
     style="width: 100%;"
   >
     <h4 class="ma-auto">
-      <template v-if="$route.params.id">
+      <template v-if="isDisplayUserName">
         {{ user.name }}
       </template>
       <template v-else-if="$route.name === 'search'">
@@ -12,7 +12,7 @@
       </template>
       {{ breadcrumbs }}
     </h4>
-    <template v-if="isDisplay && isAuthenticated">
+    <template v-if="isDisplaySearchForm && isAuthenticated">
       <search-form />
     </template>
   </div>
@@ -33,7 +33,7 @@ export default {
       searchWord: 'search/searchWord',
       isAuthenticated: 'auth/isAuthenticated'
     }),
-    isDisplay () {
+    isDisplaySearchForm () {
       const route = this.$route.name
       switch (route) {
         case 'search':
@@ -41,6 +41,21 @@ export default {
         case 'posts':
           return true
         case 'homes-id':
+          return true
+        default:
+          return false
+      }
+    },
+    isDisplayUserName () {
+      const route = this.$route.name
+      switch (route) {
+        case 'users-id':
+          return true
+        case 'posts-id':
+          return true
+        case 'chatRooms-id':
+          return true
+        case 'relationships-id':
           return true
         default:
           return false

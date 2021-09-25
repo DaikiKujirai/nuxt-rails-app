@@ -22,7 +22,7 @@
             {{ user.name }}
           </v-card-title>
           <template
-            v-if="user.id !== currentUser.id"
+            v-if="!isCurrentUser"
           >
             <v-spacer />
             <btn-follow
@@ -53,6 +53,11 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      isCurrentUser: false
+    }
+  },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data'
@@ -62,6 +67,11 @@ export default {
     if (this.user.introduction.length > 80) {
       this.sliceIntroduction(this.user)
     }
+    setTimeout(() => {
+      if (this.user.id === this.currentUser.id) {
+        this.isCurrentUser = true
+      }
+    }, 0)
   },
   methods: {
     sliceIntroduction (user) {

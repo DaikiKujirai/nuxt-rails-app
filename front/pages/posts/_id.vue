@@ -61,7 +61,11 @@
               <v-card-text>
                 {{ commentsCountPagePostId }} 件のコメント
               </v-card-text>
-              <v-card-text>
+              <v-card-text
+                class="likes"
+                style="cursor: pointer;"
+                @click="toShow('likes', $route.params.id)"
+              >
                 {{ likesCountPagePostId }} 件のいいね
               </v-card-text>
             </v-col>
@@ -169,3 +173,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .likes:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+  }
+</style>

@@ -82,13 +82,15 @@ export default {
   },
   methods: {
     ...mapActions({
-      setDeletePost: 'post/setDeletePost'
+      setDeletePost: 'post/setDeletePost',
+      setCommentsCountPagePostId: 'post/setCommentsCountPagePostId'
     }),
     async fetchComments () {
       const url = `/api/v1/find_comments/${this.$route.params.id}`
       await this.$axios.get(url)
         .then((res) => {
           this.comments = res.data.comments
+          this.setCommentsCountPagePostId(res.data.comments.length)
         })
     },
     fetchContents () {
