@@ -86,6 +86,7 @@ export default {
     async follow () {
       const url = `/api/v1/users/${this.user.id}/relationships`
       this.params.id = this.currentUser.id
+      this.params.uid = this.user.uid
       await this.$axios.post(url, this.params)
         .then(() => {
           this.isFollow = true

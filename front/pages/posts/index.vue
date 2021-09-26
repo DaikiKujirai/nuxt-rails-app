@@ -74,13 +74,13 @@ export default {
   channels: {
     RoomChannel: {
       connected () {
-        // eslint-disable-next-line no-console
-        console.log('connected')
       },
-      received () {
+      received (data) {
         this.setIsActive(true)
+        this.pushNotification(data)
       },
       disconnected () {
+        // eslint-disable-next-line no-console
         console.log('disconnected')
       }
     }
@@ -127,7 +127,8 @@ export default {
       setIsNewPost: 'post/setIsNewPost',
       setDeletePost: 'post/setDeletePost',
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
-      setIsActive: 'notification/setIsActive'
+      setIsActive: 'notification/setIsActive',
+      pushNotification: 'notification/pushNotification'
     }),
     async fetchContents () {
       await this.$axios.get(this.url)

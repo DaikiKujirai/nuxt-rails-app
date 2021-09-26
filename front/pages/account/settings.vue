@@ -66,6 +66,20 @@ export default {
     TabEditEmail,
     TabEditPassword
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+      },
+      received (data) {
+        this.setIsActive(true)
+        this.pushNotification(data)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   data () {
     return {
       tab: null,
@@ -91,14 +105,23 @@ export default {
       this.avatar = this.currentUser.avatar.url
       this.setBreadcrumbs(this.breadcrumbs)
       this.isGuest = this.guest === this.currentUser.email
+      this.subscribe()
     }, 0)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       updateCurrentUser: 'auth/updateCurrentUser',
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
-    })
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setIsActive: 'notification/setIsActive'
+    }),
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
+    }
   }
 }
 </script>

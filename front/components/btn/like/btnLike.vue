@@ -47,6 +47,10 @@ export default {
     isList: {
       type: Boolean,
       required: true
+    },
+    user: {
+      type: Object,
+      required: true
     }
   },
   data () {
@@ -77,6 +81,7 @@ export default {
     async like () {
       this.newLike.user_id = this.currentUser.id
       this.newLike.post_id = this.post.id
+      this.newLike.uid = this.user.uid
       const url = '/api/v1/likes'
       await this.$axios.post(url, this.newLike)
         .then(() => {

@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import LayoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import InfiniteScroll from '../../components/ui/infiniteScroll.vue'
 import userTemplate from '../../components/user/userTemplate.vue'
@@ -34,6 +34,20 @@ export default {
     userTemplate,
     InfiniteScroll,
     LayoutMain
+  },
+  channels: {
+    RoomChannel: {
+      connected () {
+      },
+      received (data) {
+        this.setIsActive(true)
+        this.pushNotification(data)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
   },
   async asyncData ({ $axios, params }) {
     const res = await $axios.get(`/api/v1/likes/${params.id}`)
@@ -46,13 +60,31 @@ export default {
       breadcrumbs: 'いいねしたユーザー'
     }
   },
+  computed: {
+    ...mapGetters({
+      currentUser: 'auth/data'
+    })
+  },
   created () {
     this.setBreadcrumbs(this.breadcrumbs)
   },
+  mounted () {
+    setTimeout(() => {
+      this.subscribe()
+    }, 0)
+  },
   methods: {
     ...mapActions({
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      pushNotification: 'notification/pushNotification'
     }),
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
+    },
     rollBackPage () {
       this.page = 1
     },

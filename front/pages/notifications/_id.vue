@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import LikeCommentCard from '../../components/notification/likeCommentCard.vue'
 import FollowCard from '../../components/notification/followCard.vue'
@@ -59,52 +59,20 @@ export default {
     const res = await $axios.get(`/api/v1/notifications/${params.id}`)
     return { notifications: res.data.notifications }
   },
-  channels: {
-    RoomChannel: {
-      connected () {
-        // eslint-disable-next-line no-console
-        console.log('connected')
-      },
-      received () {
-        this.setIsActive(true)
-      },
-      disconnected () {
-        // eslint-disable-next-line no-console
-        console.log('disconnected')
-      }
-    }
-  },
   data () {
     return {
       page: 1,
       breadcrumbs: '通知'
     }
   },
-  computed: {
-    ...mapGetters({
-      currentUser: 'auth/data'
-    })
-  },
   created () {
     this.setBreadcrumbs(this.breadcrumbs)
-  },
-  mounted () {
-    setTimeout(() => {
-      this.subscribe()
-    }, 0)
   },
   methods: {
     ...mapActions({
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
       setIsActive: 'notification/setIsActive'
     }),
-    async subscribe () {
-      await this.$cable.subscribe({
-        channel: 'RoomChannel',
-        room: this.currentUser.uid,
-        uid: `${this.currentUser.uid}`
-      })
-    },
     async pushContents (res) {
       await this.notifications.push(...res.data.notifications)
       await this.setIsActive(true)

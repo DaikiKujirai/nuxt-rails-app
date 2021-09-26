@@ -25,7 +25,9 @@ class Api::V1::ChatRoomsController < ApplicationController
       distination_user_id: params[:distination_user_id]
     )
     # actioncable
-    ActionCable.server.broadcast params[:distination_user][:uid], chat_room: chat_room
+    ActionCable.server.broadcast params[:distination_user][:uid], notification_data: chat_room,
+                                                                  category:          'chat'   ,
+                                                                  user_name:         params[:distination_user][:name]
 
     distination_chat_room = ChatRoom.find_by(
       user_id: params[:distination_user_id],

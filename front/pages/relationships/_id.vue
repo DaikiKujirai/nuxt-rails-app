@@ -44,11 +44,10 @@ export default {
   channels: {
     RoomChannel: {
       connected () {
-        // eslint-disable-next-line no-console
-        console.log('connected')
       },
-      received () {
+      received (data) {
         this.setIsActive(true)
+        this.pushNotification(data)
       },
       disconnected () {
         // eslint-disable-next-line no-console
@@ -79,7 +78,8 @@ export default {
   methods: {
     ...mapActions({
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
-      setIsActive: 'notification/setIsActive'
+      setIsActive: 'notification/setIsActive',
+      pushNotification: 'notification/pushNotification'
     }),
     async subscribe () {
       await this.$cable.subscribe({

@@ -162,6 +162,7 @@ export default {
       formData.append('post[user_id]', this.currentUser.id)
       formData.append('post[post_id]', this.post.id)
       formData.append('post[content]', this.content)
+      formData.append('post[uid]', this.user.uid)
       if (this.image) {
         formData.append('post[image]', this.image)
       }

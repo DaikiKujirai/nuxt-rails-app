@@ -1,18 +1,16 @@
 <template>
   <v-card>
-    <v-app-bar
-      dense
+    <v-card
       flat
-      color="white"
     >
-      <v-toolbar-title>
+      <v-card-title>
         {{ user.name }}
-      </v-toolbar-title>
-    </v-app-bar>
+      </v-card-title>
+    </v-card>
     <v-list
       id="chat-display"
       class="overflow-y-auto overflow-x-0"
-      color="info"
+      :color="color"
       height="600"
     >
       <v-list-item
@@ -72,7 +70,10 @@ export default {
   computed: {
     ...mapGetters({
       currentUser: 'auth/data'
-    })
+    }),
+    color () {
+      return this.$vuetify.theme.dark ? ('#1e1e1e') : ('info')
+    }
   },
   channels: {
     RoomChannel: {
@@ -240,7 +241,7 @@ export default {
   margin-top: -10px;
 }
 .balloon_l .says:after {
-  left: -13px;
+  left: -15px;
   border-right: 20px solid #f6f6f4;
 }
 .balloon_r .says-current:after {
@@ -252,5 +253,52 @@ export default {
 }
 .card-text {
   padding: 0;
+}
+.says-dark {
+  max-width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  padding: 10px;
+  border-radius: 30px;
+  background: grey;
+  box-sizing: border-box;
+  margin: 0 !important;
+  line-height: 1.3;
+}
+.says-current-dark {
+  max-width: 300px;
+  display: flex;
+  flex-wrap: wrap;
+  position: relative;
+  padding: 10px;
+  border-radius: 30px;
+  background: #1c9cef;
+  box-sizing: border-box;
+  margin: 0 !important;
+  line-height: 1.3;
+  /*   align-items: center; */
+}
+.other-dark {
+  background: #EDF1EE;
+}
+.says-dark p {
+  margin: 8px 0 0 !important;
+}
+.says-dark p:first-child {
+  margin-top: 0 !important;
+}
+.says-dark:after {
+  content: "";
+  position: absolute;
+  border: 5px solid transparent;
+  transform: rotate(20deg);
+}
+.says-current-dark:after {
+  content: "";
+  position: absolute;
+  border: 5px solid transparent;
+  transform: rotate(-35deg);
+  margin-top: -10px;
 }
 </style>

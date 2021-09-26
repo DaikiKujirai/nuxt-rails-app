@@ -37,7 +37,11 @@ class User < ApplicationRecord
     users.find_activated(email).present?
   end
 
-  def create_notification_follow!(current_user)
+  def follow(other_user)
+    Relationship.create(user_id: id, follow_id: other_user.id)
+  end
+
+  def create_notification_follow!(current_user, other_user_uid)
     temp = Notification.where(["visitor_id = ? and visited_id = ? and action = ?", current_user.id, id, 'follow'])
     if temp.blank?
       notification = current_user.active_notifications.new(
@@ -45,7 +49,13 @@ class User < ApplicationRecord
                                                           action: 'follow'
                                                         )
       notification.save if notification.valid?
+      create_push_notification_follow!(current_user, other_user_uid)
     end
+  end
+
+  def create_push_notification_follow!(current_user, other_user_uid)
+    ActionCable.server.broadcast other_user_uid, category:  'follow',
+                                                 user_name: current_user.name
   end
 
   def create_notification_chat!(current_user)
