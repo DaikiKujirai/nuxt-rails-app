@@ -99,6 +99,20 @@ export default {
     UserFormName,
     UserFormIntroduction
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+      },
+      received (data) {
+        this.setIsActive(true)
+        this.pushNotification(data)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   data () {
     return {
       isValid: false,
@@ -124,6 +138,9 @@ export default {
       return this.guest === this.user.email
     }
   },
+  created () {
+    this.subscribe()
+  },
   mounted () {
     this.setBreadcrumbs(this.breadcrumbs)
     setTimeout(() => {
@@ -137,7 +154,9 @@ export default {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       updateCurrentUser: 'auth/updateCurrentUser',
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      pushNotification: 'notification/pushNotification',
+      setIsActive: 'notification/setIsActive'
     }),
     async submitEdit () {
       this.loading = true
@@ -161,6 +180,13 @@ export default {
           this.flashMessage({ message: err, type: 'error', status: true })
           this.loading = false
         })
+    },
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
     },
     toHome () {
       this.flashMessage({ message: 'ゲストユーザーのため変更できません', type: 'success', status: true })

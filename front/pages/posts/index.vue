@@ -71,6 +71,20 @@ export default {
       channel: ''
     }
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+      },
+      received (data) {
+        this.setIsActive(true)
+        this.pushNotification(data)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
@@ -101,21 +115,20 @@ export default {
     this.setBreadcrumbs(this.breadcrumbs)
   },
   mounted () {
-    setTimeout(() => {
-      // this.subscribe()
-      // this.$cable.subscribe({
-      //   channel: 'RoomChannel',
-      //   room: 'public',
-      //   uid: this.currentUser.uid
-      // }, 'room_channel_public')
-    }, 0)
+    if (this.isAuthenticated) {
+      setTimeout(() => {
+        this.subscribe()
+      }, 0)
+    }
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setIsNewPost: 'post/setIsNewPost',
       setDeletePost: 'post/setDeletePost',
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setIsActive: 'notification/setIsActive',
+      pushNotification: 'notification/pushNotification'
     }),
     async fetchContents () {
       await this.$axios.get(this.url)
@@ -129,8 +142,11 @@ export default {
         })
     },
     async subscribe () {
-      await this.$cable.connection.connect(() => 'ws://localhost:3000/cable')
-      await this.$cable.subscribe({ channel: 'RoomChannel' })
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
     },
     toShow (page, id) {
       this.$router.push(`/${page}/${id}`)

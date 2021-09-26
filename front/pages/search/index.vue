@@ -61,6 +61,20 @@ export default {
     PostCard,
     InfiniteScroll
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+      },
+      received (data) {
+        this.setIsActive(true)
+        this.pushNotification(data)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   data () {
     return {
       posts: [],
@@ -87,14 +101,12 @@ export default {
       if (bool) {
         await window.scrollTo({
           top: 0,
-          behavior: 'smooth'
+          behavior: 'auto'
         })
-        await setTimeout(() => {
-          this.rollBackPage()
-          this.fetchContents()
-          this.identifierIncrement()
-          this.setIsNewPost(false)
-        }, 1000)
+        this.rollBackPage()
+        this.fetchContents()
+        this.identifierIncrement()
+        this.setIsNewPost(false)
       }
     },
     deletePost (val) {
@@ -106,16 +118,8 @@ export default {
     },
     async fetchSearchContents (bool) {
       if (bool) {
-        await window.scrollTo({
-          top: 0,
-          behavior: 'smooth'
-        })
-        await setTimeout(() => {
-          this.rollBackPage()
-          this.fetchContents()
-          this.identifierIncrement()
-          this.setSearchContents(false)
-        }, 1000)
+        await this.setSearchContents(false)
+        await this.$router.push(`/homes/${this.currentUser.id}`)
       }
     }
   },
@@ -125,6 +129,7 @@ export default {
   mounted () {
     setTimeout(() => {
       this.fetchContents()
+      this.subscribe()
     }, 0)
   },
   destroyed () {
@@ -139,8 +144,17 @@ export default {
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
       setSearchWord: 'search/setSearchWord',
       setSearchContents: 'search/setFetchSearchContents',
-      setSearchPageName: 'search/setSearchPageName'
+      setSearchPageName: 'search/setSearchPageName',
+      setIsActive: 'notification/setIsActive',
+      pushNotification: 'notification/pushNotification'
     }),
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
+    },
     async fetchContents () {
       await this.$axios.get(this.url, {
         params: {

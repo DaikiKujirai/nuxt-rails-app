@@ -99,6 +99,20 @@ export default {
     const res = await $axios.get(`/api/v1/users/${params.id}`)
     return { user: res.data }
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+      },
+      received (data) {
+        this.setIsActive(true)
+        this.pushNotification(data)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   data () {
     return {
       breadcrumbs: ''
@@ -119,13 +133,23 @@ export default {
       if (!this.isAuthenticated) {
         this.$router.push('/auth/login')
       }
+      this.subscribe()
     })
   },
   methods: {
     ...mapActions({
       setUser: 'user/setUser',
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
-    })
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setIsActive: 'notification/setIsActive',
+      pushNotification: 'notification/pushNotification'
+    }),
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
+    }
   }
 }
 </script>

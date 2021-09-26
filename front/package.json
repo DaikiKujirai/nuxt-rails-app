@@ -23,6 +23,7 @@
     "firebase-tools": "^9.16.0",
     "nuxt": "^2.15.7",
     "nuxt-i18n": "^6.27.3",
+    "push.js": "^1.0.12",
     "qs": "^6.10.1",
     "save": "^2.4.0",
     "vue-infinite-loading": "^2.4.5",

@@ -16,6 +16,7 @@
         <v-row>
           <v-col
             class="breadcrumbs"
+            offset-sm="0"
             xs="12"
             sm="12"
             md="6"
@@ -47,11 +48,13 @@
         </v-main>
       </v-col>
       <v-col
+        xs="0"
         sm="0"
         md="3"
+        class="d-none d-md-flex"
       >
         <v-card>
-          サイドバー
+          サイドバーあああああああああああああ
         </v-card>
       </v-col>
     </v-row>

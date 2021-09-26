@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapActions } from 'vuex'
 import layoutMain from '../../components/layout/loggedIn/layoutMain.vue'
 import LikeCommentCard from '../../components/notification/likeCommentCard.vue'
 import FollowCard from '../../components/notification/followCard.vue'
@@ -64,11 +64,6 @@ export default {
       page: 1,
       breadcrumbs: '通知'
     }
-  },
-  computed: {
-    ...mapGetters({
-      currentUser: 'auth/data'
-    })
   },
   created () {
     this.setBreadcrumbs(this.breadcrumbs)

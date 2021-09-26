@@ -13,6 +13,7 @@
         <btn-like
           :post="post"
           :likes="likes"
+          :user="user"
           :is-list="isList"
           @likesCountIncrement="likesCountIncrement"
           @likesCountDecrement="likesCountDecrement"

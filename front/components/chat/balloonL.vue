@@ -6,7 +6,9 @@
           :src="userAvatar"
         >
       </div>
-      <p class="says">
+      <p
+        :class="says"
+      >
         {{ msg.message }}
       </p>
     </div>
@@ -23,6 +25,11 @@ export default {
     msg: {
       type: Object,
       required: true
+    }
+  },
+  computed: {
+    says () {
+      return this.$vuetify.theme.dark ? ('says-dark') : ('says')
     }
   }
 }

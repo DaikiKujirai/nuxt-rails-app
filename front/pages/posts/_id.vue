@@ -61,7 +61,11 @@
               <v-card-text>
                 {{ commentsCountPagePostId }} 件のコメント
               </v-card-text>
-              <v-card-text>
+              <v-card-text
+                class="likes"
+                style="cursor: pointer;"
+                @click="toShow('likes', $route.params.id)"
+              >
                 {{ likesCountPagePostId }} 件のいいね
               </v-card-text>
             </v-col>
@@ -110,6 +114,20 @@ export default {
     const res = await $axios.get(`/api/v1/posts/${params.id}`)
     return { post: res.data }
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+      },
+      received (data) {
+        this.setIsActive(true)
+        this.pushNotification(data)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   data () {
     return {
       isList: false,
@@ -142,14 +160,24 @@ export default {
       if (!this.isAuthenticated) {
         this.$router.push('/auth/login')
       }
+      this.subscribe()
     }, 0)
   },
   methods: {
     ...mapActions({
       setUser: 'user/setUser',
       setUpdatePost: 'post/setUpdatePost',
-      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
+      setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
+      setIsActive: 'notification/setIsActive',
+      pushNotification: 'notification/pushNotification'
     }),
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
+    },
     async fetchContents () {
       const url = `/api/v1/posts/${this.$route.params.id}`
       await this.$axios.get(url)
@@ -169,3 +197,10 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  .likes:hover {
+    opacity: 0.7;
+    text-decoration: underline;
+  }
+</style>

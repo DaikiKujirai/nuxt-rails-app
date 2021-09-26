@@ -41,7 +41,7 @@ class Api::V1::PostsController < ApplicationController
     current_user = User.find(params[:post][:user_id])
 
     if comment.save
-      post.create_notification_comment!(current_user, post.user_id) if post.user_id != current_user.id
+      post.create_notification_comment!(current_user, post.user_id, post, params[:post][:uid]) if post.user_id != current_user.id
       render json: comment
     else
       render json: post.errors.messages
@@ -58,10 +58,9 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def destroy
-    post  = Post.find(params[:id])
-    posts = Post.where(post_id: post.id)
+    post = Post.find(params[:id])
+    byebug
     if post.destroy
-      posts.destroy_all
       render json: { success_message: '削除しました' }
     else
       render json: { errors_message: '削除に失敗しました' }

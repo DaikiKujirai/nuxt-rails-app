@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <bef-login-app-bar />
+    <wel-app-bar />
     <v-main>
       <flash />
       <nuxt />
@@ -10,15 +10,15 @@
 </template>
 
 <script>
-import befLoginAppBar from '../components/beforeLogin/befLoginAppBar.vue'
 import befLoginFooter from '../components/beforeLogin/befLoginFooter.vue'
 import flash from '../components/ui/flash.vue'
+import WelAppBar from '../components/welcome/welAppBar.vue'
 
 export default {
   components: {
-    befLoginAppBar,
     befLoginFooter,
-    flash
+    flash,
+    WelAppBar
   }
 }
 </script>
