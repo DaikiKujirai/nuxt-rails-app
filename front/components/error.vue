@@ -2,7 +2,7 @@
   <div
     class="text-center red accent-2 white--text mb-10"
   >
-    エラーメッセージ
+    エラー
   </div>
 </template>
 
