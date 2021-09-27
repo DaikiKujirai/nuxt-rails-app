@@ -70,15 +70,11 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      commentsCountPagePostIdDecrement: 'post/commentsCountPagePostIdDecrement',
       setDeletePost: 'post/setDeletePost'
     }),
     async clickOK () {
       await this.$axios.delete(`/api/v1/posts/${this.post.id}`)
         .then(() => {
-          if (this.$route.name === 'posts-id' && this.isList) {
-            this.commentsCountPagePostIdDecrement()
-          }
           this.$route.name === 'posts-id' && !this.isList
             ? (this.$router.replace('/posts'))
             : (this.setDeletePost({ bool: true, post: this.post }))

@@ -76,7 +76,6 @@ ActiveRecord::Schema.define(version: 2021_09_14_035331) do
     t.string "cover_image"
     t.string "introduction", default: "よろしくお願いします。", null: false
     t.boolean "is_active", default: false, null: false
-    t.boolean "admin", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

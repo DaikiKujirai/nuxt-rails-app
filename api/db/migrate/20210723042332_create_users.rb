@@ -8,7 +8,6 @@ class CreateUsers < ActiveRecord::Migration[6.0]
       t.string  :cover_image
       t.string  :introduction, null: false, default: "よろしくお願いします。"
       t.boolean :is_active   , null: false, default: false
-      t.boolean :admin       , null: false, default: false
 
       t.timestamps
     end

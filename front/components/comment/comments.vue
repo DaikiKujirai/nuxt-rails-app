@@ -90,7 +90,6 @@ export default {
       await this.$axios.get(url)
         .then((res) => {
           this.comments = res.data.comments
-          this.setCommentsCountPagePostId(res.data.comments.length)
         })
     },
     fetchContents () {
