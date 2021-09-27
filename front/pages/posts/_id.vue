@@ -59,7 +59,7 @@
           <v-row>
             <v-col class="d-flex text-center pa-0">
               <v-card-text>
-                {{ commentsCountPagePostId }} 件のコメント
+                {{ commentsCount }} 件のコメント
               </v-card-text>
               <v-card-text
                 class="likes"
@@ -112,7 +112,7 @@ export default {
   },
   async asyncData ({ $axios, params }) {
     const res = await $axios.get(`/api/v1/posts/${params.id}`)
-    return { post: res.data }
+    return { post: res.data, commentsCount: res.data.comments.length }
   },
   channels: {
     RoomChannel: {
@@ -138,9 +138,10 @@ export default {
     ...mapGetters({
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
-      commentsCountPagePostId: 'post/commentsCountPagePostId',
       likesCountPagePostId: 'like/likesCountPagePostId',
-      updatePost: 'post/updatePost'
+      updatePost: 'post/updatePost',
+      deletePost: 'post/deletePost',
+      isNewComment: 'post/isNewComment'
     })
   },
   watch: {
@@ -148,6 +149,17 @@ export default {
       if (val.bool && val.post.id === this.post.id) {
         this.post = await val.post
         this.setUpdatePost = await { bool: false, post: {} }
+      }
+    },
+    deletePost (val) {
+      if (val.bool) {
+        this.commentsCount--
+      }
+    },
+    async isNewComment (bool) {
+      if (bool) {
+        await this.commentsCount++
+        await this.setIsNewComment(false)
       }
     }
   },
@@ -169,7 +181,8 @@ export default {
       setUpdatePost: 'post/setUpdatePost',
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
       setIsActive: 'notification/setIsActive',
-      pushNotification: 'notification/pushNotification'
+      pushNotification: 'notification/pushNotification',
+      setIsNewComment: 'post/setIsNewComment'
     }),
     async subscribe () {
       await this.$cable.subscribe({

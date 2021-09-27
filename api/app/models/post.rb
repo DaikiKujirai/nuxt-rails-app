@@ -1,10 +1,10 @@
 class Post < ApplicationRecord
   belongs_to :user
 
-  has_many :likes        , dependent: :destroy
-  has_many :notifications, dependent: :destroy
+  has_many :likes        , dependent: :delete_all
+  has_many :notifications, dependent: :delete_all
 
-  has_many :comments, class_name: 'Post', foreign_key: 'post_id', dependent: :destroy
+  has_many :comments, class_name: 'Post', foreign_key: 'post_id', dependent: :delete_all
 
   mount_uploader :image, ImageUploader
 

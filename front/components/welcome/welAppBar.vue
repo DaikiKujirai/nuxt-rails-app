@@ -12,11 +12,13 @@
     <v-spacer />
     <signup-link />
     <login-link />
+    <btn-change-theme />
   </v-app-bar>
 </template>
 
 <script>
 import appLogo from '../ui/appLogo.vue'
+import BtnChangeTheme from '../loggedIn/header/btnChangeTheme.vue'
 import appTitle from '~/components/ui/appTitle'
 import signupLink from '~/components/beforeLogin/signupLink'
 import loginLink from '~/components/beforeLogin/loginLink'
@@ -26,7 +28,8 @@ export default {
     appLogo,
     appTitle,
     signupLink,
-    loginLink
+    loginLink,
+    BtnChangeTheme
   },
   data () {
     return {

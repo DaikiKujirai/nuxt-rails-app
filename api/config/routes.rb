@@ -7,7 +7,7 @@ Rails.application.routes.draw do
       end
       resources :posts        , only: %i[index show create update destroy]
       resources :likes        , only: %i[show create destroy]
-      resources :chat_rooms   , only: %i[show update]
+      resources :chats        , only: %i[show update]
       resources :notifications, only: %i[show create update]
       # user
       get  'find_login_user/:uid'               => 'users#find_login_user'

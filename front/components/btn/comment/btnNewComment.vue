@@ -153,8 +153,7 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      commentsCountPagePostIdIncrement: 'post/commentsCountPagePostIdIncrement',
-      commentsCountPagePostIdDecrement: 'post/commentsCountPagePostIdDecrement'
+      setIsNewComment: 'post/setIsNewComment'
     }),
     async submitComment () {
       this.loading = true
@@ -173,12 +172,12 @@ export default {
           this.dialog = false
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
           this.$refs.form.reset()
-          if (this.isList) {
-            this.$router.push(`/posts/${this.post.id}`)
-          } else {
-            this.commentsCountPagePostIdIncrement()
-            this.fetchContents()
+          if (this.$route.name === 'posts-id') {
+            this.setIsNewComment(true)
           }
+          this.isList
+            ? (this.$router.push(`/posts/${this.post.id}`))
+            : (this.fetchContents())
         })
         .catch(() => {
           this.flashMessage({ message: 'コメントに失敗しました', type: 'error', status: true })

@@ -59,7 +59,6 @@ class Api::V1::PostsController < ApplicationController
 
   def destroy
     post = Post.find(params[:id])
-    byebug
     if post.destroy
       render json: { success_message: '削除しました' }
     else

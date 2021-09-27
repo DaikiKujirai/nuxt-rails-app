@@ -64,14 +64,14 @@ export default {
     fetchUrlAndUserId () {
       if (this.$route.name === 'chatRooms') {
         this.userId = this.currentUser.id
-        this.url = `/api/v1/chat_rooms/${this.currentUser.id}`
+        this.url = `/api/v1/chats/${this.currentUser.id}`
       } else {
         this.userId = this.$route.params.id
-        this.url = `/api/v1/chat_rooms/${this.$route.params.id}`
+        this.url = `/api/v1/chats/${this.$route.params.id}`
       }
     },
     async fetchContents () {
-      const url = `/api/v1/chat_rooms/${this.currentUser.id}`
+      const url = `/api/v1/chats/${this.currentUser.id}`
       await this.$axios.get(url, {
         params: {
           user_id: this.userId
