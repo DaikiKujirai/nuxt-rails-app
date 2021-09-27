@@ -6,9 +6,9 @@ Rails.application.routes.draw do
         get :is_following
       end
       resources :posts        , only: %i[index show create update destroy]
-      resources :likes        , only: %i[show create destroy]
-      resources :chats        , only: %i[show update]
-      resources :notifications, only: %i[show create update]
+      resources :likes        , only: %i[      show create        destroy]
+      resources :chats        , only: %i[      show create update]
+      resources :notifications, only: %i[      show create update]
       # user
       get  'find_login_user/:uid'               => 'users#find_login_user'
       get  'show_user_posts/:id'                => 'users#show_user_posts'

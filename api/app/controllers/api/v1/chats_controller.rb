@@ -1,22 +1,37 @@
-class Api::V1::ChatRoomsController < ApplicationController
+class Api::V1::ChatsController < ApplicationController
   include Pagination
   def show
-    current_user = User.find(params[:id])
-    other_user   = User.find(params[:user_id])
+    current_user = User.find(params[:user_id])
+    other_user   = User.find(params[:id])
     rooms        = current_user.user_rooms.pluck(:room_id)
-    user_rooms   = UserRoom.find_by(user_id: user.id, room_id: rooms)
-    if params[:id] != params[:user_id]
+    user_rooms   = UserRoom.find_by(user_id: current_user.id, room_id: rooms)
 
-      unless current_user.chat_rooms.exists?(name: room_id)
-        ChatRoom.create!(user_id: current_user.id, name: room_id)
-        ChatRoom.create!(user_id: other_user.id, name: room_id)
-      end
+    unless user_rooms.nil?
+      room = user_rooms.room
+    else
+      room = Room.new
+      room.save
+      UserRoom.create!(user_id: current_user.id, partner_id: other_user.id  , room_id: room.id)
+      UserRoom.create!(user_id: other_user.id  , partner_id: current_user.id, room_id: room.id)
     end
 
-    chat_rooms = current_user.chat_rooms.includes(:distination_user).updated_desc.page(params[:page]).per(15)
-    pagination = resources_with_pagination(chat_rooms)
-    object     = { chat_rooms: chat_rooms.as_json(include: :distination_user), kaminari: pagination }
+    chats  = room.chats
+    object = { chats: chats, room_id: room.id, user: other_user }
     render json: object
+    # chat_rooms = current_user.chat_rooms.includes(:distination_user).updated_desc.page(params[:page]).per(15)
+    # pagination = resources_with_pagination(chat_rooms)
+    # object     = { chat_rooms: chat_rooms.as_json(include: :distination_user), kaminari: pagination }
+    # render json: object
+  end
+
+  def create
+    current_user = User.find(params[:user_id])
+    chat         = current_user.chats.new(chat_params)
+    if chat.save
+      render json: chat
+    else
+      render json: errors.message
+    end
   end
 
   def update
@@ -40,7 +55,7 @@ class Api::V1::ChatRoomsController < ApplicationController
 
   private
 
-  def chat_room_params
-    params.require(:chat_room).permit(:user_id, :name, :distination_user_id)
+  def chat_params
+    params.require(:chat).permit(:message, :user_id, :partner_id, :room_id)
   end
 end

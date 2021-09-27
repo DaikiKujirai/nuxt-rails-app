@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 2021_09_27_082008) do
   create_table "user_rooms", force: :cascade do |t|
     t.bigint "user_id"
     t.bigint "room_id"
-    t.integer "partner", null: false
+    t.integer "partner_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["room_id"], name: "index_user_rooms_on_room_id"

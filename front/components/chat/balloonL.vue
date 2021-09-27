@@ -9,7 +9,7 @@
       <p
         :class="says"
       >
-        {{ msg.message }}
+        {{ message }}
       </p>
     </div>
   </v-col>
@@ -22,8 +22,8 @@ export default {
       type: String,
       required: true
     },
-    msg: {
-      type: Object,
+    message: {
+      type: String,
       required: true
     }
   },
