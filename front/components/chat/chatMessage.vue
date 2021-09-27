@@ -5,7 +5,7 @@
       class="d-flex align-center"
     >
       <img
-        :src="user.avatar.url"
+        :src="userAvatar"
         height="50"
         width="50"
         class="ml-2"
@@ -27,12 +27,12 @@
         <template v-if="chat.user_id != currentUser.id">
           <balloon-l
             :user-avatar="userAvatar"
-            :message="chat.message"
+            :chat="chat"
           />
         </template>
         <template v-else>
           <balloon-r
-            :message="chat.message"
+            :chat="chat"
           />
         </template>
       </v-list-item>
@@ -124,6 +124,7 @@ export default {
       })
     },
     async fetchContents () {
+      console.log(this.$route.params.id)
       const url = `/api/v1/chats/${this.$route.params.id}`
       await this.$axios.get(url, {
         params: {

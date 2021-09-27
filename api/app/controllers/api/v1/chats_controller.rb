@@ -3,8 +3,7 @@ class Api::V1::ChatsController < ApplicationController
   def show
     current_user = User.find(params[:user_id])
     other_user   = User.find(params[:id])
-    rooms        = current_user.user_rooms.pluck(:room_id)
-    user_rooms   = UserRoom.find_by(user_id: current_user.id, room_id: rooms)
+    user_rooms   = UserRoom.find_by(user_id: current_user.id, partner_id: other_user.id)
 
     unless user_rooms.nil?
       room = user_rooms.room
@@ -18,10 +17,6 @@ class Api::V1::ChatsController < ApplicationController
     chats  = room.chats
     object = { chats: chats, room_id: room.id, user: other_user }
     render json: object
-    # chat_rooms = current_user.chat_rooms.includes(:distination_user).updated_desc.page(params[:page]).per(15)
-    # pagination = resources_with_pagination(chat_rooms)
-    # object     = { chat_rooms: chat_rooms.as_json(include: :distination_user), kaminari: pagination }
-    # render json: object
   end
 
   def create

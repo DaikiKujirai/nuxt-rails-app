@@ -63,6 +63,13 @@ export default {
       const url = '/api/v1/chats'
       this.$axios.post(url, this.chat)
         .then((res) => {
+          this.$cable.perform({
+            channel: 'RoomChannel',
+            action: 'post',
+            data: {
+              message: this.message
+            }
+          })
           this.pushChat(res.data)
           this.$refs.form.reset()
         })
@@ -84,13 +91,6 @@ export default {
     //     .collection('chats')
     //     .add(chat)
     //     .then(() => {
-    //       this.$cable.perform({
-    //         channel: 'RoomChannel',
-    //         action: 'post',
-    //         data: {
-    //           message: this.message
-    //         }
-    //       })
     //       this.$refs.form.reset()
     //       this.createNotification()
     //     })

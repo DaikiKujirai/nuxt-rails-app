@@ -52,6 +52,7 @@ export default {
     '@nuxtjs/axios',
     'nuxt-i18n',
     '@nuxtjs/dotenv',
+    '@nuxtjs/moment',
     // '@nuxtjs/google-adsense',
     [
       '@nuxtjs/firebase',

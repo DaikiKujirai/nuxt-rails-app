@@ -2,19 +2,26 @@
   <v-col class="pr-5">
     <div class="balloon_r">
       <p :class="saysCurrent">
-        {{ message }}
-        <!-- {{ msg.createdAt.toDate().format('YYYY-MM-DD HH:mm') }} -->
+        {{ chat.message }}
+        {{ time }}
       </p>
     </div>
   </v-col>
 </template>
 
 <script>
+import moment from 'moment'
+
 export default {
   props: {
-    message: {
-      type: String,
+    chat: {
+      type: Object,
       required: true
+    }
+  },
+  data () {
+    return {
+      time: moment(this.chat.created_at)
     }
   },
   computed: {
