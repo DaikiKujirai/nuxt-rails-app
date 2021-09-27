@@ -15,6 +15,7 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/firebase": "^7.6.1",
     "@nuxtjs/google-adsense": "^1.4.0",
+    "@nuxtjs/moment": "^1.6.1",
     "actioncable": "^5.2.6",
     "actioncable-vue": "^2.5.0",
     "core-js": "^3.15.1",

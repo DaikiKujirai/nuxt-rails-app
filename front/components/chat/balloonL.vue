@@ -9,7 +9,7 @@
       <p
         :class="says"
       >
-        {{ message }}
+        {{ chat.message }}
       </p>
     </div>
   </v-col>
@@ -22,8 +22,8 @@ export default {
       type: String,
       required: true
     },
-    message: {
-      type: String,
+    chat: {
+      type: Object,
       required: true
     }
   },
