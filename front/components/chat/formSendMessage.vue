@@ -23,7 +23,7 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import chatMessageForm from './chatMessageForm.vue'
-import firebase from '~/plugins/firebase'
+// import firebase from '~/plugins/firebase'
 
 export default {
   components: {
@@ -35,7 +35,7 @@ export default {
       required: true
     },
     roomId: {
-      type: String,
+      type: Number,
       required: true
     }
   },
@@ -43,6 +43,7 @@ export default {
     return {
       disabled: false,
       isValid: false,
+      chat: {},
       message: ''
     }
   },
@@ -56,32 +57,50 @@ export default {
       setIsUpdate: 'chat/setIsUpdate'
     }),
     sendMessage () {
-      const chat = {
-        userId: this.currentUser.uid,
-        name: this.currentUser.name,
-        message: this.message,
-        createdAt: new Date()
-      }
-      firebase.firestore()
-        .collection('rooms')
-        .doc(this.roomId)
-        .collection('chats')
-        .add(chat)
-        .then(() => {
-          this.$cable.perform({
-            channel: 'RoomChannel',
-            action: 'post',
-            data: {
-              message: this.message
-            }
-          })
+      this.chat.message = this.message
+      this.chat.user_id = this.currentUser.id
+      this.chat.room_id = this.roomId
+      const url = '/api/v1/chats'
+      this.$axios.post(url, this.chat)
+        .then((res) => {
+          this.pushChat(res.data)
           this.$refs.form.reset()
-          this.createNotification()
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
-          console.log(err)
+          console.error(err)
         })
+    },
+    // sendMessage () {
+    //   const chat = {
+    //     userId: this.currentUser.uid,
+    //     name: this.currentUser.name,
+    //     message: this.message,
+    //     createdAt: new Date()
+    //   }
+    //   firebase.firestore()
+    //     .collection('rooms')
+    //     .doc(this.roomId)
+    //     .collection('chats')
+    //     .add(chat)
+    //     .then(() => {
+    //       this.$cable.perform({
+    //         channel: 'RoomChannel',
+    //         action: 'post',
+    //         data: {
+    //           message: this.message
+    //         }
+    //       })
+    //       this.$refs.form.reset()
+    //       this.createNotification()
+    //     })
+    //     .catch((err) => {
+    //       // eslint-disable-next-line no-console
+    //       console.log(err)
+    //     })
+    // },
+    pushChat (chat) {
+      this.$emit('pushChat', chat)
     },
     createNotification () {
       const url = '/api/v1/notifications'

@@ -2,7 +2,14 @@
   <v-card>
     <v-card
       flat
+      class="d-flex align-center"
     >
+      <img
+        :src="user.avatar.url"
+        height="50"
+        width="50"
+        class="ml-2"
+      >
       <v-card-title>
         {{ user.name }}
       </v-card-title>
@@ -14,18 +21,18 @@
       height="600"
     >
       <v-list-item
-        v-for="(msg, i) in chats"
-        :key="i"
+        v-for="chat in chats"
+        :key="chat.id"
       >
-        <template v-if="msg.userId != currentUser.uid">
+        <template v-if="chat.user_id != currentUser.id">
           <balloon-l
             :user-avatar="userAvatar"
-            :msg="msg"
+            :message="chat.message"
           />
         </template>
         <template v-else>
           <balloon-r
-            :msg="msg"
+            :message="chat.message"
           />
         </template>
       </v-list-item>
@@ -36,6 +43,7 @@
     <form-send-message
       :user="user"
       :room-id="roomId"
+      @pushChat="pushChat"
     />
   </v-card>
 </template>
@@ -45,7 +53,7 @@ import { mapGetters, mapActions } from 'vuex'
 import BalloonL from './balloonL.vue'
 import BalloonR from './balloonR.vue'
 import FormSendMessage from './formSendMessage.vue'
-import firebase from '~/plugins/firebase'
+// import firebase from '~/plugins/firebase'
 
 export default {
   components: {
@@ -56,7 +64,8 @@ export default {
   data () {
     return {
       chats: [],
-      roomId: '',
+      newChat: {},
+      roomId: 0,
       user: {},
       userAvatar: '',
       isMyChatRoom: false,
@@ -97,10 +106,6 @@ export default {
       this.fetchContents()
     }, 0)
   },
-  destroyed () {
-    this.chats = []
-    this.unsubscribe()
-  },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage'
@@ -109,7 +114,6 @@ export default {
       this.$cable.subscribe({
         channel: 'RoomChannel',
         room: this.$route.query.uid,
-        // room: `room_${this.$route.query.uid}`,
         uid: this.$route.query.uid
       })
     },
@@ -120,50 +124,65 @@ export default {
       })
     },
     async fetchContents () {
-      const url = `/api/v1/users/${this.$route.params.id}`
-      await this.$axios.get(url)
+      const url = `/api/v1/chats/${this.$route.params.id}`
+      await this.$axios.get(url, {
+        params: {
+          user_id: this.currentUser.id
+        }
+      })
         .then((res) => {
-          this.user = res.data
-          this.userAvatar = res.data.avatar.url
-          this.setRoomId()
-          this.fetchChats()
-          if (this.$route.name === 'chatRooms-id') {
-            setTimeout(() => {
-              this.scrollBottom()
-            }, 100)
-          }
+          this.chats = res.data.chats
+          this.roomId = res.data.room_id
+          this.user = res.data.user
+          this.userAvatar = res.data.user.avatar.url
+        })
+        .catch((err) => {
+          // eslint-disable-next-line no-console
+          console.error(err)
         })
     },
-    async fetchChats () {
-      await firebase.firestore()
-        .collection('rooms')
-        .doc(this.roomId)
-        .collection('chats')
-        .orderBy('createdAt', 'asc')
-        .onSnapshot((chatsSnapShot) => {
-          chatsSnapShot.docChanges().forEach((snapshot) => {
-            const docData = snapshot.doc.data()
-            const chat = {
-              id: snapshot.doc.id,
-              ...docData
-            }
-            const isEmpty = this.chats.length === 0
-            const isNotAdded = !this.chats.find(c => c.id === chat.id)
+    pushChat (chat) {
+      this.chats.push(chat)
+    },
+    // async fetchContents () {
+    //   const url = `/api/v1/users/${this.$route.params.id}`
+    //   await this.$axios.get(url)
+    //     .then((res) => {
+    //       this.user = res.data
+    //       this.userAvatar = res.data.avatar.url
+    //       this.fetchChats()
+    //       if (this.$route.name === 'chatRooms-id') {
+    //         setTimeout(() => {
+    //           this.scrollBottom()
+    //         }, 100)
+    //       }
+    //     })
+    // },
+    // async fetchChats () {
+    //   await firebase.firestore()
+    //     .collection('rooms')
+    //     .doc(this.roomId)
+    //     .collection('chats')
+    //     .orderBy('createdAt', 'asc')
+    //     .onSnapshot((chatsSnapShot) => {
+    //       chatsSnapShot.docChanges().forEach((snapshot) => {
+    //         const docData = snapshot.doc.data()
+    //         const chat = {
+    //           id: snapshot.doc.id,
+    //           ...docData
+    //         }
+    //         const isEmpty = this.chats.length === 0
+    //         const isNotAdded = !this.chats.find(c => c.id === chat.id)
 
-            if (isEmpty || isNotAdded) {
-              this.chats.push(chat)
-              setTimeout(() => {
-                this.scrollBottom()
-              }, 100)
-            }
-          })
-        })
-    },
-    setRoomId () {
-      this.user.uid > this.currentUser.uid
-        ? (this.roomId = this.user.uid + '-' + this.currentUser.uid)
-        : (this.roomId = this.currentUser.uid + '-' + this.user.uid)
-    },
+    //         if (isEmpty || isNotAdded) {
+    //           this.chats.push(chat)
+    //           setTimeout(() => {
+    //             this.scrollBottom()
+    //           }, 100)
+    //         }
+    //       })
+    //     })
+    // },
     scrollBottom () {
       const chatBack = document.getElementById('chat-display')
       chatBack.scrollTop = chatBack.scrollHeight

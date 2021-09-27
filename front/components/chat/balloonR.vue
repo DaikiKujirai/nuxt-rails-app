@@ -2,7 +2,7 @@
   <v-col class="pr-5">
     <div class="balloon_r">
       <p :class="saysCurrent">
-        {{ msg.message }}
+        {{ message }}
         <!-- {{ msg.createdAt.toDate().format('YYYY-MM-DD HH:mm') }} -->
       </p>
     </div>
@@ -12,8 +12,8 @@
 <script>
 export default {
   props: {
-    msg: {
-      type: Object,
+    message: {
+      type: String,
       required: true
     }
   },
