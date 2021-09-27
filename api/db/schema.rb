@@ -10,18 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_14_035331) do
+ActiveRecord::Schema.define(version: 2021_09_27_082008) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "chat_rooms", force: :cascade do |t|
+  create_table "chats", force: :cascade do |t|
     t.bigint "user_id"
-    t.integer "distination_user_id"
-    t.string "name", null: false
+    t.bigint "room_id"
+    t.string "message", null: false
+    t.boolean "checked", default: false, null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-    t.index ["user_id"], name: "index_chat_rooms_on_user_id"
+    t.index ["room_id"], name: "index_chats_on_room_id"
+    t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
   create_table "likes", force: :cascade do |t|
@@ -68,6 +70,21 @@ ActiveRecord::Schema.define(version: 2021_09_14_035331) do
     t.index ["user_id"], name: "index_relationships_on_user_id"
   end
 
+  create_table "rooms", force: :cascade do |t|
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "user_rooms", force: :cascade do |t|
+    t.bigint "user_id"
+    t.bigint "room_id"
+    t.integer "partner", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["room_id"], name: "index_user_rooms_on_room_id"
+    t.index ["user_id"], name: "index_user_rooms_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name", null: false
     t.string "email", null: false
@@ -80,10 +97,13 @@ ActiveRecord::Schema.define(version: 2021_09_14_035331) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
-  add_foreign_key "chat_rooms", "users"
+  add_foreign_key "chats", "rooms"
+  add_foreign_key "chats", "users"
   add_foreign_key "likes", "posts"
   add_foreign_key "likes", "users"
   add_foreign_key "posts", "users"
   add_foreign_key "relationships", "users"
   add_foreign_key "relationships", "users", column: "follow_id"
+  add_foreign_key "user_rooms", "rooms"
+  add_foreign_key "user_rooms", "users"
 end

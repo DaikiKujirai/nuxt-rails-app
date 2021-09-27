@@ -4,7 +4,8 @@ class User < ApplicationRecord
 
   has_many :posts , dependent: :delete_all
   has_many :likes , dependent: :delete_all
-  has_many :chat_rooms
+  has_many :user_rooms
+  has_many :chats
 
   has_many :relationships, dependent: :delete_all
   has_many :reverse_of_relationships, class_name: 'Relationship', foreign_key: 'follow_id'
