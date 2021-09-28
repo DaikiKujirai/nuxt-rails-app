@@ -18,7 +18,7 @@
       id="chat-display"
       class="overflow-y-auto overflow-x-0"
       :color="color"
-      height="600"
+      height="550"
     >
       <v-list-item
         v-for="chat in chats"
@@ -44,6 +44,7 @@
       :user="user"
       :room-id="roomId"
       @pushChat="pushChat"
+      @scrollBottom="scrollBottom"
     />
   </v-card>
 </template>
@@ -53,13 +54,35 @@ import { mapGetters, mapActions } from 'vuex'
 import BalloonL from './balloonL.vue'
 import BalloonR from './balloonR.vue'
 import FormSendMessage from './formSendMessage.vue'
-// import firebase from '~/plugins/firebase'
 
 export default {
   components: {
     BalloonL,
     BalloonR,
     FormSendMessage
+  },
+  channels: {
+    RoomChannel: {
+      connected () {
+      },
+      received (data) {
+        if (data.category === 'read') {
+          console.log('発火')
+          this.patchCheckedTrue()
+          return
+        }
+        // this.setIsActive(true)
+        this.updateChecked(data.notification_data)
+        this.chats.push(data.notification_data)
+        setTimeout(() => {
+          this.scrollBottom()
+        }, 0)
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
   },
   data () {
     return {
@@ -84,47 +107,26 @@ export default {
       return this.$vuetify.theme.dark ? ('#1e1e1e') : ('info')
     }
   },
-  channels: {
-    RoomChannel: {
-      connected () {
-        console.log('connected', this)
-      },
-      rejected () {
-        console.log('rejected')
-      },
-      received (data) {
-        console.log('received', data)
-      },
-      disconnected () {
-        console.log('disconnected')
-      }
-    }
-  },
   mounted () {
-    this.subscribe()
     setTimeout(() => {
       this.fetchContents()
+      this.subscribe()
     }, 0)
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      setIsActive: 'notification/setIsActive',
+      pushNotification: 'notification/pushNotification'
     }),
-    subscribe () {
-      this.$cable.subscribe({
+    async subscribe () {
+      await this.$cable.subscribe({
         channel: 'RoomChannel',
-        room: this.$route.query.uid,
-        uid: this.$route.query.uid
-      })
-    },
-    unsubscribe () {
-      this.$cable.unsubscribe({
-        channel: 'RoomChannel',
-        uid: this.$route.query.uid
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
       })
     },
     async fetchContents () {
-      console.log(this.$route.params.id)
       const url = `/api/v1/chats/${this.$route.params.id}`
       await this.$axios.get(url, {
         params: {
@@ -136,6 +138,9 @@ export default {
           this.roomId = res.data.room_id
           this.user = res.data.user
           this.userAvatar = res.data.user.avatar.url
+          setTimeout(() => {
+            this.scrollBottom()
+          }, 0)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
@@ -144,49 +149,28 @@ export default {
     },
     pushChat (chat) {
       this.chats.push(chat)
+      this.scrollBottom()
     },
-    // async fetchContents () {
-    //   const url = `/api/v1/users/${this.$route.params.id}`
-    //   await this.$axios.get(url)
-    //     .then((res) => {
-    //       this.user = res.data
-    //       this.userAvatar = res.data.avatar.url
-    //       this.fetchChats()
-    //       if (this.$route.name === 'chatRooms-id') {
-    //         setTimeout(() => {
-    //           this.scrollBottom()
-    //         }, 100)
-    //       }
-    //     })
-    // },
-    // async fetchChats () {
-    //   await firebase.firestore()
-    //     .collection('rooms')
-    //     .doc(this.roomId)
-    //     .collection('chats')
-    //     .orderBy('createdAt', 'asc')
-    //     .onSnapshot((chatsSnapShot) => {
-    //       chatsSnapShot.docChanges().forEach((snapshot) => {
-    //         const docData = snapshot.doc.data()
-    //         const chat = {
-    //           id: snapshot.doc.id,
-    //           ...docData
-    //         }
-    //         const isEmpty = this.chats.length === 0
-    //         const isNotAdded = !this.chats.find(c => c.id === chat.id)
-
-    //         if (isEmpty || isNotAdded) {
-    //           this.chats.push(chat)
-    //           setTimeout(() => {
-    //             this.scrollBottom()
-    //           }, 100)
-    //         }
-    //       })
-    //     })
-    // },
     scrollBottom () {
       const chatBack = document.getElementById('chat-display')
       chatBack.scrollTop = chatBack.scrollHeight
+    },
+    updateChecked (chat) {
+      const url = `/api/v1/update_checked/${chat.id}`
+      this.$axios.patch(url, {
+        uid: this.user.uid
+      })
+      // .then((res) => {
+      //   console.log(res)
+      // })
+      // .catch((err) => {
+      //   // eslint-disable-next-line no-console
+      //   console.error(err)
+      // })
+    },
+    patchCheckedTrue () {
+      console.log(this.chats.slice(-1)[0])
+      this.chats.slice(-1)[0].checked = true
     }
   }
 }

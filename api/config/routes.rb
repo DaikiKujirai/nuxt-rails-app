@@ -30,6 +30,9 @@ Rails.application.routes.draw do
       mount ActionCable.server                  => '/cable'
       # notification
       get 'find_notifications_count/:id'        => 'notifications#find_notifications_count'
+      # chat
+      get 'find_my_chat_rooms'                  => 'chats#find_my_chat_rooms'
+      patch 'update_checked/:id'                => 'chats#update_checked'
     end
   end
 end

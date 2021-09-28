@@ -43,8 +43,12 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/eslint
     '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+    '@nuxtjs/moment'
   ],
+  moment: {
+    locales: ['ja']
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
@@ -52,7 +56,6 @@ export default {
     '@nuxtjs/axios',
     'nuxt-i18n',
     '@nuxtjs/dotenv',
-    '@nuxtjs/moment',
     // '@nuxtjs/google-adsense',
     [
       '@nuxtjs/firebase',

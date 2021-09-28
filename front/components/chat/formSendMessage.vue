@@ -23,7 +23,6 @@
 <script>
 import { mapGetters, mapActions } from 'vuex'
 import chatMessageForm from './chatMessageForm.vue'
-// import firebase from '~/plugins/firebase'
 
 export default {
   components: {
@@ -60,45 +59,30 @@ export default {
       this.chat.message = this.message
       this.chat.user_id = this.currentUser.id
       this.chat.room_id = this.roomId
+      this.chat.user_name = this.user.name
+      this.chat.uid = this.user.uid
       const url = '/api/v1/chats'
       this.$axios.post(url, this.chat)
         .then((res) => {
-          this.$cable.perform({
-            channel: 'RoomChannel',
-            action: 'post',
-            data: {
-              message: this.message
-            }
-          })
+          // this.$cable.perform({
+          //   channel: 'RoomChannel',
+          //   action: 'post',
+          //   data: {
+          //     message: this.message
+          //   }
+          // })
           this.pushChat(res.data)
           this.$refs.form.reset()
+          // this.createNotification()
+          setTimeout(() => {
+            this.scrollBottom()
+          }, 0)
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err)
         })
     },
-    // sendMessage () {
-    //   const chat = {
-    //     userId: this.currentUser.uid,
-    //     name: this.currentUser.name,
-    //     message: this.message,
-    //     createdAt: new Date()
-    //   }
-    //   firebase.firestore()
-    //     .collection('rooms')
-    //     .doc(this.roomId)
-    //     .collection('chats')
-    //     .add(chat)
-    //     .then(() => {
-    //       this.$refs.form.reset()
-    //       this.createNotification()
-    //     })
-    //     .catch((err) => {
-    //       // eslint-disable-next-line no-console
-    //       console.log(err)
-    //     })
-    // },
     pushChat (chat) {
       this.$emit('pushChat', chat)
     },
@@ -120,6 +104,9 @@ export default {
           // eslint-disable-next-line no-console
           console.error(err)
         })
+    },
+    scrollBottom () {
+      this.$emit('scrollBottom')
     }
   }
 }
