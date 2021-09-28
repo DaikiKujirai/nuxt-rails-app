@@ -13,7 +13,6 @@ class Api::V1::LikesController < ApplicationController
       post         = Post.find(params[:post_id])
       current_user = User.find(params[:user_id])
       post.create_notification_like!(current_user, post, params[:uid]) if post.user_id != current_user.id
-      # post.create_push_notification_like!(current_user, post, params[:uid]) if post.user_id != current_user.id
       render json: like
     else
       render json: { error_message: '失敗しました' }

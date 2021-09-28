@@ -28,7 +28,7 @@ export default {
   },
   methods: {
     toChat () {
-      this.$router.push(`/chatRooms/${this.user.id}`)
+      this.$router.push(`/chatRooms/${this.user.id}?uid=${this.user.uid}`)
     }
   }
 }

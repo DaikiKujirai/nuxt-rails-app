@@ -58,7 +58,7 @@ module Pagination
       }
     end
   end
-  class Api::V1::ChatRoomsController < ApplicationController
+  class Api::V1::ChatsController < ApplicationController
     def resources_with_pagination(resources)
       {
         pagination: {
