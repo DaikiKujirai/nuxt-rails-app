@@ -3,5 +3,11 @@ class Chat < ApplicationRecord
 
   has_many :notifications
 
-  # default_scope -> { order(created_at: :desc) }
+  class << self
+    def read_all_chats(unread_chats, other_user_id)
+      unread_chats.each do |chat|
+        chat.update_attributes(checked: true)
+      end
+    end
+  end
 end

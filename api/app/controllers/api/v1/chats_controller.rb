@@ -14,7 +14,13 @@ class Api::V1::ChatsController < ApplicationController
       UserRoom.create!(user_id: other_user.id  , partner_id: current_user.id, room_id: room.id)
     end
 
-    chats  = room.chats
+    chats        = room.chats
+    unread_chats = chats.where(user_id: other_user.id, checked: false)
+    unless unread_chats.blank?
+      Chat.read_all_chats(unread_chats, other_user.id)
+      ActionCable.server.broadcast params[:uid], chats: chats, category: 'read_all'
+    end
+
     object = { chats: chats, room_id: room.id, user: other_user }
     render json: object
   end
@@ -23,8 +29,8 @@ class Api::V1::ChatsController < ApplicationController
     current_user = User.find(params[:user_id])
     chat         = current_user.chats.new(chat_params)
     if chat.save
-      ActionCable.server.broadcast params[:uid], notification_data: chat,
-                                                 category:          'chat'   ,
+      ActionCable.server.broadcast params[:uid], notification_data: chat  ,
+                                                 category:          'chat',
                                                  user_name:         params[:user_name]
       render json: chat
     else

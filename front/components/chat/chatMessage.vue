@@ -66,17 +66,23 @@ export default {
       connected () {
       },
       received (data) {
-        if (data.category === 'read') {
-          console.log('発火')
-          this.patchCheckedTrue()
-          return
+        console.log(data)
+        switch (data.category) {
+          case 'read':
+            this.patchCheckedTrue()
+            return
+          case 'read_all':
+            this.chats = data.chats
+            return
         }
         // this.setIsActive(true)
-        this.updateChecked(data.notification_data)
-        this.chats.push(data.notification_data)
-        setTimeout(() => {
-          this.scrollBottom()
-        }, 0)
+        if (Number(this.$route.params.id) === data.notification_data.user_id) {
+          this.updateChecked(data.notification_data)
+          this.chats.push(data.notification_data)
+          setTimeout(() => {
+            this.scrollBottom()
+          }, 0)
+        }
       },
       disconnected () {
         // eslint-disable-next-line no-console
@@ -130,7 +136,8 @@ export default {
       const url = `/api/v1/chats/${this.$route.params.id}`
       await this.$axios.get(url, {
         params: {
-          user_id: this.currentUser.id
+          user_id: this.currentUser.id,
+          uid: this.$route.query.uid
         }
       })
         .then((res) => {
@@ -169,7 +176,6 @@ export default {
       // })
     },
     patchCheckedTrue () {
-      console.log(this.chats.slice(-1)[0])
       this.chats.slice(-1)[0].checked = true
     }
   }
