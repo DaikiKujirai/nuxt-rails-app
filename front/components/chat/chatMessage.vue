@@ -66,19 +66,19 @@ export default {
       connected () {
       },
       received (data) {
-        console.log(data)
         switch (data.category) {
           case 'read':
             this.patchCheckedTrue()
-            return
+            break
           case 'read_all':
             this.chats = data.chats
-            return
+            break
         }
         // this.setIsActive(true)
         if (Number(this.$route.params.id) === data.notification_data.user_id) {
           this.updateChecked(data.notification_data)
           this.chats.push(data.notification_data)
+          this.setIsCatchMessage(true)
           setTimeout(() => {
             this.scrollBottom()
           }, 0)
@@ -102,7 +102,6 @@ export default {
       disabled: false,
       isValid: false,
       message: ''
-      // date: `${$my(this.msg.createdAt.toDate())}`
     }
   },
   computed: {
@@ -123,7 +122,8 @@ export default {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       setIsActive: 'notification/setIsActive',
-      pushNotification: 'notification/pushNotification'
+      pushNotification: 'notification/pushNotification',
+      setIsCatchMessage: 'chat/setIsCatchMessage'
     }),
     async subscribe () {
       await this.$cable.subscribe({

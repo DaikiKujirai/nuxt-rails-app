@@ -16,6 +16,7 @@ class Api::V1::ChatsController < ApplicationController
 
     chats        = room.chats
     unread_chats = chats.where(user_id: other_user.id, checked: false)
+
     unless unread_chats.blank?
       Chat.read_all_chats(unread_chats, other_user.id)
       ActionCable.server.broadcast params[:uid], chats: chats, category: 'read_all'
@@ -49,11 +50,11 @@ class Api::V1::ChatsController < ApplicationController
                                                                   user_name:         params[:distination_user][:name]
 
     distination_chat_room = ChatRoom.find_by(
-      user_id: params[:distination_user_id],
-      distination_user_id: params[:user_id]
-    )
+                                              user_id:    params[:partner_id],
+                                              partner_id: params[:user_id]
+                                            )
     chat_room.created_at = Time.now
-    chat_room.update(chat_room_params)
+    chat_room.update!(chat_room_params)
     render json: { success_messages: '更新しました' }
   end
 
@@ -61,7 +62,7 @@ class Api::V1::ChatsController < ApplicationController
     chat = Chat.find(params[:id])
     chat.update_attributes(checked: true)
     ActionCable.server.broadcast params[:uid], chat: chat, category: 'read'
-    render json: { success_message: '既読しました' }
+    render json: { success_message: '既読' }
   end
 
   def find_my_chat_rooms
@@ -70,6 +71,14 @@ class Api::V1::ChatsController < ApplicationController
     pagination   = resources_with_pagination(user_rooms)
     object       = { chat_rooms: user_rooms.as_json(include: [:partner, { room: { include: :chats} }]), kaminari: pagination }
     render json: object
+  end
+
+  def find_unread_chats_count
+    current_user = User.find(params[:id])
+    rooms        = current_user.user_rooms.pluck(:room_id)
+    unread_chats = Chat.where(room_id: [*rooms], checked: false).where.not(user_id: current_user.id)
+    render json: unread_chats
+
   end
 
   def find_last_message

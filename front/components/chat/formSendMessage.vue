@@ -64,16 +64,8 @@ export default {
       const url = '/api/v1/chats'
       this.$axios.post(url, this.chat)
         .then((res) => {
-          // this.$cable.perform({
-          //   channel: 'RoomChannel',
-          //   action: 'post',
-          //   data: {
-          //     message: this.message
-          //   }
-          // })
           this.pushChat(res.data)
           this.$refs.form.reset()
-          // this.createNotification()
           setTimeout(() => {
             this.scrollBottom()
           }, 0)
@@ -86,25 +78,25 @@ export default {
     pushChat (chat) {
       this.$emit('pushChat', chat)
     },
-    createNotification () {
-      const url = '/api/v1/notifications'
-      this.$axios.post(url, {
-        chat: {
-          id: this.currentUser.id,
-          user_id: this.user.id
-        }
-      })
-        .then(() => {
-          this.setIsUpdate({
-            bool: true,
-            userId: this.user.id
-          })
-        })
-        .catch((err) => {
-          // eslint-disable-next-line no-console
-          console.error(err)
-        })
-    },
+    // createNotification () {
+    //   const url = '/api/v1/notifications'
+    //   this.$axios.post(url, {
+    //     chat: {
+    //       id: this.currentUser.id,
+    //       user_id: this.user.id
+    //     }
+    //   })
+    //     .then(() => {
+    //       this.setIsUpdate({
+    //         bool: true,
+    //         userId: this.user.id
+    //       })
+    //     })
+    //     .catch((err) => {
+    //       // eslint-disable-next-line no-console
+    //       console.error(err)
+    //     })
+    // },
     scrollBottom () {
       this.$emit('scrollBottom')
     }

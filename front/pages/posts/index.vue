@@ -90,7 +90,8 @@ export default {
       currentUser: 'auth/data',
       isAuthenticated: 'auth/isAuthenticated',
       isNewPost: 'post/isNewPost',
-      deletePost: 'post/deletePost'
+      deletePost: 'post/deletePost',
+      isCatchMessage: 'chat/isCatchMessage'
     })
   },
   watch: {
