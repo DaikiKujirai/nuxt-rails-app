@@ -22,6 +22,7 @@ export const actions = {
   },
   pushNotification ({ commit }, notification) {
     let message = ''
+    console.log(notification)
     switch (notification.category) {
       case 'chat':
         message = `${notification.user_name}さんからチャットが届きました`

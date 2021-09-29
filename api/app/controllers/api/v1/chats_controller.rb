@@ -27,12 +27,20 @@ class Api::V1::ChatsController < ApplicationController
   end
 
   def create
-    current_user = User.find(params[:user_id])
+    current_user = User.find(params[:current_user_id])
     chat         = current_user.chats.new(chat_params)
+    last_message = chat.message.truncate(15)
     if chat.save
-      ActionCable.server.broadcast params[:uid], notification_data: chat  ,
-                                                 category:          'chat',
-                                                 user_name:         params[:user_name]
+      # last_message = last_message.truncate(15) if last_message.length >= 15
+      user_room         = UserRoom.find_by(user_id: current_user.id   , partner_id: params[:user][:id])
+      partner_user_room = UserRoom.find_by(user_id: params[:user][:id], partner_id: current_user.id)
+      user_room.update_attributes(last_message: last_message)
+      partner_user_room.update_attributes(last_message: last_message)
+
+      ActionCable.server.broadcast params[:user][:uid], notification_data: chat  ,
+                                                        category:          'chat',
+                                                        user_name:         params[:user][:name]
+
       render json: chat
     else
       render json: errors.message
@@ -40,55 +48,28 @@ class Api::V1::ChatsController < ApplicationController
   end
 
   def update
-    chat_room = ChatRoom.find_by(
-      user_id: params[:user_id],
-      distination_user_id: params[:distination_user_id]
-    )
-    # actioncable
-    ActionCable.server.broadcast params[:distination_user][:uid], notification_data: chat_room,
-                                                                  category:          'chat'   ,
-                                                                  user_name:         params[:distination_user][:name]
-
-    distination_chat_room = ChatRoom.find_by(
-                                              user_id:    params[:partner_id],
-                                              partner_id: params[:user_id]
-                                            )
-    chat_room.created_at = Time.now
-    chat_room.update!(chat_room_params)
-    render json: { success_messages: '更新しました' }
-  end
-
-  def update_checked
     chat = Chat.find(params[:id])
     chat.update_attributes(checked: true)
     ActionCable.server.broadcast params[:uid], chat: chat, category: 'read'
     render json: { success_message: '既読' }
   end
 
-  def find_my_chat_rooms
-    current_user = User.find(params[:user_id])
-    user_rooms   = current_user.user_rooms.includes(:partner, { room: :chats }).page(params[:page]).per(15)
-    pagination   = resources_with_pagination(user_rooms)
-    object       = { chat_rooms: user_rooms.as_json(include: [:partner, { room: { include: :chats} }]), kaminari: pagination }
-    render json: object
-  end
-
-  def find_unread_chats_count
+  def find_unread_chats_count_in_sidebar
     current_user = User.find(params[:id])
     rooms        = current_user.user_rooms.pluck(:room_id)
     unread_chats = Chat.where(room_id: [*rooms], checked: false).where.not(user_id: current_user.id)
     render json: unread_chats
-
   end
 
-  def find_last_message
-    room = Room.find(params[:id])
-    render json: room.chats.last
+  def find_unread_chats_count_in_room
+    room         = Room.find(params[:id])
+    unread_chats = room.chats.where(partner_id: partner_id, checked: false)
+    render json: unread_chats
   end
 
   private
 
   def chat_params
-    params.require(:chat).permit(:message, :user_id, :partner_id, :room_id)
+    params.require(:chat).permit(:message, :user_id, :room_id, :checked)
   end
 end
