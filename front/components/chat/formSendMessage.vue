@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { mapGetters, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 import chatMessageForm from './chatMessageForm.vue'
 
 export default {
@@ -52,15 +52,11 @@ export default {
     })
   },
   methods: {
-    ...mapActions({
-      setIsUpdate: 'chat/setIsUpdate'
-    }),
     sendMessage () {
       this.chat.message = this.message
-      this.chat.user_id = this.currentUser.id
+      this.chat.current_user_id = this.currentUser.id
+      this.chat.user = this.user
       this.chat.room_id = this.roomId
-      this.chat.user_name = this.user.name
-      this.chat.uid = this.user.uid
       const url = '/api/v1/chats'
       this.$axios.post(url, this.chat)
         .then((res) => {
@@ -78,25 +74,6 @@ export default {
     pushChat (chat) {
       this.$emit('pushChat', chat)
     },
-    // createNotification () {
-    //   const url = '/api/v1/notifications'
-    //   this.$axios.post(url, {
-    //     chat: {
-    //       id: this.currentUser.id,
-    //       user_id: this.user.id
-    //     }
-    //   })
-    //     .then(() => {
-    //       this.setIsUpdate({
-    //         bool: true,
-    //         userId: this.user.id
-    //       })
-    //     })
-    //     .catch((err) => {
-    //       // eslint-disable-next-line no-console
-    //       console.error(err)
-    //     })
-    // },
     scrollBottom () {
       this.$emit('scrollBottom')
     }

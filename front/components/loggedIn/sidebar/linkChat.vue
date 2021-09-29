@@ -54,7 +54,7 @@ export default {
       setIsCatchMessage: 'chat/setIsCatchMessage'
     }),
     fetchContents () {
-      const url = `/api/v1/find_unread_chats_count/${this.currentUser.id}`
+      const url = `/api/v1/find_unread_chats_count_in_sidebar/${this.currentUser.id}`
       this.$axios.get(url)
         .then((res) => {
           this.count = res.data.length
@@ -65,7 +65,7 @@ export default {
         })
     },
     toChat () {
-      this.$router.push('/chatRooms')
+      this.$router.push('/userRooms')
     }
   }
 }

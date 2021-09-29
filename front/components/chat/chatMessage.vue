@@ -66,6 +66,7 @@ export default {
       connected () {
       },
       received (data) {
+        this.setIsCatchMessage(true)
         switch (data.category) {
           case 'read':
             this.patchCheckedTrue()
@@ -74,11 +75,9 @@ export default {
             this.chats = data.chats
             break
         }
-        // this.setIsActive(true)
         if (Number(this.$route.params.id) === data.notification_data.user_id) {
           this.updateChecked(data.notification_data)
           this.chats.push(data.notification_data)
-          this.setIsCatchMessage(true)
           setTimeout(() => {
             this.scrollBottom()
           }, 0)
@@ -121,7 +120,6 @@ export default {
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
-      setIsActive: 'notification/setIsActive',
       pushNotification: 'notification/pushNotification',
       setIsCatchMessage: 'chat/setIsCatchMessage'
     }),
@@ -163,17 +161,10 @@ export default {
       chatBack.scrollTop = chatBack.scrollHeight
     },
     updateChecked (chat) {
-      const url = `/api/v1/update_checked/${chat.id}`
+      const url = `/api/v1/chats/${chat.id}`
       this.$axios.patch(url, {
         uid: this.user.uid
       })
-      // .then((res) => {
-      //   console.log(res)
-      // })
-      // .catch((err) => {
-      //   // eslint-disable-next-line no-console
-      //   console.error(err)
-      // })
     },
     patchCheckedTrue () {
       this.chats.slice(-1)[0].checked = true

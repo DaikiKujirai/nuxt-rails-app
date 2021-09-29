@@ -3,12 +3,13 @@
     style="height: 550px; overflow-y: auto; overflow-x: hidden;"
   >
     <v-card
-      v-for="chatRoom in chatRooms"
-      :key="chatRoom.id"
+      v-for="userRoom in userRooms"
+      :key="userRoom.id"
       class="mb-4"
     >
       <chat-list
-        :chat-room="chatRoom"
+        ref="room"
+        :user-room="userRoom"
         @fetchContents="fetchContents"
         @rollBackPage="rollBackPage"
         @identifierIncrement="identifierIncrement"
@@ -37,47 +38,56 @@ export default {
   },
   data () {
     return {
-      chatRooms: [],
+      userRooms: [],
       page: 1,
-      url: '/api/v1/find_my_chat_rooms',
+      url: '',
       userId: ''
     }
   },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      isUpdate: 'chat/isUpdate'
+      isCatchMessage: 'chat/isCatchMessage'
     })
+  },
+  watch: {
+    async isCatchMessage (bool) {
+      if (bool) {
+        await this.fetchContents()
+        await this.identifierIncrement()
+        await this.setIsCatchMessage(false)
+      }
+    }
   },
   mounted () {
     setTimeout(() => {
-      // this.fetchUrlAndUserId()
-      this.fetchContents()
       this.setUser(this.currentUser)
       this.userId = this.currentUser.id
+      this.url = `/api/v1/user_rooms/${this.currentUser.id}`
+      this.fetchContents()
     }, 0)
   },
   methods: {
     ...mapActions({
-      setIsUpdate: 'chat/setIsUpdate',
-      setUser: 'user/setUser'
+      setUser: 'user/setUser',
+      setIsCatchMessage: 'chat/setIsCatchMessage'
     }),
     async fetchContents () {
-      await this.$axios.get(this.url, {
-        params: {
-          user_id: this.currentUser.id
-        }
-      })
+      await this.$axios.get(this.url)
         .then((res) => {
-          this.chatRooms = res.data.chat_rooms
+          this.userRooms = res.data.user_rooms
+          // this.fetchUnreadChatsCount()
         })
         .catch((err) => {
           // eslint-disable-next-line no-console
           console.error(err)
         })
     },
-    toChatRoom () {
-      this.$refs.list.toChatRoom()
+    // fetchUnreadChatsCount () {
+    //   this.$refs.room.fetchUnreadChatsCount()
+    // },
+    touserRoom () {
+      this.$refs.list.touserRoom()
     },
     pageIncrement () {
       this.page++
@@ -86,7 +96,7 @@ export default {
       this.page = 1
     },
     pushContents (res) {
-      this.chatRooms.push(...res.data.chat_rooms)
+      this.userRooms.push(...res.data.user_rooms)
     },
     identifierIncrement () {
       this.$refs.infinite.identifierIncrement()
