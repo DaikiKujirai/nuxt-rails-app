@@ -66,10 +66,11 @@ export default {
       connected () {
       },
       received (data) {
-        this.setIsCatchMessage(true)
+        console.log(data)
         switch (data.category) {
           case 'read':
             this.patchCheckedTrue()
+            this.setIsCatchMessage({ bool: true, userId: data.chat.user_id })
             break
           case 'read_all':
             this.chats = data.chats

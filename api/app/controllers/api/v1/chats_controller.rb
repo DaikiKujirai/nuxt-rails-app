@@ -63,7 +63,7 @@ class Api::V1::ChatsController < ApplicationController
 
   def find_unread_chats_count_in_room
     room         = Room.find(params[:id])
-    unread_chats = room.chats.where(partner_id: partner_id, checked: false)
+    unread_chats = room.chats.where(user_id: params[:partner_id], checked: false)
     render json: unread_chats
   end
 

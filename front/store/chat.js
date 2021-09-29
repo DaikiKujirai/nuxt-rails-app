@@ -1,6 +1,6 @@
 export const state = () => ({
   isUpdate: {},
-  isCatchMessage: false
+  isCatchMessage: {}
 })
 
 export const getters = {
@@ -25,7 +25,7 @@ export const actions = {
   setIsUpdate ({ commit }, { bool, userId }) {
     commit('setIsUpdate', { bool, userId })
   },
-  setIsCatchMessage ({ commit }, bool) {
-    commit('setIsCatchMessage', bool)
+  setIsCatchMessage ({ commit }, { bool, userId }) {
+    commit('setIsCatchMessage', { bool, userId })
   }
 }

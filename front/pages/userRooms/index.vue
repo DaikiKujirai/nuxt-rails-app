@@ -16,20 +16,6 @@ export default {
   components: {
     LayoutChat
   },
-  channels: {
-    RoomChannel: {
-      connected () {
-      },
-      received (data) {
-        this.setIsActive(true)
-        this.pushNotification(data)
-      },
-      disconnected () {
-        // eslint-disable-next-line no-console
-        console.log('disconnected')
-      }
-    }
-  },
   data () {
     return {
       breadcrumbs: 'チャット',
@@ -44,22 +30,10 @@ export default {
   created () {
     this.setBreadcrumbs(this.breadcrumbs)
   },
-  mounted () {
-    setTimeout(() => {
-      this.subscribe()
-    })
-  },
   methods: {
     ...mapActions({
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs'
-    }),
-    async subscribe () {
-      await this.$cable.subscribe({
-        channel: 'RoomChannel',
-        room: this.currentUser.uid,
-        uid: `${this.currentUser.uid}`
-      })
-    }
+    })
   }
 }
 </script>
