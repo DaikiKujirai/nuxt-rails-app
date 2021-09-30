@@ -40,6 +40,9 @@ export default {
       connected () {
       },
       received (data) {
+        if (data.category === 'chat') {
+          this.setIsExistsUnreadChat(true)
+        }
         this.setIsActive(true)
         this.pushNotification(data)
       },
@@ -76,7 +79,8 @@ export default {
   methods: {
     ...mapActions({
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
-      pushNotification: 'notification/pushNotification'
+      pushNotification: 'notification/pushNotification',
+      setIsExistsUnreadChat: 'chat/setIsExistsUnreadChat'
     }),
     async subscribe () {
       await this.$cable.subscribe({

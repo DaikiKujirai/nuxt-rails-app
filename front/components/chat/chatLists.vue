@@ -36,6 +36,23 @@ export default {
     ChatList,
     InfiniteScroll
   },
+  channels: {
+    RoomChannel: {
+      connected () {
+      },
+      received (data) {
+        if (data.category === 'chat') {
+          this.fetchContents()
+          this.identifierIncrement()
+          this.setIsCatchMessage({ bool: true, userId: data.notification_data.user_id })
+        }
+      },
+      disconnected () {
+        // eslint-disable-next-line no-console
+        console.log('disconnected')
+      }
+    }
+  },
   data () {
     return {
       userRooms: [],
@@ -50,22 +67,14 @@ export default {
       isCatchMessage: 'chat/isCatchMessage'
     })
   },
-  watch: {
-    async isCatchMessage (bool) {
-      if (bool) {
-        await this.fetchContents()
-        await this.identifierIncrement()
-        await this.setIsCatchMessage(false)
-      }
-    }
-  },
   mounted () {
     setTimeout(() => {
       this.setUser(this.currentUser)
       this.userId = this.currentUser.id
       this.url = `/api/v1/user_rooms/${this.currentUser.id}`
+      this.subscribe()
       this.fetchContents()
-    }, 0)
+    }, 200)
   },
   methods: {
     ...mapActions({
@@ -83,9 +92,13 @@ export default {
           console.error(err)
         })
     },
-    // fetchUnreadChatsCount () {
-    //   this.$refs.room.fetchUnreadChatsCount()
-    // },
+    async subscribe () {
+      await this.$cable.subscribe({
+        channel: 'RoomChannel',
+        room: this.currentUser.uid,
+        uid: `${this.currentUser.uid}`
+      })
+    },
     touserRoom () {
       this.$refs.list.touserRoom()
     },

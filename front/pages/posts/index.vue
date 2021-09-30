@@ -76,6 +76,9 @@ export default {
       connected () {
       },
       received (data) {
+        if (data.category === 'chat') {
+          this.setIsExistsUnreadChat(true)
+        }
         this.setIsActive(true)
         this.pushNotification(data)
       },
@@ -91,7 +94,8 @@ export default {
       isAuthenticated: 'auth/isAuthenticated',
       isNewPost: 'post/isNewPost',
       deletePost: 'post/deletePost',
-      isCatchMessage: 'chat/isCatchMessage'
+      isCatchMessage: 'chat/isCatchMessage',
+      reacquireData: 'post/reacquireData'
     })
   },
   watch: {
@@ -109,6 +113,17 @@ export default {
       if (val.bool) {
         this.posts = this.posts.filter(post => post.id !== val.post.id)
         this.setDeletePost({ bool: false, post: {} })
+      }
+    },
+    async reacquireData (bool) {
+      console.log(bool)
+      if (bool) {
+        await window.scrollTo({
+          top: 0,
+          behavior: 'auto'
+        })
+        await this.fetchContents()
+        await this.setReacquireData(false)
       }
     }
   },
@@ -129,7 +144,9 @@ export default {
       setDeletePost: 'post/setDeletePost',
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
       setIsActive: 'notification/setIsActive',
-      pushNotification: 'notification/pushNotification'
+      pushNotification: 'notification/pushNotification',
+      setIsExistsUnreadChat: 'chat/setIsExistsUnreadChat',
+      setReacquireData: 'post/setReacquireData'
     }),
     async fetchContents () {
       await this.$axios.get(this.url)

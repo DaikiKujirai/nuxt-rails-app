@@ -2,7 +2,8 @@ export const state = () => ({
   isNewPost: false,
   isNewComment: false,
   updatePost: { bool: false, post: {} },
-  deletePost: { bool: false, post: {} }
+  deletePost: { bool: false, post: {} },
+  reacquireData: false
 })
 
 export const getters = {
@@ -17,6 +18,9 @@ export const getters = {
   },
   deletePost (state) {
     return state.deletePost
+  },
+  reacquireData (state) {
+    return state.reacquireData
   }
 }
 
@@ -32,6 +36,9 @@ export const mutations = {
   },
   setDeletePost (state, payload) {
     state.deletePost = payload
+  },
+  setReacquireData (state, payload) {
+    state.reacquireData = payload
   }
 }
 
@@ -47,5 +54,8 @@ export const actions = {
   },
   setDeletePost ({ commit }, { bool, post }) {
     commit('setDeletePost', { bool, post })
+  },
+  setReacquireData ({ commit }, bool) {
+    commit('setReacquireData', bool)
   }
 }

@@ -5,7 +5,7 @@
       text
       rounded
       class="px-0"
-      @click="toShow('relationships', $route.params.id, 0)"
+      @click="toShow('relationships', $route.params.id, 'follower')"
     >
       フォロワー
     </v-btn>

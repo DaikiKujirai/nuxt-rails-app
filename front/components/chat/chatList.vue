@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   props: {
@@ -61,9 +61,12 @@ export default {
     })
   },
   watch: {
-    isCatchMessage (val) {
-      if (val.bool && val.userRoom.id === this.userRoom.id) {
-        this.fetchUnreadChatsCount()
+    async isCatchMessage (val) {
+      if (val.bool && val.userId === this.userRoom.partner_id) {
+        await setTimeout(() => {
+          this.fetchUnreadChatsCount()
+          this.setIsCatchMessage(false, '')
+        }, 200)
       }
     }
   },
@@ -73,11 +76,15 @@ export default {
     })
   },
   methods: {
+    ...mapActions({
+      setIsCatchMessage: 'chat/setIsCatchMessage'
+    }),
     fetchUnreadChatsCount () {
-      console.log(this.userRoom)
       const url = `/api/v1/find_unread_chats_count_in_room/${this.userRoom.room_id}`
       this.$axios.get(url, {
-        partner_id: this.userRoom.partner_id
+        params: {
+          partner_id: this.userRoom.partner.id
+        }
       })
         .then((res) => {
           this.unreadCount = res.data.length

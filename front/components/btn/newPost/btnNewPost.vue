@@ -59,6 +59,7 @@
               :disabled="!isValid || loading"
               :loading="loading"
               block
+              rounded
               color="info"
               @click="submitPost"
             >

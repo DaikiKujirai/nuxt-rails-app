@@ -66,14 +66,14 @@ export default {
       connected () {
       },
       received (data) {
-        this.setIsCatchMessage(true)
         switch (data.category) {
           case 'read':
             this.patchCheckedTrue()
-            break
+            this.setIsCatchMessage({ bool: true, userId: data.chat.user_id })
+            return
           case 'read_all':
             this.chats = data.chats
-            break
+            return
         }
         if (Number(this.$route.params.id) === data.notification_data.user_id) {
           this.updateChecked(data.notification_data)
@@ -82,6 +82,7 @@ export default {
             this.scrollBottom()
           }, 0)
         }
+        this.setIsExistsUnreadChat(true)
       },
       disconnected () {
         // eslint-disable-next-line no-console
@@ -114,22 +115,15 @@ export default {
   mounted () {
     setTimeout(() => {
       this.fetchContents()
-      this.subscribe()
     }, 0)
   },
   methods: {
     ...mapActions({
       flashMessage: 'flash/flashMessage',
       pushNotification: 'notification/pushNotification',
-      setIsCatchMessage: 'chat/setIsCatchMessage'
+      setIsCatchMessage: 'chat/setIsCatchMessage',
+      setIsExistsUnreadChat: 'chat/setIsExistsUnreadChat'
     }),
-    async subscribe () {
-      await this.$cable.subscribe({
-        channel: 'RoomChannel',
-        room: this.currentUser.uid,
-        uid: `${this.currentUser.uid}`
-      })
-    },
     async fetchContents () {
       const url = `/api/v1/chats/${this.$route.params.id}`
       await this.$axios.get(url, {
