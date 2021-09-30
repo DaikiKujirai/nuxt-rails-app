@@ -54,11 +54,16 @@ class Api::V1::ChatsController < ApplicationController
     render json: { success_message: '既読' }
   end
 
-  def find_unread_chats_count_in_sidebar
+  def is_exists_unread_chat
     current_user = User.find(params[:id])
     rooms        = current_user.user_rooms.pluck(:room_id)
     unread_chats = Chat.where(room_id: [*rooms], checked: false).where.not(user_id: current_user.id)
-    render json: unread_chats
+
+    unless unread_chats.empty?
+      render json: true
+    else
+      render json: false
+    end
   end
 
   def find_unread_chats_count_in_room

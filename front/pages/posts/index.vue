@@ -76,6 +76,10 @@ export default {
       connected () {
       },
       received (data) {
+        if (data.category === 'chat') {
+          console.log('true')
+          this.setIsExistsUnreadChat(true)
+        }
         this.setIsActive(true)
         this.pushNotification(data)
       },
@@ -129,7 +133,8 @@ export default {
       setDeletePost: 'post/setDeletePost',
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
       setIsActive: 'notification/setIsActive',
-      pushNotification: 'notification/pushNotification'
+      pushNotification: 'notification/pushNotification',
+      setIsExistsUnreadChat: 'chat/setIsExistsUnreadChat'
     }),
     async fetchContents () {
       await this.$axios.get(this.url)

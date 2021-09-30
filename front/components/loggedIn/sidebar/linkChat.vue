@@ -15,11 +15,11 @@
       <div class="ml-5">
         チャット
       </div>
-      <template v-if="count">
+      <template v-if="isExists">
         <v-badge
+          dot
           bordered
           color="error"
-          :content="count"
         />
       </template>
     </v-list-item>
@@ -32,32 +32,37 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   data () {
     return {
-      count: 0
+      isExists: false
     }
   },
   computed: {
     ...mapGetters({
       currentUser: 'auth/data',
-      isCatchMessage: 'chat/isCatchMessage'
+      isExistsUnreadChat: 'chat/isExistsUnreadChat'
     })
   },
   watch: {
-    isCatchChat (bool) {
+    async isExistsUnreadChat (bool) {
       if (bool) {
-        this.fetchContents()
-        this.setIsCatchMessage(false)
+        await this.fetchContents()
+        await this.setIsExistsUnreadChat(false)
       }
     }
   },
+  mounted () {
+    setTimeout(() => {
+      this.fetchContents()
+    }, 200)
+  },
   methods: {
     ...mapActions({
-      setIsCatchMessage: 'chat/setIsCatchMessage'
+      setIsExistsUnreadChat: 'chat/setIsExistsUnreadChat'
     }),
     fetchContents () {
-      const url = `/api/v1/find_unread_chats_count_in_sidebar/${this.currentUser.id}`
+      const url = `/api/v1/is_exists_unread_chat/${this.currentUser.id}`
       this.$axios.get(url)
         .then((res) => {
-          this.count = res.data.length
+          this.isExists = res.data
         })
         .catch((err) => {
           // eslint-disable-next-line no-console

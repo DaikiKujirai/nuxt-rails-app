@@ -1,6 +1,7 @@
 export const state = () => ({
   isUpdate: {},
-  isCatchMessage: {}
+  isCatchMessage: {},
+  isExistsUnreadChat: false
 })
 
 export const getters = {
@@ -9,6 +10,9 @@ export const getters = {
   },
   isCatchMessage (state) {
     return state.isCatchMessage
+  },
+  isExistsUnreadChat (state) {
+    return state.isExistsUnreadChat
   }
 }
 
@@ -18,6 +22,9 @@ export const mutations = {
   },
   setIsCatchMessage (state, payload) {
     state.isCatchMessage = payload
+  },
+  setIsExistsUnreadChat (state, payload) {
+    state.isExistsUnreadChat = payload
   }
 }
 
@@ -27,5 +34,8 @@ export const actions = {
   },
   setIsCatchMessage ({ commit }, { bool, userId }) {
     commit('setIsCatchMessage', { bool, userId })
+  },
+  setIsExistsUnreadChat ({ commit }, bool) {
+    commit('setIsExistsUnreadChat', bool)
   }
 }

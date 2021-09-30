@@ -62,10 +62,11 @@ export default {
   },
   watch: {
     async isCatchMessage (val) {
-      console.log(val)
       if (val.bool && val.userId === this.userRoom.partner_id) {
-        await this.fetchUnreadChatsCount()
-        await this.setIsCatchMessage(false, '')
+        await setTimeout(() => {
+          this.fetchUnreadChatsCount()
+          this.setIsCatchMessage(false, '')
+        }, 200)
       }
     }
   },
