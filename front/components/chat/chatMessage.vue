@@ -66,7 +66,6 @@ export default {
       connected () {
       },
       received (data) {
-        console.log(data)
         switch (data.category) {
           case 'read':
             this.patchCheckedTrue()
@@ -76,7 +75,6 @@ export default {
             this.chats = data.chats
             return
         }
-        console.log(data)
         if (Number(this.$route.params.id) === data.notification_data.user_id) {
           this.updateChecked(data.notification_data)
           this.chats.push(data.notification_data)

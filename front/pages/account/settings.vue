@@ -71,6 +71,9 @@ export default {
       connected () {
       },
       received (data) {
+        if (data.category === 'chat') {
+          this.setIsExistsUnreadChat(true)
+        }
         this.setIsActive(true)
         this.pushNotification(data)
       },
@@ -113,7 +116,8 @@ export default {
       flashMessage: 'flash/flashMessage',
       updateCurrentUser: 'auth/updateCurrentUser',
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
-      setIsActive: 'notification/setIsActive'
+      setIsActive: 'notification/setIsActive',
+      setIsExistsUnreadChat: 'chat/setIsExistsUnreadChat'
     }),
     async subscribe () {
       await this.$cable.subscribe({

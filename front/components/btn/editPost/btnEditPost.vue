@@ -60,6 +60,7 @@
                   :disabled="!isValid || loading"
                   :loading="loading"
                   rounded
+                  block
                   color="info"
                   @click="updatePost"
                 >

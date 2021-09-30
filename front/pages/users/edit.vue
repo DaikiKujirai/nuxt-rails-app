@@ -104,6 +104,9 @@ export default {
       connected () {
       },
       received (data) {
+        if (data.category === 'chat') {
+          this.setIsExistsUnreadChat(true)
+        }
         this.setIsActive(true)
         this.pushNotification(data)
       },
@@ -156,7 +159,8 @@ export default {
       updateCurrentUser: 'auth/updateCurrentUser',
       setBreadcrumbs: 'breadcrumbs/setBreadcrumbs',
       pushNotification: 'notification/pushNotification',
-      setIsActive: 'notification/setIsActive'
+      setIsActive: 'notification/setIsActive',
+      setIsExistsUnreadChat: 'chat/setIsExistsUnreadChat'
     }),
     async submitEdit () {
       this.loading = true

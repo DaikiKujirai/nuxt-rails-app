@@ -22,8 +22,6 @@ Rails.application.routes.draw do
       post 'create_comment'                      => 'posts#create_comment'
       get  'find_comments/:id'                   => 'posts#find_comments'
       get  'search'                              => 'posts#search'
-      # like
-      # get   'render_is_like_and_likes_count/:id' => 'likes#render_is_like_and_likes_count'
       # relationship
       get  'find_following/:id'                  => 'relationships#find_following'
       get  'find_followers/:id'                  => 'relationships#find_followers'

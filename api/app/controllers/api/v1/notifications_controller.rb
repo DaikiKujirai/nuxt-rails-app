@@ -2,8 +2,8 @@ class Api::V1::NotificationsController < ApplicationController
   include Pagination
   def show
     current_user  = User.find(params[:id])
-    notifications = current_user.passive_notifications.includes(:post, :visitor).page(params[:page]).per(15)
-    notifications.where(checked: false).each do |notification|
+    notifications = current_user.passive_notifications.includes(:post, :visitor).where(checked: false).page(params[:page]).per(15)
+    notifications.each do |notification|
       notification.update_attributes(checked: true)
     end
     pagination    = resources_with_pagination(notifications)

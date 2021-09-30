@@ -22,11 +22,17 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 
 export default {
   methods: {
+    ...mapActions({
+      setReacquireData: 'post/setReacquireData'
+    }),
     toIndex () {
-      this.$router.push('/posts')
+      this.$route.name !== 'posts'
+        ? (this.$router.push('/posts'))
+        : (this.setReacquireData(true))
     }
   }
 }

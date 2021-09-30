@@ -66,6 +66,9 @@ export default {
       connected () {
       },
       received (data) {
+        if (data.category === 'chat') {
+          this.setIsExistsUnreadChat(true)
+        }
         this.setIsActive(true)
         this.pushNotification(data)
       },
@@ -146,7 +149,8 @@ export default {
       setSearchContents: 'search/setFetchSearchContents',
       setSearchPageName: 'search/setSearchPageName',
       setIsActive: 'notification/setIsActive',
-      pushNotification: 'notification/pushNotification'
+      pushNotification: 'notification/pushNotification',
+      setIsExistsUnreadChat: 'chat/setIsExistsUnreadChat'
     }),
     async subscribe () {
       await this.$cable.subscribe({

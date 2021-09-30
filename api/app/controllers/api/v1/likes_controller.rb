@@ -28,18 +28,6 @@ class Api::V1::LikesController < ApplicationController
     end
   end
 
-  def render_is_like_and_likes_count
-    post        = Post.find(params[:id])
-    likes_count = post.likes.count
-    if Like.exists?(user_id: params[:user_id], post_id: post.id)
-      object    = { is_like: true, likes_count: likes_count }
-      render json: object
-    else
-      object    = { is_like: false, likes_count: likes_count }
-      render json: object
-    end
-  end
-
   private
 
   def like_params

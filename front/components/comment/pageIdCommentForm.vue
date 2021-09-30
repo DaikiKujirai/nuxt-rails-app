@@ -78,7 +78,8 @@ export default {
   },
   methods: {
     ...mapActions({
-      flashMessage: 'flash/flashMessage'
+      flashMessage: 'flash/flashMessage',
+      setIsNewComment: 'post/setIsNewComment'
     }),
     async submitComment () {
       this.loading = true
@@ -92,6 +93,7 @@ export default {
       await this.$axios.$post('/api/v1/create_comment', formData)
         .then(() => {
           this.fetchContents()
+          this.setIsNewComment(true)
           this.flashMessage({ message: 'コメントしました', type: 'primary', status: true })
           this.loading = false
           this.$refs.form.reset()
